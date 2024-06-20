@@ -1,0 +1,1459 @@
+\documentclass{article}
+\usepackage{mathtools}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage{minted}
+\usepackage{amsfonts} % Add this line to include the amsfonts package
+
+\setlength\parindent{0pt}
+
+
+\title{BIOMATH 205 Answers Almanac}
+\author{Simon A. Lee, Zach Schlamowitz}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Purpose}
+
+A wholistic answer sheet to help us study for the BIOMATH 205 - Computational Algorithms comprehensive exam. Below we will display some rules to ensure fairness and not just people copying from one another.
+
+\begin{itemize}
+    \item You must contribute a minimum of one answer per chapter.
+    \item tackle different problems from the chapter (no repeated content). 
+    \item write the question and answer clearly and explain any steps that are necessary. 
+    \item sign off who did the problem so we can contact the person if any logic doesn't make sense.
+\end{itemize}
+
+\subsubsection*{I skipped programming questions for the most part since they wont be useful for the qual}
+
+\section*{Chapter 1: Ancient Algorithms}
+%% Question 2 %%
+\subsubsection*{Q2: Use the significand and exponent functions of Julia and devise a better initial value than $x_0 = 1.0$ for the Babylonian method. Explain your choice, and test it on a few examples.}
+
+We modify the Babylonian method to use an initial guess that is based on the value $c$ whose root we are computing. We begin by claiming that the order of magnitude (in powers of 2) of the square root of $c$ is roughly double that of the root. To see this, consider the following proof:
+
+\textbf{Proof}
+
+Suppose $\sqrt{c} = \alpha \cdot 2^{\beta}$. By definition, $\alpha = \text{significand}(\sqrt{c})$ and $\beta = \text{exponent}(\sqrt{c})$. As such, $\alpha \in [1,2)$. Then:
+
+\begin{align*}
+c &= \sqrt{c} \cdot \sqrt{c} \\
+&= (\alpha \cdot 2^{\beta}) \cdot (\alpha \cdot 2^{\beta}) \\
+&= \alpha^2 \cdot 2^{2\beta}
+\end{align*}
+
+If $\alpha^2 \in [1,2)$, then $\text{exponent}(c) = 2\beta = 2 \cdot \text{exponent}(\sqrt{c})$. Otherwise, $\alpha^2 > 2 \implies \text{significand}(c) = \frac{\alpha^2}{2}$ and $\text{exponent}(c) = 2(\text{exponent}(\sqrt{c}) + 1)$. In either case, $\text{exponent}(c) \approx 2 \cdot \text{exponent}(\sqrt{c}$).
+
+We can take advantage of this fact to quicken the algorithm by setting the initial guess at a value that has the same order of magnitude (in powers of 2) as $\sqrt{c}$ so that it starts out (potentially) much closer to $\sqrt{c}$ than $x_0 = 1$ does. We accomplish this by using an initial guess of: $x_0 = \text{significand}(c) \cdot 2^{\frac{\text{exponent}(c)}{2}}$. To make this speed increase even more precise, we could build in if-else logic to determine which subcase of the above proof holds and set the exponent of $x_0$ accordingly, but we did not implement this for clarity's sake. Code for the original Babylonian method and our modified version is shown below, with an example demonstrating the potential efficiency increase by way of the number of required iterations.
+
+\begin{minted}[breaklines]{python}
+function babylonian(c::T, tol::T) where T <: Real
+    x = one(T)  # start x at 1
+    print("Initial guess x_0 is: ")
+    println(x)
+    print()
+    println("Beginning iterations.")
+    half = one(T) / 2  # half = 0.5
+    for n = 1:100
+      print("Iteration (n) = ")
+      print(n)
+      print(". Current value = ")
+      x = half * (x + c / x)
+      println(x)
+      if abs(x^2 - c) < tol  # convergence test
+        println("Tolerance reached. Stopping.")
+        return x
+      end
+    end
+  end
+
+babylonian(1736.234^2,1e-10);
+
+>>>Initial guess x_0 is: 1.0
+Beginning iterations.
+Iteration (n) = 1. Current value = 1.5072547513779998e6
+Iteration (n) = 2. Current value = 753628.3756886681
+Iteration (n) = 3. Current value = 376816.18784101674
+Iteration (n) = 4. Current value = 188412.09389264337
+Iteration (n) = 5. Current value = 94214.04672075355
+Iteration (n) = 6. Current value = 47123.02155070868
+Iteration (n) = 7. Current value = 23593.49629329818
+Iteration (n) = 8. Current value = 11860.632457504966
+Iteration (n) = 9. Current value = 6057.396656948727
+Iteration (n) = 10. Current value = 3277.5270475989328
+Iteration (n) = 11. Current value = 2098.638981572482
+Iteration (n) = 12. Current value = 1767.5250824162194
+Iteration (n) = 13. Current value = 1736.5109782020404
+Iteration (n) = 14. Current value = 1736.2340220893864
+Iteration (n) = 15. Current value = 1736.234
+Tolerance reached. Stopping.
+\end{verbatim}
+
+The modified Babylonian method: 
+\begin{verbatim}
+function babylonian_mod(c::T, tol::T) where T <: Real
+    x = significand(c) * 2^(exponent(c)/2)  # start x at 2^exponent(c)
+    print("Initial guess x_0 is: ")
+    println(x)
+    print()
+    println("Beginning iterations.")
+    half = one(T) / 2  # half = 0.5
+    for n = 1:100
+      print("Iteration (n) = ")
+      print(n)
+      print(". Current value = ")
+      x = half * (x + c / x)
+      println(x)
+      if abs(x^2 - c) < tol  # convergence test
+        println("Tolerance reached. Stopping.")
+        return x
+      end
+    end
+  end
+
+babylonian_mod(1736.234^2,1e-10);
+
+>>> Initial guess x_0 is: 2081.620511956322
+Beginning iterations.
+Iteration (n) = 1. Current value = 1764.8875999131856
+Iteration (n) = 2. Current value = 1736.4666008715867
+Iteration (n) = 3. Current value = 1736.2340155785216
+Iteration (n) = 4. Current value = 1736.234
+Tolerance reached. Stopping.
+\end{minted}
+
+For example, using $c = 1736.234^2$, the standard Babylonian algorithm requires 15 iterations to complete, whereas our modified version requires only 4.
+
+\textbf{\textit{- Zach Schlamowitz }} \\\\
+
+\subsubsection*{Q3:  For $c \geq 0$ show that the iteration scheme
+\[
+x_{n+1} = \frac{c + x_n}{1 + x_n}
+\]
+converges to $\sqrt{c}$ starting from any $x_0 \geq 0$. Verify either theoretically or empirically that the rate of convergence is much slower than that of the Babylonian method.}
+
+\textbf{Answer:}
+
+To analyze the convergence of the given iteration scheme:
+\[
+x_{n+1} = \frac{c + x_n}{1 + x_n}
+\]
+to $\sqrt{c}$ for $c \geq 0$, we can use both theoretical insights and some empirical evidence.
+
+\textbf{Theoretical Analysis}\\
+\textbf{1. Fixed Points:} We start by identifying fixed points of the iteration. Setting $x_{n+1} = x_n = x$, we get:
+   \[
+   x = \frac{c + x}{1 + x} \Rightarrow x + x^2 = c + x \Rightarrow x^2 - x + c = 0.
+   \]
+   The solutions to this quadratic are:
+   \[
+   x = \frac{1 \pm \sqrt{1 - 4c}}{2}.
+   \]
+   However, we need real solutions for $x$, thus we require $1 - 4c \geq 0$, which is not necessarily true for all $c \geq 0$. This calculation does not immediately suggest convergence to $\sqrt{c}$, but we look further.
+
+\textbf{2. Behavior near $\sqrt{c}$:} Instead, consider approximating $x_{n+1} \approx \sqrt{c}$:
+   \[
+   \sqrt{c} = \frac{c + \sqrt{c}}{1 + \sqrt{c}} \Rightarrow \sqrt{c} + \sqrt{c}^2 = c + \sqrt{c} \Rightarrow \sqrt{c}^2 = c,
+   \]
+   which is valid, indicating $\sqrt{c}$ could indeed be a fixed point. Let’s analyze local stability by evaluating the derivative of the function at $\sqrt{c}$.
+
+   Define $f(x) = \frac{c + x}{1 + x}$. Then,
+   \[
+   f'(x) = \frac{(c + x)'(1 + x) - (c + x)(1 + x)'}{(1 + x)^2} = \frac{1 \cdot (1 + x) - (c + x) \cdot 1}{(1 + x)^2} = \frac{1 + x - c - x}{(1 + x)^2} = \frac{1 - c}{(1 + x)^2}.
+   \]
+   At $x = \sqrt{c}$:
+   \[
+   f'(\sqrt{c}) = \frac{1 - c}{(1 + \sqrt{c})^2}.
+   \]
+   If $|f'(\sqrt{c})| < 1$, then $\sqrt{c}$ is an attracting fixed point. Note that for large $c$, the derivative at $\sqrt{c}$ suggests that the convergence could be slow since the denominator grows, making the absolute value of $f'(\sqrt{c})$ smaller.\\
+
+\textbf{Empirical Analysis}
+To test empirically, we can compare the convergence rate of this method to the Babylonian method for computing square roots (also known as Newton’s method for $f(x) = x^2 - c$). Newton's iteration scheme is given by:
+\[
+x_{n+1} = x_n - \frac{x_n^2 - c}{2x_n} = \frac{x_n^2 + c}{2x_n} = \frac{1}{2} \left(x_n + \frac{c}{x_n}\right).
+\]
+Newton's method typically converges quadratically, meaning the number of correct digits roughly doubles at each step under ideal conditions.
+
+We can compare this by numerically iterating both schemes starting from the same $x_0$ for a specific $c$ and observing the number of iterations required to achieve a certain accuracy. \\\\
+
+\subsubsection*{Q5: Find coefficients $(a, b, c)$ where the standard quadratic formula is grossly inaccurate when implemented in single precision. You will have to look up how to represent single precision numbers in Julia.}
+
+\textbf{Answer:}\\
+The standard quadratic formula, $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$, can be particularly inaccurate in single precision floating point arithmetic under specific conditions. This inaccuracy arises primarily from **catastrophic cancellation**, which occurs when subtracting two close numbers, diminishing the significant digits of the result. A notorious example is when $b^2 \gg 4ac$, making $\sqrt{b^2 - 4ac}$ and $b$ very close in magnitude but opposite in sign.
+
+\textbf{Conditions for Inaccuracy}
+To find coefficients $(a, b, c)$ that maximize this inaccuracy:
+1. Choose $b$ to be large relative to $a$ and $c$.
+2. Ensure $b^2 \approx 4ac$ as closely as possible to maximize cancellation.
+
+\textbf{Julia Representation}
+In Julia, single precision is represented using `Float32`. A standard way to define these numbers is by appending `f0` to the number, e.g., `1.0f0` for the float version of 1.0.
+
+\textbf{Example Coefficients}
+Let's choose:
+- \( a = 1.0f0 \)
+- \( b = 10^6f0 \) (a large number to enhance the effect of $b^2$)
+- \( c = 2.5 \times 10^{11}f0 \) (designed so $4ac \approx b^2$)
+
+Here, \( b^2 = (10^6)^2 = 10^{12} \) and \( 4ac = 4 \times 1.0 \times 2.5 \times 10^{11} = 10^{12} \), fulfilling the condition \( b^2 \approx 4ac \).
+
+\textbf{Calculating the Roots}
+Plugging these into the quadratic formula:
+- \( \sqrt{b^2 - 4ac} = \sqrt{10^{12} - 10^{12}} = 0 \) (approximation due to limited precision)
+- \( x = \frac{-10^6 \pm 0}{2} = -500000 \) (only one root due to cancellation)
+
+\textbf{Derivation}
+This calculation shows how a single root appears due to catastrophic cancellation, a gross inaccuracy since theoretically, there should be two distinct roots for different signs in $\pm$. Hence, $(a, b, c) = (1.0f0, 10^6f0, 2.5 \times 10^{11}f0)$ provides a specific case of gross inaccuracy in the quadratic formula when implemented in single precision in Julia. \\
+
+
+
+%% QUESTION 6 %%
+ \subsubsection*{Q6: Why does the product of the two roots of a quadratic equal $\frac{c}{a}$}
+
+\textbf{Answer:}
+
+Consider the quadratic equation in standard form:
+\[ ax^2 + bx + c = 0 \]
+
+\textbf{Step 1: Factorize the quadratic equation }(assuming \(a \neq 0\)):
+\[ x^2 + \frac{b}{a}x + \frac{c}{a} = 0 \]
+
+\textbf{Step 2: Use Vieta's Formulas}, which relate the coefficients of a polynomial to sums and products of its roots. For a quadratic equation \(x^2 + px + q = 0\), the roots \(\alpha\) and \(\beta\) satisfy:
+\[ \alpha + \beta = -p \quad \text{and} \quad \alpha\beta = q \]
+
+\textbf{Step 3: Apply Vieta's to our equation:}
+In the case of the quadratic \(x^2 + \frac{b}{a}x + \frac{c}{a} = 0\):
+\[ p = \frac{b}{a} \quad \text{and} \quad q = \frac{c}{a} \]
+
+Therefore, by Vieta's formulas:
+\[ \alpha\beta = \frac{c}{a} \]
+
+Thus, the product of the roots \(\alpha\) and \(\beta\) of the quadratic equation \(ax^2 + bx + c = 0\) is \(\frac{c}{a}\), proving the statement.
+
+% Q7
+\subsubsection*{Q7: Solving a cubic equation $ax^3 + bx^2 + cx + d = 0$ is much more complicated than solving a quadratic. Demonstrate that (a) the substitution $x = y - \frac{b}{3a}$ reduces the cubic to $y^3 + ey + f = 0$ for certain coefficients $e$ and $f$, (b) the further substitution $y = z - \frac{e}{3z}$ reduces this equation to $z^6 + fz^3 - \frac{e^3}{27} = 0$, and (c) the final substitution $w = z^3$ reduces the equation in $z$ to a quadratic in $w$, which can be explicitly solved. One can now reverse these substitutions and capture six roots, which collapse in pairs to at most three unique roots. Program your algorithm in Julia, and make sure that it captures complex as well as real roots.}
+
+To solve the cubic equation \(ax^3 + bx^2 + cx + d = 0\) using the substitutions described in the problem, let's perform the transformations step by step.
+
+\textbf{Step (a): Substitution \(x = y - \frac{b}{3a}\)}
+
+Substitute \(x = y - \frac{b}{3a}\) into the cubic equation. We aim to eliminate the \(y^2\) term:
+
+\[
+a\left(y - \frac{b}{3a}\right)^3 + b\left(y - \frac{b}{3a}\right)^2 + c\left(y - \frac{b}{3a}\right) + d = 0
+\]
+
+Expanding and simplifying while collecting terms free of \(y^2\) results in a new equation of the form:
+
+\[
+y^3 + Py + Q = 0
+\]
+
+Here, \(P\) and \(Q\) are new coefficients derived from \(a, b, c, d\), specifically:
+\[
+P = c - \frac{b^2}{3a} \quad \text{and} \quad Q = \frac{2b^3}{27a^2} - \frac{bc}{3a} + d
+\]
+
+\textbf{Step (b): Substitution \(y = z - \frac{P}{3z}\)}
+
+Next, substitute \(y = z - \frac{P}{3z}\) into the transformed cubic equation. This substitution aims to simplify \(y^3 + Py + Q = 0\) further into a form involving \(z\):
+
+\[
+\left(z - \frac{P}{3z}\right)^3 + P\left(z - \frac{P}{3z}\right) + Q = 0
+\]
+
+Multiplying through and simplifying, this leads to an equation of the form:
+
+\[
+z^6 + Qz^3 - \frac{P^3}{27} = 0
+\]
+
+\textbf{Step (c): Substitution \(w = z^3\)}
+
+Finally, let \(w = z^3\). This turns the equation into a quadratic in terms of \(w\):
+
+\[
+w^2 + Qw - \frac{P^3}{27} = 0
+\]
+
+This quadratic equation can be solved using the standard formula:
+
+\[
+w = \frac{-Q \pm \sqrt{Q^2 + 4 \cdot \frac{P^3}{27}}}{2}
+\]
+
+\textbf{Finding Roots}
+
+1. Solve for \(w\) using the quadratic formula.
+2. Back-substitute to find \(z\) (and hence \(y\), then \(x\)) using \(z = \sqrt[3]{w}\).
+3. This results in up to six values for \(z\), but pairs will collapse to three unique roots for \(y\), and hence three unique roots for \(x\).
+
+\textbf{Programming in Julia}
+
+Here’s a simple outline of how you might code this in Julia, capturing complex and real roots:
+
+\begin{minted}[breaklines]{julia}
+function solve_cubic(a, b, c, d)
+    P = c - b^2 / (3a)
+    Q = 2b^3 / (27a^2) - bc / (3a) + d
+    discriminant = Q^2 + 4 * P^3 / 27
+
+    w1 = (-Q + sqrt(discriminant)) / 2
+    w2 = (-Q - sqrt(discriminant)) / 2
+
+    z_roots = [w1^(1/3), -w1^(1/3), w2^(1/3), -w2^(1/3)]
+    y_roots = [z - P / (3z) for z in z_roots]
+    x_roots = y_roots .- b / (3a)
+
+    return x_roots
+end
+\end{minted}
+
+\subsubsection*{Q9: The prime number theorem says that the number of primes $\pi(n)$ between $1$ and $n$ is asymptotic to $\frac{n}{\ln n}$. Use the Sieve of Eratosthenes to check how quickly the ratio $\frac{\pi(n) \ln(n)}{n}$ tends to $1$.}
+
+\begin{minted}[breaklines]{julia}
+function sieve(n)
+    is_prime = trues(n)
+    is_prime[1] = false  # 1 is not a prime number
+    for i in 2:sqrt(n)
+        if is_prime[i]
+            for multiple in i*i:i:n
+                is_prime[multiple] = false
+            end
+        end
+    end
+    return count(is_prime)  # Returns the number of primes up to n
+end
+\end{minted}
+
+\subsubsection*{Q11: Show that the perimeter lengths $a_n$ and $b_n$ in Archimedes’ algorithm satisfy
+\[ a_n = m \tan \frac{\pi}{m} \quad\] and\[\quad b_n = m \sin \frac{\pi}{m}, \]
+where \( m = 2 \cdot 2^n \) is the number of sides of the two regular polygons. Use this representation and appropriate trigonometric identities to prove the recurrence relations (1.3) and (1.4).}
+
+To prove the recurrence relations given the perimeter lengths, we begin with:
+
+- \( a_n = m \tan \left( \frac{\pi}{m} \right) \)
+- \( b_n = m \sin \left( \frac{\pi}{m} \right) \)
+
+Where \( m = 2 \cdot 2^n \).
+
+\textbf{Recurrence Relation 1.3:}
+
+\[ a_{n+1} = \frac{2a_nb_n}{a_n + b_n} \]
+
+Given the definitions:
+- \( a_n = m \tan \left( \frac{\pi}{m} \right) \)
+- \( b_n = m \sin \left( \frac{\pi}{m} \right) \)
+
+Substitute into the recurrence relation:
+\[ a_{n+1} = \frac{2 \cdot m \tan \left( \frac{\pi}{m} \right) \cdot m \sin \left( \frac{\pi}{m} \right)}{m \tan \left( \frac{\pi}{m} \right) + m \sin \left( \frac{\pi}{m} \right)} \]
+\[ a_{n+1} = \frac{2m^2 \tan \left( \frac{\pi}{m} \right) \sin \left( \frac{\pi}{m} \right)}{m \left(\tan \left( \frac{\pi}{m} \right) + \sin \left( \frac{\pi}{m} \right)\right)} \]
+\[ a_{n+1} = \frac{2m \tan \left( \frac{\pi}{m} \right) \sin \left( \frac{\pi}{m} \right)}{\tan \left( \frac{\pi}{m} \right) + \sin \left( \frac{\pi}{m} \right)} \]
+
+This form illustrates that \( a_{n+1} \) is dependent on \( \tan \) and \( \sin \) values, scaled by \( m \), but needs further simplification or numerical computation to directly connect it to the tangent and sine of angles for \( m \) in the next iteration.
+
+\textbf{Recurrence Relation 1.4:}
+
+\[ b_{n+1} = \sqrt{a_{n+1}b_n} \]
+
+Using our previous result:
+\[ b_{n+1} = \sqrt{\left(\frac{2m \tan \left( \frac{\pi}{m} \right) \sin \left( \frac{\pi}{m} \right)}{\tan \left( \frac{\pi}{m} \right) + \sin \left( \frac{\pi}{m} \right)}\right) \cdot m \sin \left( \frac{\pi}{m} \right)} \]
+\[ b_{n+1} = m \sqrt{\frac{2 \tan \left( \frac{\pi}{m} \right) \sin^2 \left( \frac{\pi}{m} \right)}{\tan \left( \frac{\pi}{m} \right) + \sin \left( \frac{\pi}{m} \right)}} \]
+
+Here, \( b_{n+1} \) is derived from the geometric mean of \( a_{n+1} \) and \( b_n \), also indicating dependence on \( \tan \) and \( \sin \) values of \( \frac{\pi}{m} \). 
+
+These formulas confirm the relationship between the perimeter lengths and trigonometric functions, highlighting the complexity of Archimedes' algorithm when applied recursively through these geometric transformations.
+
+%q12
+\subsubsection*{Q12: Based on the trigonometric representations of the previous problem, show that $\frac{1}{3}a_n + \frac{2}{3}b_n$ is a much better approximation to $\pi$ than either $a_n$ or $b_n$ [142]. Check your theoretical conclusions by writing a Julia program that tracks all three approximations to $\pi$.}
+
+To demonstrate why \( \frac{1}{3}a_n + \frac{2}{3}b_n \) is a much better approximation to \( \pi \) than either \( a_n \) or \( b_n \) alone, consider the following:
+
+- \( a_n = m \tan \left(\frac{\pi}{m}\right) \)
+- \( b_n = m \sin \left(\frac{\pi}{m}\right) \)
+
+Given that the tangent function overestimates the angle for large angles while the sine function underestimates it, the weighted average of these using \( \frac{1}{3} \) and \( \frac{2}{3} \) potentially balances the overestimation and underestimation.
+
+\textbf{Theoretical Basis}
+
+Both \( \tan(\theta) \) and \( \sin(\theta) \) are approximations of \( \theta \) for small values of \( \theta \), but:
+- \( \tan(\theta) \) grows faster than \( \theta \) as \( \theta \) increases.
+- \( \sin(\theta) \) grows slower than \( \theta \) as \( \theta \) approaches \( \frac{\pi}{2} \).
+
+Thus, combining them in a weighted manner can potentially yield a more accurate estimate of \( \pi \) compared to using either alone.
+
+\textbf{Julia Program to Check the Approximations}
+
+Below is a simple Julia program to compute \( a_n \), \( b_n \), and \( \frac{1}{3}a_n + \frac{2}{3}b_n \) and compare these to \( \pi \):
+
+\begin{minted}[breaklines]{julia}
+using Plots
+
+function pi_approximations(n)
+    m = 2 * 2^n
+    a_n = m * tan(π / m)
+    b_n = m * sin(π / m)
+    mixed = (1/3) * a_n + (2/3) * b_n
+    
+    return a_n, b_n, mixed
+end
+
+function track_approximations(n)
+    approximations = [pi_approximations(i) for i in 1:n]
+    a_ns = [x[1] for x in approximations]
+    b_ns = [x[2] for x in approximations]
+    mixed = [x[3] for x in approximations]
+
+    plot(1:n, [a_ns, b_ns, mixed], label=["a_n" "b_n" "Mixed"], xlabel="n", ylabel="Value", title="Approximations to Pi")
+end
+
+# Track and plot approximations for n = 1 to 10
+track_approximations(10)
+\end{minted}
+
+\textbf{Expected Outcome}
+
+Upon running this Julia program, the plot will show the convergence of \( a_n \), \( b_n \), and \( \frac{1}{3}a_n + \frac{2}{3}b_n \) to \( \pi \). The mixed approximation should converge closer to \( \pi \) than either \( a_n \) or \( b_n \) alone, especially for larger \( n \), confirming the theoretical insights with empirical evidence.
+
+\subsubsection*{Q13: Consider evaluation of the polynomial
+\[ p(x) = a_0x^n + a_1x^{n-1} + \cdots + a_{n-1}x + a_n \]
+for a given value of \( x \). If one proceeds naively, then it takes \( n-1 \) multiplications to form the powers \( x^k = x \cdot x^{k-1} \) for \( 2 \leq k \leq n \), \( n \) multiplications to multiply each power \( x^k \) by its coefficient \( a_{n-k} \), and \( n \) additions to sum the resulting terms. This amounts to \( 3n - 1 \) operations in all. A more efficient method exploits the fact that \( p(x) \) can be expressed as 
+\[ p(x) = x(a_0x^{n-1} + a_1x^{n-2} + \cdots + a_{n-1}) + a_n \]
+\[ = x b_{n-1}(x) + a_n. \]
+Since the polynomial \( b_{n-1}(x) \) of degree \( n - 1 \) can be similarly reduced, a complete recursive scheme for evaluating \( p(x) \) is given by 
+\[ b_0(x) = a_0, \quad b_k(x) = x b_{k-1}(x) + a_k, \quad k = 1, \ldots, n. \]
+This scheme requires only \( n \) multiplications and \( n \) additions in order to compute \( p(x) = b_n(x). \) Program the scheme and extend it to the simultaneous evaluation of the derivative \( p'(x) \) of \( p(x). \)}\\
+
+The efficient method of evaluating the polynomial \(p(x)\) and its derivative \(p'(x)\) can be implemented using Horner's method. This method requires only \(n\) multiplications and \(n\) additions, significantly reducing computational overhead compared to the naive method.
+
+\textbf{Implementing Horner's Method in Julia:}
+
+Below is a simple Julia program that uses Horner's method to evaluate both \(p(x)\) and \(p'(x)\):
+
+\begin{minted}[breaklines]{julia}
+function evaluate_polynomial_and_derivative(coeffs, x)
+    p = coeffs[end]
+    dp = 0  # Derivative initialization
+    
+    # Horner's method loop for both p(x) and p'(x)
+    for i in length(coeffs)-1:-1:1
+        dp = dp * x + p
+        p = p * x + coeffs[i]
+    end
+    
+    return p, dp
+end
+
+# Example coefficients of the polynomial p(x) = 2x^3 - 6x^2 + 2x - 1
+coeffs = [2, -6, 2, -1]
+x = 3  # Value at which to evaluate the polynomial
+
+# Evaluating the polynomial and its derivative
+p, dp = evaluate_polynomial_and_derivative(coeffs, x)
+
+println("The polynomial evaluated at x = $x is $p")
+println("The derivative of the polynomial at x = $x is $dp")
+\end{minted}
+
+
+\begin{itemize}
+    \item \textbf{1. Horner's Scheme:} The function `evaluate\_polynomial\_and\_derivative` calculates the value of the polynomial and its derivative at a specific point \(x\) using Horner's method. This method evaluates the polynomial efficiently by nesting each term inside the next, reducing the number of necessary operations.
+    \item \textbf{2. Recursive Calculation:} The loop computes the polynomial value \(p\) and its derivative \(dp\) simultaneously. Each iteration incorporates the next coefficient from the polynomial into the running total for \(p\) and \(dp\), adjusting for the current power of \(x\).
+    \item \textbf{3. Efficiency:} This approach is significantly more efficient than calculating each term separately and then summing them up, as it consolidates the operations into a single traversal of the coefficients.
+\end{itemize}
+
+The output of the program provides the evaluated polynomial and its derivative at the chosen point \(x\), demonstrating the practical application of Horner's method.
+
+\subsubsection*{Q14: Consider a sequence \(x_1, \ldots, x_n\) of \(n\) real numbers. After you have computed the sample mean and variance
+\[ \mu_n = \frac{1}{n} \sum_{i=1}^n x_i \quad \text{and} \quad \sigma_n^2 = \frac{1}{n} \sum_{i=1}^n (x_i - \mu_n)^2, \]
+\text{suppose you are presented with a new observation \(x_{n+1}\). It is possible to adjust the sample mean and variance without revisiting all of the previous observations. Verify theoretically and then code the updates}
+\[ \mu_{n+1} = \frac{1}{n+1} (n\mu_n + x_{n+1}) \]
+\[ \sigma_{n+1}^2 = \frac{n}{n+1} \sigma_n^2 + \frac{1}{n} (x_{n+1} - \mu_n)^2. \]}
+
+\textbf{Theoretical Verification}
+
+Let's start by verifying the formulas for updating the mean and variance when a new data point is added.
+
+\textbf{Updating the Mean:}
+
+Given the current mean \(\mu_n\):
+\[ \mu_n = \frac{1}{n} \sum_{i=1}^n x_i \]
+
+When a new observation \(x_{n+1}\) is added:
+\[ \mu_{n+1} = \frac{1}{n+1} (x_1 + x_2 + \ldots + x_n + x_{n+1}) \]
+\[ = \frac{1}{n+1} \left( n\mu_n + x_{n+1} \right) \]
+\[ = \frac{n}{n+1} \mu_n + \frac{1}{n+1} x_{n+1} \]
+
+This matches the given update formula:
+\[ \mu_{n+1} = \frac{1}{n+1} (n\mu_n + x_{n+1}) \]
+
+\textbf{Updating the Variance:}
+
+Given the current variance \(\sigma_n^2\):
+\[ \sigma_n^2 = \frac{1}{n} \sum_{i=1}^n (x_i - \mu_n)^2 \]
+
+When a new observation \(x_{n+1}\) is added, the updated variance \(\sigma_{n+1}^2\) is calculated using the new mean \(\mu_{n+1}\) and includes the new observation \(x_{n+1}\):
+\[ \sigma_{n+1}^2 = \frac{1}{n+1} \sum_{i=1}^{n+1} (x_i - \mu_{n+1})^2 \]
+
+This can be rearranged and simplified (by expanding the square and using linearity of sums) to:
+\[ \sigma_{n+1}^2 = \frac{n}{n+1} \sigma_n^2 + \frac{1}{n+1} (x_{n+1} - \mu_n)^2 \]
+
+This formula reflects how the variance needs to account for the distance of the new observation from the previous mean, not the new mean, to avoid recalculating terms involving the old observations. The term \(\frac{1}{n}\) adjusts for the change in the number of observations in the variance calculation.
+
+\textbf{Julia Code Implementation}
+
+Here's a simple Julia function to update the mean and variance based on these formulas:
+
+\begin{minted}[breaklines]{julia}
+function update_stats(current_mean, current_variance, n, new_value)
+    new_mean = (n * current_mean + new_value) / (n + 1)
+    new_variance = (n * current_variance / (n + 1)) + ((new_value - current_mean)^2 / (n + 1))
+    return new_mean, new_variance
+end
+
+# Example usage
+n = 100  # Number of existing observations
+current_mean = 50.0  # Current mean of observations
+current_variance = 25.0  # Current variance of observations
+new_value = 48.0  # New observation
+
+new_mean, new_variance = update_stats(current_mean, current_variance, n, new_value)
+println("Updated Mean: $new_mean")
+println("Updated Variance: $new_variance")
+\end{minted}
+
+\newpage
+\section*{Chapter 2: Sorting}
+
+\textbf{Q2}: Show the worst case of quicksort takes on the order of \(n^2\) operations.
+
+\textbf{Answer:}
+
+To demonstrate that the worst-case scenario for the QuickSort algorithm takes on the order of \(n^2\) operations, we can construct an example and analyze its behavior. The worst-case scenario occurs when the pivot chosen at each step consistently divides the array into two unbalanced subarrays, one of size 
+\(n-1\) and the other of size 0.\\
+
+Here is an example that showcases the behavior. \\ 
+
+Consider an array of $n$ elements sorted in ascending order: \\ 
+
+\(1,2,3,4,5,...,n-1,n\) \\
+
+In this case, if we chose the lst element as the pivot, the partitioning step will result in one subarray of size \(n-1\), and one subarray of size 0. \\
+
+Now we have reduced the array with one less element. If we continue to always choose the last element as the pivot this behavior will repeat reducing our array size by a single entry. \\
+
+At each step, we have $n$ elements, and we perform $n$ comparisons to partition them. Since we repeat this process $n$ times (each time with \(n-1\) elements, then \(n-2\) and so on), the total number of comparisons become: \\ 
+
+\(n + (n-1) + (n-2) + ... + 1 \) which is equal to the arithmetic sequence \(\frac{n(n+1)}{2}\) \\
+
+Therefore, the number of comparisons in the worst case scenario is on the order of \(\frac{n(n+1)}{2}\) which is proportional to $n^2$ \\
+
+From this example we see why worst case scenario would result in $n^2$ operations. \\
+
+\textbf{\textit{- Simon Lee }} \\\\
+
+\textbf{Q4} Given a sorted array of numbers of lengthnand a number $c$, write a Julia program to find the pair of numbers in the array whose sum is closest to $c$. An efficient solution can find the pair in $O(n)$ time?\\
+
+\textbf{Answer}
+
+\begin{verbatim}
+    function find_closest_pair(arr::Vector{Int}, c::Int)
+        if length(arr) < 2
+            return (0, 0)  # Not enough elements for a pair
+        end
+        
+        left, right = 1, length(arr)
+        closest_diff = abs(arr[left] + arr[right] - c)
+        closest_pair = (arr[left], arr[right])
+        
+        while left < right
+            current_diff = abs(arr[left] + arr[right] - c)
+            if current_diff < closest_diff
+                closest_diff = current_diff
+                closest_pair = (arr[left], arr[right])
+            end
+            
+            if arr[left] + arr[right] < c
+                left += 1
+            else
+                right -= 1
+            end
+        end
+        
+        return closest_pair
+    end
+    
+    # Example of the question
+    arr = [1, 2, 4, 7, 10, 14]
+    c = 8
+    result = find_closest_pair(arr, c)
+    println("Closest pair to $c is $result")
+
+    >>> Closest pair to 8 is (1, 7)
+\end{verbatim}
+
+\textbf{\textit{- Simon Lee }} \\\\
+
+\textbf{Q6:} Suppose you are given two ordered arrays $x$ and $y$ of integers. If these represent integer sets, write Julia functions to find their union, intersection, and set difference. Do not use existing Julia functions for set operations 
+
+\textbf{Answer} 
+\begin{verbatim}
+function set_union(x::Array, y::Array)
+    """
+    Compute the set union of two sets that are represented as ordered (1xN) integer arrays.
+    Takes advantage of the ordered property of the arrays by identifying elements in common
+    by moving along the elements of each input array and assembling the union in order. 
+    RETURNS the set union as an Array matching the input types.
+    """
+    z = Array{Int64}(undef, 1, size(x, 2) + size(y, 2))
+    # Initialize indices
+    i = 1 # index for set x
+    j = 1 # index for set y
+    k = 1 # index for set z (union set)
+
+    # Iterate down the input arrays simultaneously keeping track of union's order
+    while i <= length(x) && j <= length(y)
+        # Identify next element in union's order and insert into union
+        if x[i] < y[j]
+            z[k] = x[i]
+            i = i + 1
+        elseif x[i] > y[j]
+            z[k] = y[j]
+            j = j + 1
+        elseif x[i] == y[j]
+            z[k] = x[i]
+            i = i + 1
+            j = j + 1
+        end
+        k = k + 1
+    end
+    
+    # Put any remaining entries into union
+    if i > length(x)
+        z[k:k+(length(y)-j)] = y[j:end] # put rest of y into z
+        k = k + (length(y)-j)
+    elseif j > length(y)
+        z[k:k+(length(x)-i)] = x[i:end] # put rest of x into z
+        k = k+(length(x)-i)
+    end
+
+    # If there were duplicates, pre-allocated size of z will have been 
+    # too long, so we now put the actual values into an output array
+    union_array = z[1:k]
+
+    return Array(union_array')
+end
+
+function set_intersection(x::Array, y::Array)
+    """
+    Compute the set intersection of two sets that are represented as ordered (1xN) integer arrays.
+    Takes advantage of the ordered property of the arrays by identifying elements in common
+    by moving along the elements of each input array and assembling the intersection in order. 
+    RETURNS the set intersection as an Array to match the input types.
+    """
+    z = Int64[] # Initialize intersection as a vector for ease of internal use
+
+    # Initialize indices
+    i = 1 # index for set x
+    j = 1 # index for set y
+
+    # Iterate down the input arrays simultaneously keeping track of intersection's order
+    while i <= length(x) && j <= length(y)
+        # Identify next element in union's order and insert into intersection
+        if x[i] < y[j]
+            i = i + 1
+        elseif x[i] > y[j]
+            j = j + 1
+        elseif x[i] == y[j]
+            push!(z, x[i])
+            i = i + 1
+            j = j + 1
+        end
+    end
+
+    return Array(z')
+end
+
+function set_difference(x::Array, y::Array)
+    """
+    Compute the set difference (x - y) of two sets (x,y) that are represented as ordered (1xN) 
+    integer arrays. Takes advantage of the ordered property through use of the above-defined
+    intersection function. 
+    RETURNS the set difference as an Array to match the input types.
+    """
+    # Initialize set difference as a vector for ease of internal use
+    z = Int64[]
+
+    # Obtain set intersection to identify shared elements
+    inter = set_intersection(x,y)
+
+    # Iterate along array x, putting elements into the output array z which are not in y
+    i = 1 # Index for set x
+    j = 1 # Index for intersection array
+    while j <= length(inter)
+        if x[i] < inter[j]
+            push!(z, x[i])
+            i+=1
+        else # shared element! (Because inter[j]>x[i] can't happen, since inter is a subset of x)
+            i+=1
+            j+=1
+        end
+    end
+
+    # Add any remaining elements of x to z
+    append!(z,x[i:end])
+
+    return Array(z')
+
+end
+    
+\end{verbatim}
+
+And now some examples of their use:
+
+Example 1:
+\begin{verbatim}
+a = [-1 0 13 22 50 64 78 88 89 90 91 92] # notice presence of duplicates
+b = [20 22 64 75 114 116]
+c = set_union(a,b)
+print("Union = ")
+println(c)
+print()
+
+d = set_intersection(a,b)
+print("Intersection = ")
+println(d)
+print()
+
+e = set_difference(a,b)
+print("Set Difference = ")
+println(e)
+
+>>> Union = [-1 0 13 20 22 50 64 75 78 88 89 90 91 92 114 116]
+Intersection = [22 64]
+Set Difference = [-1 0 13 50 78 88 89 90 91 92]
+\end{verbatim}
+
+Example 2:
+\begin{verbatim}
+A = [-31 -13 0 11 13 14]
+B = [-30 -24 -13 11 13 14]
+print("Union = ")
+println(set_union(A,B))
+print()
+
+print("Intersection = ")
+println(set_intersection(A,B))
+print()
+
+print("Set Difference A - B = ")
+println(set_difference(A,B))
+print("Set Difference B - A = ")
+println(set_difference(B,A))
+print()
+
+>>> Union = [-31 -30 -24 -13 0 11 13 14]
+Intersection = [-13 11 13 14]
+Set Difference A - B = [-31 0]
+Set Difference B - A = [-30 -24]
+\end{verbatim}
+
+\textbf{\textit{- Zach Schlamowitz }} \\\\
+
+\newpage
+
+\section*{Chapter 5: Solutions of Linear Equations}
+
+\subsubsection*{Q2: Verify our contention that it takes about \(\frac{2}{3} n^3\) arithmetic operations to form the LU decomposition of an \(n \times n\) matrix.}
+
+To verify the \(\frac{2}{3} n^3\) arithmetic operations claim for the LU decomposition of an \(n \times n\) matrix, let's perform the actual calculation by analyzing the operation count required in each step of the decomposition.
+
+\textbf{Operation Count Analysis for LU Decomposition}
+
+\textbf{1. Gaussian Elimination Process:}
+   In LU decomposition, Gaussian elimination is used to form the lower triangular (L) and upper triangular (U) matrices. Here's how the operations break down for each step:
+
+\textbf{2. Eliminating Elements:}
+   For each pivot (diagonal element) from the first row/column to the \((n-1)\)-th row/column:
+   - To eliminate entries below each pivot, you need to perform subtraction operations on rows below the pivot row.
+   - For each pivot in the \(i\)-th column:
+     - There are \(n-i\) elements to eliminate (below the pivot).
+     - For each element, you update \(n-i\) elements in the row.
+     - Each update requires a multiplication and a subtraction.
+
+\textbf{3. Calculating Operations:}
+   The total number of arithmetic operations for eliminating elements below each pivot is calculated as:
+   \[
+   \text{Operations for column } i = (n-i) \times (n-i) \times 2
+   \]
+   where \( (n-i) \) is the number of elements to eliminate, and each element requires \( (n-i) \) multiplications and \( (n-i) \) subtractions.
+
+\textbf{4. Summing Up Operations:}
+   Summing the operations for each column from 1 to \(n-1\) gives:
+   \[
+   \text{Total operations} = \sum_{i=1}^{n-1} 2(n-i)^2 = 2\sum_{k=1}^{n-1} k^2
+   \]
+   The sum of squares of the first \(n-1\) integers is:
+   \[
+   \sum_{k=1}^{n-1} k^2 = \frac{(n-1)n(2n-1)}{6}
+   \]
+   Substituting into the total operations formula:
+   \[
+   \text{Total operations} = 2 \times \frac{(n-1)n(2n-1)}{6}
+   \]
+
+\textbf{5. Simplifying to Show \(\frac{2}{3} n^3\):}
+   For large \(n\), the formula simplifies (by approximating \(n-1 \approx n\)):
+   \[
+   \text{Total operations} \approx 2 \times \frac{n \times n \times (2n)}{6} = \frac{2n^3}{3}
+   \]
+
+This theoretical analysis shows that the number of operations required for LU decomposition indeed approaches \(\frac{2}{3} n^3\) for a large \(n\), which aligns with the contention. This count primarily accounts for the multiplications and subtractions required to zero out the matrix elements below each pivot, considering each pivot's influence on the subsequent rows and columns during the elimination process.
+
+\subsubsection*{Q3: Prove that (a) the product of two upper-triangular matrices is upper triangular, (b) the inverse of an upper-triangular matrix is upper triangular, (c) if the diagonal entries of an upper-triangular matrix are positive, then the diagonal entries of its inverse are positive, and (d) if the diagonal entries of an upper-triangular matrix are unity, then the diagonal entries of its inverse are unity. Similar statements apply to lower-triangular matrices.}
+
+Here we'll prove the properties of upper-triangular matrices step-by-step, considering each sub-question.
+
+\textbf{(a)} The product of two upper-triangular matrices is upper triangular
+
+\textbf{Proof:}
+Let \( A \) and \( B \) be two upper-triangular \( n \times n \) matrices, meaning all entries below the diagonal in both matrices are zero, i.e., \( A_{ij} = 0 \) and \( B_{ij} = 0 \) for \( i > j \). The product \( C = AB \) has entries \( C_{ij} \) defined as:
+\[ C_{ij} = \sum_{k=1}^n A_{ik}B_{kj} \]
+For \( i > j \), \( A_{ik} = 0 \) for \( k < i \) (since \( A \) is upper triangular) and \( B_{kj} = 0 \) for \( k > j \) (since \( B \) is upper triangular). Since \( i > j \), all terms in the sum involve a zero from either \( A_{ik} \) or \( B_{kj} \), making \( C_{ij} = 0 \) for \( i > j \). Thus, \( C \) is upper triangular.
+
+\textbf{(b)} The inverse of an upper-triangular matrix is upper triangular
+
+\textbf{Proof:}
+Consider an upper-triangular matrix \( A \) with non-zero diagonal entries (ensuring it's invertible). The inverse \( A^{-1} \) can be found such that \( AA^{-1} = I \). Since the diagonal entries are non-zero, \( A^{-1} \) must "undo" the multiplicative effect of \( A \), which can be achieved only if \( A^{-1} \) is also upper-triangular. This is because any lower components would result in non-zero entries below the diagonal in the product \( I \).
+
+\textbf{(c)} If the diagonal entries of an upper-triangular matrix are positive, then the diagonal entries of its inverse are positive
+
+\textbf{Proof:}
+For an upper-triangular matrix \( A \) with positive diagonal entries, each diagonal element of \( A^{-1} \), say \( (A^{-1})_{ii} \), is computed as the reciprocal of the corresponding diagonal element of \( A \) (in the simplest case, without off-diagonal elements). Since the reciprocal of a positive number is positive, \( (A^{-1})_{ii} > 0 \).
+
+\textbf{(d)} If the diagonal entries of an upper-triangular matrix are unity, then the diagonal entries of its inverse are unity
+
+\textbf{Proof:}
+For an upper-triangular matrix \( A \) where all diagonal entries are 1 (\( A_{ii} = 1 \)), each corresponding diagonal entry of \( A^{-1} \) must also be 1 to satisfy \( AA^{-1} = I \). Specifically, \( (A^{-1})_{ii} \cdot A_{ii} = 1 \cdot 1 = 1 \), ensuring that \( (A^{-1})_{ii} = 1 \).
+
+\subsubsection*{Q4: Demonstrate that an orthogonal upper-triangular matrix is diagonal.}
+
+To demonstrate that an orthogonal upper-triangular matrix is diagonal, consider an orthogonal matrix \( Q \) that is also upper-triangular. Recall that an orthogonal matrix satisfies \( Q^TQ = I \), where \( I \) is the identity matrix.
+
+\textbf{Step-by-Step Proof}
+
+\textbf{1. Orthogonality and Upper-Triangular Definition:}
+   Let \( Q \) be an upper-triangular matrix. This means all entries below the diagonal are zero:
+   \[
+   Q = \begin{bmatrix}
+   q_{11} & q_{12} & \cdots & q_{1n} \\
+   0 & q_{22} & \cdots & q_{2n} \\
+   \vdots & \vdots & \ddots & \vdots \\
+   0 & 0 & \cdots & q_{nn}
+   \end{bmatrix}
+   \]
+
+\textbf{2. Orthogonality Condition:}
+   The matrix \( Q \) being orthogonal implies \( Q^TQ = I \). This leads to specific conditions on the elements of \( Q \):
+   \[
+   (Q^TQ)_{ij} = \sum_{k=1}^n Q^T_{ik}Q_{kj} = \delta_{ij}
+   \]
+   where \( \delta_{ij} \) is the Kronecker delta, which is 1 if \( i=j \) and 0 otherwise.
+
+\textbf{3. Evaluating \( Q^TQ \):}
+   The product \( Q^TQ \) for an upper-triangular \( Q \) can be written explicitly. Note that \( Q^T \) is lower-triangular. The \( (i, j) \) entry of \( Q^TQ \) involves summing the products of elements in the \( i \)-th row of \( Q^T \) and the \( j \)-th column of \( Q \):
+   \[
+   (Q^TQ)_{ij} = \sum_{k=\max(i,j)}^n Q^T_{ik}Q_{kj}
+   \]
+   This sum is non-zero only when \( i = j \) due to the zero entries below the diagonal in \( Q^T \) and above the diagonal in \( Q \).
+
+\textbf{4. Zero Non-Diagonal Elements:}
+   For \( i \neq j \), \( Q^T_{ik}Q_{kj} \) involves products of elements where at least one of the terms is zero due to the triangular structure. Thus, \( (Q^TQ)_{ij} = 0 \) for all \( i \neq j \).
+
+\textbf{5. Diagonal Elements:}
+   The diagonal entries of \( Q^TQ \) (i.e., \( (Q^TQ)_{ii} \)) equate to the sum of squares of the elements in the \( i \)-th row/column of \( Q \) due to orthogonality:
+   \[
+   (Q^TQ)_{ii} = \sum_{k=i}^n Q_{ki}^2 = 1
+   \]
+   Since \( Q \) is upper-triangular, this simplifies to \( Q_{ii}^2 = 1 \), implying \( Q_{ii} = \pm 1 \) and all other off-diagonal entries in the same row and column must be zero to meet the orthogonality condition.
+
+\text{Thus, an orthogonal upper-triangular matrix must have zeros in all off-diagonal entries, proving it is diagonal.}
+
+\subsubsection*{Q5: Prove that the set of permutation matrices \(P\) forms a finite group closed under the formation of products and inverses. How many \(n \times n\) permutation matrices exist? Recall that a permutation \(\sigma\) is a one-to-one map of the set \(\{1, 2, \ldots, n\}\) onto itself.}
+
+\textbf{Proof and Count of Permutation Matrices}
+
+\textbf{Proof that Permutation Matrices Form a Group}
+
+\textbf{1. Closure}: The product of two permutation matrices is another permutation matrix. This is because the multiplication corresponds to composing two permutations, which results in another permutation.
+
+\textbf{2. Associativity}: Matrix multiplication is associative.
+
+\textbf{3. Identity Element}: The identity matrix is a permutation matrix (it corresponds to the identity permutation) and is the identity element in matrix multiplication.
+
+\textbf{4. Inverses}: Every permutation matrix has an inverse, which is also a permutation matrix. This inverse corresponds to the inverse permutation, achieved by reversing the permutation.
+
+This confirms that permutation matrices form a group under matrix multiplication.
+
+\textbf{Counting \(n \times n\) Permutation Matrices}
+
+The number of \(n \times n\) permutation matrices corresponds to the number of different ways to permute \(n\) distinct objects, which is \(n!\) (n factorial). Each permutation matrix is a one-to-one representation of one permutation of the set \(\{1, 2, \ldots, n\}\).
+
+\text{The set of \(n \times n\) permutation matrices forms a group under multiplication, closed under products and inverses, with \(n!\) elements corresponding to each possible permutation of \(\{1, 2, \ldots, n\}\).}
+
+
+\subsubsection*{Q7: Find by hand the Cholesky decomposition of the matrix}
+ \[
+   A=
+  \left[ {\begin{array}{cc}
+   2 & -2 \\
+   -2 & 5 \\
+  \end{array} } \right]
+\]
+
+\textbf{Answer:}
+
+ \[
+   A=
+  \left[ {\begin{array}{cc}
+   a_{11} & a_{12} \\
+   a_{21} & a_{22} \\
+  \end{array} } \right]
+\]
+To solve $L_{11}$
+\[
+L_{11} = \sqrt{a_{11}} = \sqrt{2}
+\]
+To solve $L_{21}$
+\[
+L_{21} = \frac{a_{21}}{L_{11}} = \frac{-2}{\sqrt{2}}
+\]
+To solve $L_{22}$
+\[
+L_{22} = \sqrt{a_{22} - L_{21}l_{21}}
+\]
+
+\[
+L_{22} = \sqrt{5 - \frac{-2}{\sqrt{2}} \frac{-2}{\sqrt{2}}}
+\]
+
+\[
+L_{22} = \sqrt{5 - -\frac{\sqrt{2}\sqrt{2}}{\sqrt{2}} -\frac{\sqrt{2}\sqrt{2}}{\sqrt{2}}}
+\]
+\[
+L_{22} = \sqrt{5 - \sqrt{2}\sqrt{2}}
+\]
+\[
+L_{22} = \sqrt{5 - 2}
+\]
+
+\[
+L_{22} = \sqrt{3}
+\]
+
+You can find $L$ and $L^T$ by plugging it into the following equation 
+
+\[
+   L=
+  \left[ {\begin{array}{cc}
+   \sqrt{2} & 0 \\
+    \frac{-2}{\sqrt{2}} & \sqrt{3} \\
+  \end{array} } \right]
+\]
+\[
+   L^T=
+  \left[ {\begin{array}{cc}
+   \sqrt{2} & \frac{-2}{\sqrt{2}} \\
+    0 & \sqrt{3} \\
+  \end{array} } \right]
+\]
+
+\subsubsection*{Q8: Show that the matrices
+\[ B = \begin{pmatrix} 1 & 0 & 0 \\ 2 & 0 & 0 \\ 2 & 3 & 2 \end{pmatrix}, \quad C = \begin{pmatrix} 1 & 0 & 0 \\ 2 & 0 & 0 \\ 2 & 0 & \sqrt{13} \end{pmatrix} \]
+\text{are both valid Cholesky-like decompositions of the positive semidefinite matrix}}
+\[ A = \begin{pmatrix} 1 & 2 & 2 \\ 2 & 4 & 4 \\ 2 & 4 & 17 \end{pmatrix}. \]
+
+To prove that matrices \(B\) and \(C\) are valid Cholesky-like decompositions of matrix \(A\), we need to show that \(B \cdot B^T = A\) and \(C \cdot C^T = A\). 
+
+\textbf{Matrix \(B\)}
+
+Given:
+\[ B = \begin{pmatrix} 1 & 0 & 0 \\ 2 & 0 & 0 \\ 2 & 3 & 2 \end{pmatrix} \]
+
+Calculate \(B \cdot B^T\):
+\[ B^T = \begin{pmatrix} 1 & 2 & 2 \\ 0 & 0 & 3 \\ 0 & 0 & 2 \end{pmatrix} \]
+
+Multiplying \(B\) by \(B^T\):
+\[ B \cdot B^T = \begin{pmatrix} 1 & 2 & 2 \\ 2 & 4 & 4 \\ 2 & 4 & 17 \end{pmatrix} \]
+
+Steps:
+\begin{itemize}
+    \item 1. For element (1,1): \(1 \times 1 + 0 \times 0 + 0 \times 0 = 1\)
+    \item 2. For element (1,2): \(1 \times 2 + 0 \times 0 + 0 \times 0 = 2\) (and symmetrically for (2,1))
+    \item 3. For element (1,3): \(1 \times 2 + 0 \times 3 + 0 \times 2 = 2\) (and symmetrically for (3,1))
+    \item 4. For element (2,2): \(2 \times 2 + 0 \times 0 + 0 \times 0 = 4\)
+    \item 5. For element (2,3): \(2 \times 2 + 0 \times 3 + 0 \times 2 = 4\) (and symmetrically for (3,2))
+    \item 6. For element (3,3): \(2 \times 2 + 3 \times 3 + 2 \times 2 = 17\)
+\end{itemize}
+
+Thus, \(B \cdot B^T = A\), confirming \(B\) is a valid decomposition.
+
+\textbf{Matrix \(C\)}
+
+Given:
+\[ C = \begin{pmatrix} 1 & 0 & 0 \\ 2 & 0 & 0 \\ 2 & 0 & \sqrt{13} \end{pmatrix} \]
+
+Calculate \(C \cdot C^T\):
+\[ C^T = \begin{pmatrix} 1 & 2 & 2 \\ 0 & 0 & 0 \\ 0 & 0 & \sqrt{13} \end{pmatrix} \]
+
+Multiplying \(C\) by \(C^T\):
+\[ C \cdot C^T = \begin{pmatrix} 1 & 2 & 2 \\ 2 & 4 & 4 \\ 2 & 4 & 17 \end{pmatrix} \]
+
+Steps:
+\begin{itemize}
+    \item 1. For element (1,1): \(1 \times 1 + 0 \times 0 + 0 \times 0 = 1\)
+    \item 2. For element (1,2): \(1 \times 2 + 0 \times 0 + 0 \times 0 = 2\) (and symmetrically for (2,1))
+    \item 3. For element (1,3): \(1 \times 2 + 0 \times 0 + 0 \times \sqrt{13} = 2\) (and symmetrically for (3,1))
+    \item 4. For element (2,2): \(2 \times 2 + 0 \times 0 + 0 \times 0 = 4\)
+    \item 5. For element (2,3): \(2 \times 2 + 0 \times 0 + 0 \times \sqrt{13} = 4\) (and symmetrically for (3,2))
+    \item 6. For element (3,3): \(2 \times 2 + 0 \times 0 + \sqrt{13} \times \sqrt{13} = 17\)
+\end{itemize}
+
+Thus, \(C \cdot C^T = A\), confirming \(C\) is also a valid decomposition.
+
+\subsubsection*{Suppose that the matrix \( A = (a_{ij}) \) is banded in the sense that \( a_{ij} = 0 \) when \( |i - j| > d \). Prove that the Cholesky decomposition \( L = (l_{ij}) \) also satisfies the band condition \( l_{ij} = 0 \) when \( |i - j| > d \).}
+
+\textbf{Proof: Cholesky Decomposition of a Banded Matrix}
+
+We need to demonstrate that if \(A\) is a banded matrix with bandwidth \(d\) (i.e., \(a_{ij} = 0\) when \(|i - j| > d\)), then its Cholesky decomposition \(L\) will also satisfy this band condition.
+
+\textbf{Step 1: Understanding Cholesky Decomposition}
+
+Cholesky decomposition of a positive definite matrix \(A\) produces a lower triangular matrix \(L\) such that:
+\[ A = LL^T \]
+Each element of \(A\) can be written in terms of elements of \(L\) as:
+\[ a_{ij} = \sum_{k=1}^{\min(i,j)} l_{ik}l_{jk} \]
+
+\textbf{Step 2: Zero Conditions in \(A\)}
+
+Given \(a_{ij} = 0\) for \(|i - j| > d\), this impacts the computation of \(L\) as follows:
+- For \(i > j + d\), \(a_{ij} = 0\) and thus:
+\[ \sum_{k=1}^j l_{ik}l_{jk} = 0 \]
+
+\textbf{Step 3: Computation of \(L\) and Bandwidth}
+
+We proceed by induction:
+
+\textbf{Base Case:} For \(i = 1\), \(l_{11}\) is determined by \(a_{11}\) and does not depend on any zero conditions outside the bandwidth since there are no such elements.
+
+\textbf{Inductive Step: }Assume that for all \(k < i\), \(l_{kj} = 0\) when \(|k - j| > d\). Now consider \(l_{ij}\) for \(i > j + d\):
+  \begin{itemize}
+      \item - From the definition of \(L\), \(l_{ij}\) contributes to \(a_{ij}\) only if \(l_{ij} \neq 0\) and \(j \leq i\). However, if \(i > j + d\), we know \(a_{ij} = 0\).
+      \item - \(l_{ij}\) is calculated using the formula derived from setting \(a_{ij}\) equal to the sum of products of terms from \(L\), which includes the condition:
+      \item \[ l_{ij} = \frac{1}{l_{jj}} \left(a_{ij} - \sum_{k=1}^{j-1} l_{ik}l_{jk}\right) \]
+      \item Given that \(l_{ik}\) and \(l_{jk}\) for \(k < j\) adhere to the band condition by inductive hypothesis, and \(a_{ij} = 0\) for \(i > j + d\), all terms in the sum are zero, thereby enforcing \(l_{ij} = 0\) for \(i > j + d\).
+  \end{itemize}
+
+\subsubsection*{Q11: Show that inversion of an arbitrary square matrix \(B\) can be reduced to inversion of a positive definite matrix via the identity \(B^{-1} = B^* (B B^*)^{-1}\). Since multiplication of two \(n \times n\) matrices has computational complexity \(O(n^3)\), matrix inversion also has computational complexity \(O(n^3)\). For the record, this is definitely not the preferred method of matrix inversion.}
+
+\textbf{Proof: Inversion of an Arbitrary Square Matrix Using Positive Definite Matrix}
+
+\textbf{The Identity}
+
+The identity to prove is:
+\[ B^{-1} = B^* (BB^*)^{-1} \]
+where \( B^* \) is the conjugate transpose of \( B \), and \( B \) is any arbitrary square matrix.
+
+\textbf{Step 1: Verification of the Identity}
+
+To verify the correctness of the identity, multiply \( B \) by \( B^{-1} \) as defined:
+\[ B B^{-1} = B [B^* (BB^*)^{-1}] \]
+Using associativity of matrix multiplication:
+\[ = (BB^*)(BB^*)^{-1} \]
+Since \( (BB^*) (BB^*)^{-1} = I \), where \( I \) is the identity matrix, this shows:
+\[ B B^{-1} = I \]
+Thus, \( B^{-1} = B^* (BB^*)^{-1} \) correctly computes the inverse of \( B \).
+
+\textbf{Step 2: Positive Definiteness of \( BB^* \)}
+
+We must show that \( BB^* \) is a positive definite matrix:
+\begin{itemize}
+    \item 1. Hermitian: \( BB^* \) is Hermitian because \( (BB^*)^* = (B^*)^*B^* = BB^* \).
+    \item 2. Positive Semi-Definite: For any non-zero vector \( x \), \( x^*BB^*x \) is non-negative. Specifically,
+     \[ x^*BB^*x = (B^*x)^*(B^*x) = \|B^*x\|^2 \geq 0 \]
+     Moreover, if \( B \) is invertible, \( B^*x \neq 0 \) for all non-zero \( x \), ensuring \( \|B^*x\|^2 > 0 \), making \( BB^* \) positive definite.
+\end{itemize}
+
+\textbf{Step 3: Computational Complexity}
+
+\begin{itemize}
+    \item 1. Matrix Multiplication: The multiplication \( BB^* \) involves \( O(n^3) \) operations for an \( n \times n \) matrix.
+    \item 2. Matrix Inversion: Inverting \( BB^* \), which is a positive definite matrix, also requires \( O(n^3) \) operations.
+\end{itemize}
+
+\subsubsection*{Q13: Find the QR Decomposition of the matrix}
+
+\[
+  X=
+  \left[ {\begin{array}{ccc}
+   1 & 3 & 3\\
+   1 & 3 & 1\\
+   1 & 1 & 5\\
+   1 & 1 & 3\\
+  \end{array} } \right]
+\]
+
+\textbf{Answer:}\\
+To solve $\mu_{1}$
+\[
+\mu_{1} = a_{1} \textbf{(1,1,1,1)}
+\]
+To solve $e_{1}$
+\[
+e_{1} = \frac{\mu_{1}}{||\mu_{1}||} = \frac{1}{\sqrt{4}} (1,1,1,1) 
+\]
+\[
+e_{1}= (\frac{1}{2}, \frac{1}{2}, \frac{1}{2}, \frac{1}{2})
+\]
+To solve $\mu_{2}$
+\[
+\mu_2 = a_2 - (a_2 \cdot e_1)e_1, a_2 = (3,3,1,1)
+\]
+\[
+\mu_2 = (3,3,1,1) - 4(\frac{1}{2}, \frac{1}{2}, \frac{1}{2}, \frac{1}{2})
+\]
+\[
+\mu_2 = (3,3,1,1) - (2,2,2,2)
+\]
+\[
+\mu_2 = \textbf{(1,1,-1,-1)}
+\]
+To solve $e_{2}$
+\[
+e_2 = \frac{\mu_2}{||\mu_2||} = \frac{1}{\sqrt{4}} = \frac{1}{2}(1,1,-1,-1)
+\]
+\[
+e_2 = (\frac{1}{2}, \frac{1}{2}, -\frac{1}{2},- \frac{1}{2})
+\]
+To solve $\mu_{3}$
+\[
+\mu_3 = a_3 - (a_3 \cdot e_1)e_1 - (a_3 \cdot e_2)e_2
+\]
+\[
+\mu_3 = (3,1,5,3) - 6(\frac{1}{2},\frac{1}{2},\frac{1}{2},\frac{1}{2}) - (-2)(\frac{1}{2}, \frac{1}{2}, -\frac{1}{2},- \frac{1}{2})
+\]
+\[
+\mu_3 = (3,1,5,3) - (3,3,3,3) + (1,1,-1,-1)
+\]
+\[
+\mu_3 = (1 -1, 1, -1)
+\]
+To solve $e_{3}$
+\[
+e_3 = \frac{\mu_3}{||\mu_3||} = \frac{1}{\sqrt{4}} = \frac{1}{2}(1, -1, 1, -1)
+\]
+\[
+e_3 = (\frac{1}{2}, - \frac{1}{2}, \frac{1}{2}, -\frac{1}{2})
+\]
+We can find Q using the following formula
+\[
+Q=[e_1^T | e_2^T | e_3^T]
+\]
+\[
+  Q=
+  \left[ {\begin{array}{ccc}
+   \frac{1}{2} & \frac{1}{2} & \frac{1}{2}\\
+   \frac{1}{2} & \frac{1}{2} & -\frac{1}{2}\\
+   \frac{1}{2} & -\frac{1}{2} & \frac{1}{2}\\
+   \frac{1}{2} & -\frac{1}{2} & -\frac{1}{2}\\
+  \end{array} } \right]
+\]
+Using the formula 
+\[
+  R=
+  \left[ {\begin{array}{ccc}
+   a_1 \cdot e_1 & a_2 \cdot e_1 & a_3 \cdot e_1\\
+   0 & a_2 \cdot e_2 & a_3 \cdot e_2\\
+   0 & 0 & a_3 \cdot e_3\\
+  \end{array} } \right]
+\]
+
+And what we know
+\[
+a_{1} = (1,1,1,1)
+\]
+\[
+a_{2} = (3,3,1,1)
+\]
+\[
+a_{3} = (3,1,5,3)
+\]
+We can find R
+
+\[
+  R=
+  \left[ {\begin{array}{ccc}
+   2 & 4 & 6\\
+   0 & 2 & -2\\
+   0 & 0 & 2 \\
+  \end{array} } \right]
+\]
+
+\subsubsection*{Q14: In linear regression find \(\hat{\beta}\), the predicted values \(\hat{y}\), the residual vector \(r\), and the residual sum of squares \(\|r\|^2\) in terms of the extended QR decomposition
+\[
+(X, y) = (Q, q) \left(\begin{array}{cc}
+R & r \\
+0 & d
+\end{array}\right).
+\]}
+
+To solve the problem, let's start by analyzing the extended QR decomposition given:
+
+\[ (X, y) = (Q, q) \left(\begin{array}{cc} R & r \\ 0 & d \end{array}\right) \]
+
+This can be expanded as:
+
+\[ X = QR \quad \text{and} \quad y = Qr + qd \]
+
+\textbf{Step 1:} Finding \(\hat{\beta}\)
+
+The estimate of \(\beta\) in linear regression using QR decomposition typically involves solving the equation:
+
+\[ R\hat{\beta} = Q^T y \]
+
+Given that \( X = QR \), this can be interpreted as solving the upper triangular system \( R \) from the decomposition of \( X \) against the projection of \( y \) onto the column space of \( Q \):
+
+1. Calculate \( Q^T y \), which is the projection of \( y \) onto the subspace spanned by the columns of \( Q \), leading to:
+
+\[ Q^T y = Q^T (Qr + qd) = Q^T Q r + Q^T q d \]
+
+Since \( Q \) is orthogonal, \( Q^T Q = I \), and assuming \( q \) is orthogonal to \( Q \), \( Q^T q = 0 \). Thus, we simplify this to:
+
+\[ Q^T y = r \]
+
+2. Solving for \(\hat{\beta}\):
+
+\[ R\hat{\beta} = r \]
+
+\(\hat{\beta}\) can be found by solving this system using back substitution since \( R \) is an upper triangular matrix.
+
+\textbf{Step 2:} Finding the Predicted Values \(\hat{y}\)
+
+The predicted values \(\hat{y}\) are given by:
+
+\[ \hat{y} = X\hat{\beta} = QR\hat{\beta} \]
+
+Since we know \(\hat{\beta}\), substituting it in yields:
+
+\[ \hat{y} = QR(R^{-1}r) = Qr \]
+
+\textbf{Step 3: }Finding the Residual Vector \(r\)
+
+In regression, the residual vector \(r\) (different from \(r\) in QR decomposition) is:
+
+\[ r = y - \hat{y} \]
+
+Substituting the known values:
+
+\[ r = (Qr + qd) - Qr = qd \]
+
+\textbf{Step 4:} Finding the Residual Sum of Squares \(\|r\|^2\)
+
+The residual sum of squares \(\|r\|^2\) is:
+
+\[ \|r\|^2 = \|qd\|^2 \]
+
+Since \( q \) is orthogonal and normalized:
+
+\[ \|r\|^2 = d^2 \]
+
+\textbf{Conclusion}
+
+We have derived expressions for \(\hat{\beta}\), \(\hat{y}\), the residual vector \(r\), and the residual sum of squares using the extended QR decomposition:
+
+\begin{itemize}
+    \item \(\hat{\beta} = R^{-1}r\)
+    \item \(\hat{y} = Qr\)
+    \item \(r = qd\)
+    \item \(\|r\|^2 = d^2\)
+\end{itemize}
+
+This demonstrates how the QR decomposition of \(X\) and \(y\) can be utilized to decompose the regression problem into manageable components, using the orthogonality and triangular properties of \(Q\) and \(R\), respectively.
+
+%q15
+\subsubsection*{Q15: If \(X = QR\) is the QR decomposition of \(X\), then show that the projection matrix
+\[ X(X^* X)^{-1}X^* = QQ^*. \]
+\text{Also show that} \(\det(X) = \det(R)\) \text{when \(X\) is square and in general that}
+\[ \det(X^* X) = (\det(R))^2. \]}
+
+% q16
+\subsubsection*{Q16: Let \(v_1, \ldots, v_n\) be \(n\) conjugate vectors for the \(n \times n\) positive definite matrix \(A\). Describe how you can use the expansion \(x = \sum_{i=1}^n c_i v_i\) to solve the linear equation \(Ax = b\).}
+
+%q17
+\subsubsection*{Q17: Suppose that \(A\) is an \(n \times n\) positive definite matrix and that the nontrivial vectors \(u_1, \ldots, u_n\) satisfy
+\[ u_i^* A u_j = 0 \quad \text{and} \quad u_i^* u_j = 0 \]
+for all \(i \neq j\). Demonstrate that the \(u_i\) are eigenvectors of \(A\).}
+
+%q18
+\subsubsection*{Q18: Suppose that the \(n \times n\) symmetric matrix \(A\) satisfies \(v^* A v \neq 0\) for all \(v \neq 0\) and that \(\{u_1, \ldots, u_n\}\) is a basis of \(\mathbb{R}^n\). If one defines \(v_1 = u_1\) and inductively
+\[ v_k = u_k - \sum_{j=1}^{k-1} \frac{u_k^* A v_j}{v_j^* A v_j} v_j \]
+for \(k = 2, \ldots, n\), then show that the vectors \(v_1, \ldots, v_n\) are conjugate and provide a basis of \({R}^n\). Note that \(A\) need not be positive definite.}
+
+\newpage
+\section*{Chapter 6: Newtons Method}
+\subsubsection*{Q2: Write a Julia program to solve Lambert’s equation \(we^w = x\) by Newton’s method for \(x > 0\). Prove that the iterates are defined by
+\[ w_{n+1} = w_n + \frac{\frac{x}{w_n e^{w_n}}}{w_n + 1}. \]
+Make the argument that \(w_{n+1} > w_n\) when \(w_n e^{w_n} < x\) and that \(w_{n+1} < w_n\) when \(w_n e^{w_n} > x\).}
+
+\subsubsection*{Q3: In solving Lambert’s equation \(we^w = x\) by Newton’s method, one must seed the algorithm with an initial guess. Argue that \(w_0 = \ln x - \ln(\ln x)\) is good for moderate to large \(x\). Show that it is exact for \(x = e\). For small \(x\), argue that the guess \(w_0 = \frac{x}{1 + cx}\) is good. What value of the constant \(c\) solves Lambert’s equation when \(x = e\)? Plot these approximations against the solution curve of Lambert’s equation.}
+
+\subsubsection*{Q4: Halley’s method for finding a root of the equation \(f(x) = 0\) approximates \(f(x)\) around \(x_n\) by the quadratic
+\[ q(x) = f(x_n) + f'(x_n)(x - x_n) + \frac{1}{2} f''(x_n)(x - x_n)^2. \]
+It then rearranges the equation \(q(x) = 0\) in the form
+\[ x - x_n = -\frac{f(x_n)}{f'(x_n) + \frac{1}{2} f''(x_n)(x - x_n)} \]
+and then approximates \(x - x_n\) on the right-hand side by the Newton increment \(-f(x_n)/f'(x_n)\). Show that these maneuvers yield the Halley update
+\[ x_{n+1} = x_n - \frac{2f(x_n)f'(x_n)}{2f'(x_n)^2 - f(x_n)f''(x_n)}. \]
+Halley’s method has a cubic rate of convergence. Compare its practical performance to Newton’s method in solving Lambert’s equation of the previous two problems.}
+
+\subsubsection*{Q5: Consider the function
+\[ f(x) = \begin{cases} 
+0 & \text{if } x = 0 \\
+x + x^2 \sin\left(\frac{2}{x}\right) & \text{if } x \neq 0.
+\end{cases} \]
+Calculate its derivative \(f'(x)\), and argue that Newton’s method tends to be repelled by its root \(x = 0\). This failure occurs despite the fact that \(f(x)\) possesses a bounded derivative in a neighborhood of 0.}
+
+\subsubsection*{Q6: The function \(f(x) = x + x^{4/3}\) has \(x = 0\) as a root. Derive the Newton updates}
+\[ x_{n+1} = \frac{\frac{1}{3} x_n^{4/3}}{1 + \frac{4}{3} x_n^{1/3}}, \]
+\text{and show that}
+\[ \lim_{n \to \infty} \frac{x_{n+1}}{x_n^{4/3}} = \frac{1}{3} \]
+\text{for \(x_0\) close to 0. This subquadratic rate of convergence occurs because \(f(x)\) is not twice differentiable at 0.}
+
+\subsubsection*{Q7: Characterize the behavior of Newton’s method in minimizing the function \(f(x) = \sqrt{x^2 + 1}\). When the method converges, what is its order of convergence?}
+
+\subsubsection*{Q8: For any positive number \(x\), show that
+\[ \log_2 x = m \pm \log_2 (1 + w) = m \pm \frac{\ln(1 + w)}{\ln 2} \]
+for an integer \(m\) and a real \(w \in \left[0, \frac{1}{2}\right]\) [177]. (Hints: Write \(x = 2^n + b\) with
+\[ 0 \leq b < 2^n. \text{ Then } \log_2 x = n + \log_2 (1 + r) \text{ for } r = \frac{b}{2^n}. \text{ When } r \geq \frac{1}{2}, \text{ write } \]
+\[ n + \log_2 (1 + r) = n + 1 - \log_2 \left(1 + \frac{1 - r}{1 + r}\right). \]}
+
+\subsubsection*{Q9: For \(y\) positive the positive root of the equation \(f(x) = \frac{1}{x^2} - y = 0\) is \(\frac{1}{\sqrt{y}}\). Show that the Newton iterates for finding the root are
+\[ x_{n+1} = \frac{x_n(3 - yx_n^2)}{2}. \]
+Alternatively, \(x = \frac{1}{\sqrt{y}}\) solves the equation \(g(x) = yx^2 - 1 = 0\). Demonstrate that this formulation gives rise to the Newton updates
+\[ x_{n+1} = \frac{1}{2} \left( x_n + \frac{1}{yx_n} \right). \]
+The first scheme involves no reciprocals, but the second scheme has better convergence guarantees. Show that the second scheme satisfies \(x_{n+1} \geq \frac{1}{\sqrt{y}}\) regardless of the value of \(x_n > 0\). Also show that \(x_{n+1} \leq x_n\) whenever \(x_n \geq \frac{1}{\sqrt{y}}\). Hence, global convergence is assured.}
+
+\subsubsection*{Q10: The binomial theorem states that for \(r\) real and \(|x| < 1\)
+\[ (1 + x)^r = \sum_{k=0}^{\infty} \binom{r}{k} x^k = \sum_{k=0}^{\infty} \frac{r(r-1) \cdots (r-k+1)}{k!} x^k. \]
+\text{One can adapt this recipe to calculate matrix roots by defining}
+\[ (I + X)^r = \sum_{k=0}^{\infty} \binom{r}{k} X^k \]
+for square matrices \(X = (x_{ij})\) with norm \(\|X\| < 1\) [81]. Here the norm is generic except for the requirement that \(\|AB\| \leq \|A\| \cdot \|B\|\). The most convenient choice is the Frobenius norm \(\|X\|_F^2\). One can extend the series method to matrices \(Y\) with larger norms by writing \(Y^r = c^r (I + X)^r\), where \(X = \frac{1}{c}Y - I\) for some constant \(c\). Show that under the Frobenius norm the optimal choice of \(c\) satisfies
+\[ c = \frac{\|Y\|_F^2}{\operatorname{tr}(Y)} \quad \text{and} \quad \|X\|_F^2 = \|I\|_F^2 - \frac{\operatorname{tr}(Y)^2}{\|Y\|_F^2}. \]
+\text{When \(\operatorname{tr}(Y)\) is negative, the factor \(c^r\) may be complex.}}
+
+\subsubsection*{Q11: For the weighted least squares criterion
+\[ f(\beta) = \frac{1}{2} \sum_{i=1}^n w_i \left( y_i - \sum_{j=1}^p x_{ij} \beta_j \right)^2, \]
+\text{prove that the minimum is achieved when}
+\[ \beta = (X^* W X)^{-1} X^* W y, \]
+\text{where \(W\) is a diagonal matrix with \(i\)-th diagonal entry \(w_i > 0\).}}
+
+\subsubsection*{Q12: Demonstrate Woodbury’s generalization
+\[ (A + UBV^*)^{-1} = A^{-1} - A^{-1}U(B^{-1} + V^* A^{-1} U)^{-1} V^* A^{-1} \]
+of the Sherman–Morrison matrix inversion formula for compatible matrices \(A\), \(B\), \(U\), and \(V\).}
+
+\subsubsection*{Q13: To explore whether the performance of Newton’s method can be improved by a linear change of variables, consider solving the two problems \(f(x) = 0\) and \(Af(Bx) = 0\), where \(A\) and \(B\) are invertible matrices of the right dimensions. Show that the two methods lead to basically the same iterates when started at \(x_0\) and \(B^{-1} x_0\), respectively.}
+
+\subsubsection*{Q14: To solve the vector-valued equation \(g(x) = 0\), one can minimize the function
+\[ f(x) = \frac{1}{2} \|g(x)\|^2. \]
+\text{Show that \(f(x)\) has gradient}
+\[ \nabla f(x) = dg(x)^* g(x) \]
+\text{and second differential}
+\[ d^2 f(x) = dg(x)^* dg(x) + d^2 g(x)^* g(x) \approx dg(x)^* dg(x). \]
+The approximation to the second differential is good when \(x\) is close to a root. When the number of components of \(g(x)\) equals the dimension of \(x\), prove that the combination of this approximation and Newton’s method of minimization leads to the standard Newton update
+\[ x_{n+1} = x_n - dg(x_n)^{-1} g(x_n). \]
+Finally, argue in this case that the Newton increment is a descent direction for the objective function \(f(x)\).}
+
+\newpage
+\section{Chapter 7: Linear Programming}
+
+\subsubsection*{Q2: Consider the linear program of maximizing \(x_1 + 2x_2 + 3x_3 + 4x_4 + 5\) subject to the constraints
+\[
+\begin{aligned}
+4x_1 + 3x_2 + 2x_3 + x_4 &\leq 10 \\
+x_1 - x_3 + 2x_4 &= 2 \\
+x_1 + x_2 + x_3 + x_4 &\geq 1
+\end{aligned}
+\]
+and \(x_1 \geq 0, x_3 \geq 0, x_4 \geq 0\). Put this program into canonical form and solve.}
+
+\subsubsection*{Q3: Convert the problem of minimizing \(|x_1 + x_2 + x_3|\) subject to \(x_1 - x_2 = 5\), \(x_2 - x_3 = 7\), and \(x_1 \geq 0\), and \(x_3 \geq 2\) into a linear program and solve.}
+
+\subsubsection*{Q4: Convert the problem of minimizing \(|x_1| - |x_2|\) subject to \(x_1 + x_2 = 5\), \(2x_1 + 3x_2 - x_3 \leq 0\), and \(x_3 \geq 4\) into a linear program and solve.}
+
+\subsubsection*{Q5: Find an upper bound on the number of basic feasible points of a linear program.}
+
+\subsubsection*{Q6: A set \(C\) is said to be convex if whenever \(\mathbf{u}\) and \(\mathbf{v}\) belong to \(C\), then the entire line segment \([\mathbf{u}, \mathbf{v}] = \{t \mathbf{u} + (1 - t) \mathbf{v} : t \in [0, 1]\}\) belongs to \(C\). Show that the feasible region of a linear program is convex. A set \(C\) is said to be closed if whenever a sequence \(x_n\) from \(C\) converges to a limit \(x\), then \(x\) also belongs to \(C\). Show that the feasible region of a linear program is closed.}
+
+\subsubsection*{Q7: Give an example of a linear program whose feasible region \(R\) is unbounded. Construct an objective \(c^* x\) that is bounded below on \(R\) and an objective \(c^* x\) that is unbounded below on \(R\).}
+
+\subsubsection*{Q8: A point \(\mathbf{x}\) of a convex set \(C\) is called extreme if it cannot be expressed as a nontrivial convex combination \(\mathbf{x} = t\mathbf{y} + (1 - t)\mathbf{z}\) of two distinct points \(\mathbf{y}\) and \(\mathbf{z}\) from \(C\). Here nontrivial means that \(t\) occurs in the open interval \((0, 1)\). Prove that a point \(\mathbf{x}\) in the feasible region \(\{\mathbf{x} : A\mathbf{x} = \mathbf{b}, \; \mathbf{x} \geq 0\}\) is extreme if and only if the columns \(A_B\) of \(A\) associated with its support set \(B = \{i : x_i > 0\}\) are linearly independent.}
+
+\subsubsection*{Q9: The dual function of a linear program is defined by
+\[ \mathcal{D}(\lambda, \mu) = \min_x \mathcal{L}(x, \lambda, \mu), \]
+\text{where \(\mathcal{L}(x, \lambda, \mu)\) is the Lagrangian (7.1). Prove that the dual equals}
+\[ \mathcal{D}(\lambda, \mu) = \begin{cases} 
+-\mathbf{b}^* \lambda & \mathbf{A}^* \lambda \leq \mathbf{c} \\
+-\infty & \text{otherwise}.
+\end{cases} \]}
+
+\subsubsection*{Q10: In the notation of the previous problem, demonstrate the duality result
+\[
+\max_{\{(\lambda, \mu) : \mu \geq 0\}} \mathcal{D}(\lambda, \mu) = \min_{\{x : A x = b, x \geq 0\}} \mathbf{c}^* x
+\]
+\text{when the linear program has a solution. (Hints: For \(x\) feasible show that}
+\[
+\mathcal{D}(\lambda, \mu) \leq \mathcal{L}(x, \lambda, \mu) \leq \mathbf{c}^* x.
+\]
+\text{At the constrained minimum \(y\) with multipliers \(\hat{\lambda}\) and \(\hat{\mu}\), also show}
+\[
+\mathbf{c}^* y = \mathcal{L}(y, \hat{\lambda}, \hat{\mu}) = \mathcal{D}(\hat{\lambda}, \hat{\mu}).
+\]}
+
+\subsubsection*{Q11: Let \(A\) be a matrix with full row rank and
+\[ S = \{x \in \mathbb{R}^p : Ax = b\} \]
+\text{be an affine subspace. Show that the closest point to \(y\) in \(S\) is}
+\[ P_S(y) = y - A^* (AA^*)^{-1} (Ay - b) \]
+by minimizing the function \(f(x) = \frac{1}{2} \|y - x\|^2\) subject to the constraint \(Ax = b\). The matrix \(P = I - A^* (AA^*)^{-1} A\) is an orthogonal projection. Check the properties \(P^2 = P\), \(P^* = P\), and \(Px = x\) for \(x \in S\).}
+
+\subsubsection*{Q12: Design and implement appropriate numerical examples to compare the performance of the revised simplex method and Karmarkar’s algorithm.}
+
+\subsubsection*{Q13: As an alternative to the revised simplex method and Karmarkar’s algorithm, one can derive a path-following algorithm to solve the linear programming problem [30]. Consider minimizing \(\mathbf{c}^* \mathbf{x}\) subject to the standard linear programming constraints \(\mathbf{x} \geq 0\) and \(A \mathbf{x} = \mathbf{b}\). Given an initial feasible point \(\mathbf{x}_0 > 0\), one can devise a differential equation \(\frac{d}{dt} \mathbf{x}(t) = G(\mathbf{x})\) whose solution \(\mathbf{x}(t)\) is likely to converge to the optimal point. Simply take \(G(\mathbf{x}) = D(\mathbf{x}) P(\mathbf{x}) \mathbf{v}(\mathbf{x})\), where \(D(\mathbf{x}) = \operatorname{diag}(\mathbf{x})\) is a diagonal matrix with diagonal entries given by the vector \(\mathbf{x}\) and \(P(\mathbf{x})\) is orthogonal projection onto the null space of \(A D(\mathbf{x})\). (See the previous problem.) The matrix \(D(\mathbf{x})\) slows the trajectory down as it approaches a boundary \(x_i = 0\). The matrix \(P(\mathbf{x})\) ensures that the value of \(A \mathbf{x}(t)\) remains fixed at the constant \(\mathbf{b}\). Check this fact. Show that the choice \(\mathbf{v}(\mathbf{x}) = -P(\mathbf{x}) D(\mathbf{x}) c\) yields \(\frac{d}{dt} \mathbf{c}^* \mathbf{x}(t) \leq 0\). In other words, \(\mathbf{c}^* \mathbf{x}(t)\) is a Liapunov function for the solution path.}
+
+\subsubsection*{Q14: Reduce the path-following algorithm of the previous problem to Julia code. This can be accomplished by adopting Euler’s method for solving the differential equation \(\frac{d}{dt} \mathbf{x}(t) = G(\mathbf{x})\). In Euler’s method we approximate
+\[ \mathbf{x}(t + \delta) \approx \mathbf{x}(t) + \delta \frac{d}{dt} \mathbf{x}(t) = \mathbf{x}(t) + \delta G(\mathbf{x}) \]
+for \(\delta > 0\) small. Note that Julia has a simple command to compute the pseudoinverse \(M^* (M M^*)^{-1}\) of a matrix \(M\) with full row rank. Your code must start with an \(\mathbf{x}\) having all entries positive and satisfying \(A \mathbf{x} = \mathbf{b}\).}
+
+\section{Chapter 8: Eigenvalues and Eigenvectors}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
