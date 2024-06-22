@@ -1376,7 +1376,7 @@ The approximation to the second differential is good when \(x\) is close to a ro
 Finally, argue in this case that the Newton increment is a descent direction for the objective function \(f(x)\).}
 
 \newpage
-\section{Chapter 7: Linear Programming}
+\section*{Chapter 7: Linear Programming}
 
 \subsubsection*{Q2: Consider the linear program of maximizing \(x_1 + 2x_2 + 3x_3 + 4x_4 + 5\) subject to the constraints
 \[
@@ -1435,21 +1435,424 @@ by minimizing the function \(f(x) = \frac{1}{2} \|y - x\|^2\) subject to the con
 \[ \mathbf{x}(t + \delta) \approx \mathbf{x}(t) + \delta \frac{d}{dt} \mathbf{x}(t) = \mathbf{x}(t) + \delta G(\mathbf{x}) \]
 for \(\delta > 0\) small. Note that Julia has a simple command to compute the pseudoinverse \(M^* (M M^*)^{-1}\) of a matrix \(M\) with full row rank. Your code must start with an \(\mathbf{x}\) having all entries positive and satisfying \(A \mathbf{x} = \mathbf{b}\).}
 
-\section{Chapter 8: Eigenvalues and Eigenvectors}
+\newpage
+\section*{Chapter 8: Eigenvalues and Eigenvectors}
+
+\subsubsection*{Q1: Describe the behavior of the power method applied to the matrix
+\[ 
+\mathbf{A} = 
+\begin{pmatrix}
+0 & 1 & 0 & 0 \\
+-1 & 0 & 0 & 0 \\
+0 & 0 & 1 & 1 \\
+0 & 0 & 0 & 1 
+\end{pmatrix}. 
+\]
+Explain your empirical findings by invoking the \texttt{eigen} command of Julia to reveal \(\mathbf{A}\)'s eigenvalues and eigenvectors.}
+
+\subsubsection*{Q2: Find the eigenvalues and eigenvectors of the matrix
+\[
+\mathbf{A} = 
+\begin{pmatrix}
+10 & 7 & 8 & 7 \\
+7 & 5 & 6 & 5 \\
+8 & 6 & 10 & 9 \\
+7 & 5 & 9 & 10 
+\end{pmatrix}
+\]
+of RJ Wilson by divide and conquer and Jacobi’s method.}
+
+\subsubsection*{Q3: Find the eigenvalues and eigenvectors of the rotation matrix
+$$
+\begin{pmatrix}
+\cos \theta & -\sin \theta \\
+\sin \theta & \cos \theta
+\end{pmatrix}
+$$
+Note that the eigenvalues are complex conjugates}
+
+First solve for $det(A- \lambda I) = 0$ and find the roots for the given polynomial
+$$
+det \begin{pmatrix}
+\cos \theta - \lambda & -\sin \theta \\
+\sin \theta & \cos \theta - \lambda
+\end{pmatrix} = (\cos \theta - \lambda)^{2} - (-\sin \theta) = 0 
+$$
+
+$$
+\lambda ^{2}-2 \lambda \cos \theta + \cos ^{2} \theta + \sin ^{2} \theta = 0
+$$
+
+We can now use the trig identity to further simplify the expression $ \cos ^{2} \theta + \sin ^{2} \theta = 1$ to obtain: 
+
+$$
+\lambda ^{2}-2 \lambda \cos \theta + 1 = 0
+$$
+
+We now plug in this to the quadratic formula to find its roots:
+
+$$
+\lambda = \frac{-2 \lambda \cos \theta \pm \sqrt{4 \lambda \cos ^{2} \theta - 4(\lambda ^{2})(1)}}{2 \lambda ^{2}} = \cos \theta \pm \sqrt{\cos ^{2} \theta -1 } 
+$$
+
+This expression simplifies further using the relation $\cos \theta \pm i \sin \theta = e^{\pm i \theta}$to obtain the complex conjugate roots:
+
+$$
+\lambda = \cos \theta \pm \sqrt{\cos ^{2} \theta -1 } = \cos \theta \pm i \sin \theta = e^{\pm i \theta}.
+$$
+
+We have therefore found not real eigenvalues if $\theta \neq 0$ (and every $\pm \pi$). However if $theta = 0, \pi$, we would get real eigenvalues.
+
+Next we find the eigenvectors of the following by plugging in our eigenvalues to the original $A- \lambda I$.
+
+\textbf{Case 1:} First lets solve for the case where $\theta = 0, \pi$.
+
+$$
+A - \lambda I
+\begin{pmatrix}
+ -i \sin \theta & -\sin \theta \\
+\sin \theta & -i \sin \theta 
+\end{pmatrix} = 
+\begin{pmatrix}
+ 0 & 0 \\
+0 & 0 
+\end{pmatrix} 
+$$
+
+This shows that each nonzero vector of $\mathbb{R}^{2}$ is an eigenvector \\
+
+\textbf{Case 2:} In the case where $ \theta \neq 0, \pi$. We reduce the row 2 by $R_2 \dot i$ and $\frac{1}{\sin \theta} R_2$ and then subtract $R_2 + R_1$ to obtain: 
+
+$$
+A - \lambda I
+\begin{pmatrix}
+ -i \sin \theta & -\sin \theta \\
+\sin \theta & -i \sin \theta 
+\end{pmatrix} = 
+\begin{pmatrix}
+ 1 & -i \\
+1 & -i 
+\end{pmatrix} =
+\begin{pmatrix}
+ -i & 1 \\
+0 & 0 
+\end{pmatrix}
+$$
+
+Thus we obtain eigenvectors   
+\begin{align}
+    y &= \begin{bmatrix}
+           i \\
+        1
+         \end{bmatrix}t 
+\end{align}
+for any nonzero scalar $t$. The other eigenvector is its complex conjugate to obtain the eigenvectors of all cases of the rotation matrix: 
+\begin{align}
+    y &= \begin{bmatrix}
+           -i \\
+           1
+         \end{bmatrix}t 
+\end{align}
 
 
 
 
+\subsubsection*{Q4: Find the eigenvalues and eigenvectors of the reflection matrix
+$$
+\begin{pmatrix}
+\cos \theta & \sin \theta \\
+\sin \theta & -\cos \theta
+\end{pmatrix}
+$$}
+
+First solve for $det(A- \lambda I) = 0$ and find the roots for the given polynomial:
+
+$$
+det \begin{pmatrix}
+\cos \theta - \lambda & \sin \theta \\
+\sin \theta & -\cos \theta - \lambda
+\end{pmatrix} = (\cos \theta - \lambda) (-\cos \theta - \lambda) - (\sin \theta)^{2} = 0 
+$$
+
+You can further simplify the expression again using the $ \cos ^{2} \theta + \sin ^{2} \theta = 1$ relation:
+$$
+(\cos \theta - \lambda) (-\cos \theta - \lambda) - (-\sin \theta)^{2} = \lambda ^{2} - \cos ^{2} \theta - \sin ^{2} \theta = \lambda ^{2} -1
+$$
+
+Our eigenvalues are therefore $\lambda = \pm 1$ \\
+
+\textbf{Case 1: }We now solve for the eigenvectors by plugging in the eigenvalues into the $A- \lambda I$ equation. 
+
+So we begin with the $\lambda=1$ case. We multiply the $R_1$ by $\cos(\theta) +1$ and multiply $sin(\theta)$ to $R_2$ to reduce the matrix
+
+$$
+\begin{pmatrix}
+\cos \theta -1 & \sin \theta \\
+\sin \theta & -\cos \theta - 1
+\end{pmatrix} = 
+\begin{pmatrix}
+(\cos \theta -1)(\cos \theta +1) & \sin \theta (\cos \theta +1)\\
+\sin \theta (\sin \theta) & (-\cos \theta -1)(\sin \theta)
+\end{pmatrix} 
+$$
+
+$$
+= \begin{pmatrix}
+-\sin^2 \theta & \sin \theta \cos \theta + \sin(\theta))\\
+\sin^2 \theta & -\sin \theta\cos \theta -\sin \theta
+\end{pmatrix} =
+\begin{pmatrix}
+\cos \theta -1 & \sin \theta \\
+0 & 0
+\end{pmatrix} = 
+\begin{pmatrix}
+1 & \frac{\sin \theta}{\cos \theta -1} \\
+0 & 0
+\end{pmatrix}
+$$
+
+Solving these equations we get the eigenvector for $\lambda =1$ is 
+
+\begin{align}
+    y &= \begin{bmatrix}
+           \frac{-\sin \theta }{\cos \theta -1} \\
+           1
+         \end{bmatrix}t 
+\end{align}
+
+\textbf{Case 2: }For the $\lambda =-1$ the system becomes
+$$
+\begin{pmatrix}
+\cos \theta - (-1) & \sin \theta \\
+\sin \theta & -\cos \theta -  (-1)
+\end{pmatrix} 
+$$
+
+We then do a similar one to the first eigenvector and solve multiply the $R_1$ by $\cos(\theta) -1$ and multiply $sin(\theta)$ to $R_2$ to reduce the matrix
+
+$$
+\begin{pmatrix}
+(\cos \theta + 1)(\cos \theta -1) & \sin \theta (\cos \theta - 1)\\
+\sin \theta (\sin \theta) & (-\cos \theta +1)(\sin \theta)
+\end{pmatrix} 
+$$
+
+$$
+= \begin{pmatrix}
+-\sin^2 \theta & \sin \theta \cos \theta - \sin(\theta))\\
+\sin^2 \theta & -\sin \theta\cos \theta +\sin \theta
+\end{pmatrix} =
+\begin{pmatrix}
+\cos \theta +1 & \sin \theta \\
+0 & 0
+\end{pmatrix} =
+\begin{pmatrix}
+1 & \frac{\sin \theta}{\cos \theta +1} \\
+0 & 0
+\end{pmatrix}
+$$
 
 
+Solving these systems we obtain the eigenvector 
 
+\begin{align}
+    y &= \begin{bmatrix}
+           \frac{-\sin \theta }{\cos \theta +1} \\
+           1
+         \end{bmatrix}t 
+\end{align}
 
+\subsubsection*{Q5: Suppose \(\lambda\) is an eigenvalue of the orthogonal matrix \(\mathbf{O}\) with corresponding eigenvector \(\mathbf{v}\). Show that \(\mathbf{v}\) has real entries only if \(\lambda = \pm 1\).}
 
+\subsubsection*{Q6: A matrix \(\mathbf{A}\) with real entries is said to be skew-symmetric if \(\mathbf{A}^* = -\mathbf{A}\). Show that all eigenvalues of a skew-symmetric matrix are imaginary or 0.}
 
+\subsubsection*{Q7: Continuing the previous problem, suppose that \(\mathbf{A}\) is skew-symmetric. Prove that \(I - \mathbf{A}\) is invertible and that \((I - \mathbf{A})^{-1}(I + \mathbf{A})\) is orthogonal. The latter matrix is called the Cayley transform of \(\mathbf{A}\).}
 
+\subsubsection*{Q8: Consider an \(n \times n\) upper triangular matrix \(U\) with distinct nonzero diagonal entries. Let \(\lambda\) be its \(m\)th diagonal entry, and write
+\[
+U = \begin{pmatrix}
+U_{11} & U_{12} & U_{13} \\
+0 & \lambda & U_{23} \\
+0 & 0 & U_{33}
+\end{pmatrix}
+\]
+in block form. Verify that \(\lambda\) is an eigenvalue of \(U\) with eigenvector
+\[
+w = \begin{pmatrix}
+v \\
+-1 \\
+0
+\end{pmatrix}, \quad v = (U_{11} - \lambda I_{m-1})^{-1} U_{12},
+\]
+where \(I_{m-1}\) is the \((m - 1) \times (m - 1)\) identity matrix.}
 
+\subsubsection*{Q9: Suppose the \(m \times m\) symmetric matrix \(A\) has eigenvalues
+\[
+\lambda_1 < \lambda_2 \le \cdots \le \lambda_{m-1} < \lambda_m.
+\]
+The iterative scheme \(x_{n+1} = (A - \eta_n I)x_n\) can be used to approximate either \(\lambda_1\) or \(\lambda_m\) [79]. Consider the criterion
+\[
+\sigma_n = \frac{x_{n+1}^* A x_{n+1}}{x_{n+1}^* x_{n+1}}.
+\]
+Choosing \(\eta_n\) to maximize \(\sigma_n\) causes \(\lim_{n \to \infty} \sigma_n = \lambda_m\), while choosing \(\eta_n\) to minimize \(\sigma_n\) causes \(\lim_{n \to \infty} \sigma_n = \lambda_1\). If \(\tau_k = x_n^* A^k x_n\), then show that the extrema of \(\sigma_n\) as a function of \(\eta\) are given by the roots of the quadratic equation}
+\[
+0 = \det \begin{pmatrix}
+1 & \eta & \eta^2 \\
+\tau_0 & \tau_1 & \tau_2 \\
+\tau_1 & \tau_2 & \tau_3
+\end{pmatrix}.
+\]
 
+\subsubsection*{Q10: Apply the algorithm of the previous problem to find the largest and smallest eigenvalues of the matrix in problem (2).}
 
+\subsubsection*{Q11: Let \(A\) be a symmetric matrix. Show that the Rayleigh quotient \(R(x) = \frac{x^* A x}{x^* x}\) has gradient
+\[
+\frac{2[Ax - R(x)x]}{x^* x}.
+\]
+Argue that the eigenvalues and eigenvectors of \(A\) are the stationary values and stationary points, respectively, of \(R(x)\).}
+
+\subsubsection*{Q12: Denote the smallest and largest eigenvalues of an \(m \times m\) symmetric matrix \(C\) by \(\lambda_1[C]\) and \(\lambda_m[C]\). For any two \(m \times m\) symmetric matrices \(A\) and \(B\) and any \(\alpha \in [0, 1]\), demonstrate that
+\[
+\lambda_1[\alpha A + (1 - \alpha)B] \geq \alpha \lambda_1[A] + (1 - \alpha) \lambda_1[B]
+\]
+\[
+\lambda_m[\alpha A + (1 - \alpha)B] \leq \alpha \lambda_m[A] + (1 - \alpha) \lambda_m[B].
+\]
+}
+
+\subsubsection*{Q13: Given the assumptions of the previous problem, show that the smallest and largest eigenvalues satisfy
+\[
+\lambda_1[A + B] \geq \lambda_1[A] + \lambda_1[B]
+\]
+\[
+\lambda_m[A + B] \leq \lambda_m[A] + \lambda_m[B].
+\]
+}
+
+\subsubsection*{Q14: For symmetric matrices \(A\) and \(B\), define \(A \triangleright 0\) to mean that \(A\) is positive semidefinite and \(A \triangleright B\) to mean that \(A - B \triangleright 0\). Show that \(A \triangleright B\) and \(B \triangleright C\) imply \(A \triangleright C\). Also show that \(A \triangleright B\) and \(B \triangleright A\) imply \(A = B\). Thus, \(\triangleright\) induces a partial order on the set of symmetric matrices.}
+
+\subsubsection*{Q15: In the notation of the previous problem, show that two positive definite matrices \(A\) and \(B\) satisfy \(A \triangleright B\) if and only if they satisfy \(B^{-1} \triangleright A^{-1}\). If \(A \triangleright B\), then prove that \(\det A \geq \det B\) and \(\operatorname{tr} A \geq \operatorname{tr} B\).}
+
+\subsubsection*{Q16: Suppose the symmetric matrices \(A\) and \(B\) satisfy \(A \triangleright B\) in the notation of the previous two problems. If in addition \(\operatorname{tr} (A) = \operatorname{tr} (B)\), then demonstrate that \(A = B\). (Hint: Consider the matrix \(C = A - B\).)}
+
+\subsubsection*{Q17: Let \(A\) and \(B\) be positive semidefinite matrices of the same dimension. Prove that the matrix \(aA + bB\) is positive semidefinite for every pair of nonnegative scalars \(a\) and \(b\). Thus, the set of positive semidefinite matrices is a convex cone.}
+
+\subsubsection*{Q18: One of the simplest ways of showing that a symmetric matrix is positive semidefinite is to show that it is the covariance matrix of a random vector. Use this insight to prove that if the symmetric matrices \(A = (a_{ij})\) and \(B = (b_{ij})\) are positive semidefinite, then the matrix \(C = (c_{ij})\) with entries \(c_{ij} = a_{ij} b_{ij}\) is also positive semidefinite [138]. (Hint: Take independent random vectors \(\mathbf{x}\) and \(\mathbf{y}\) with covariance matrices \(A\) and \(B\) and form the random vector \(\mathbf{z}\) with components \(z_i = x_i y_i\).)}
+
+\subsubsection*{Q19: Continuing the previous problem, suppose that the \(n \times n\) symmetric matrices \(A\) and \(B\) have entries \(a_{ij} = i(n - j + 1)\) and \(b_{ij} = \sum_{k=1}^i \sigma_k^2\) for \(j \geq i\) and all \(\sigma_k^2 \geq 0\). Show that \(A\) and \(B\) are positive semidefinite [138]. (Hint: For \(A\), consider the order statistics from a random sample of the uniform distribution on \([0, 1]\).)}
+
+\newpage
+\section*{Chapter 9: MM Algorithms}
+\subsubsection*{Q1: In a majorization-minimization algorithm with objective function \(f(x)\) and surrogate function \(g(x \mid x_n)\), show that the sequence \(g(x_{n+1} \mid x_n)\) decreases.}
+
+\subsubsection*{Q2: In an MM algorithm having a differentiable objective \(f(x)\), a differentiable surrogate \(g(x \mid y)\), and no constraints, prove that the gradient identity \(\nabla f(x) = \nabla g(x \mid x)\) when \(y = x\). Here the gradient of \(g(x \mid y)\) is taken with respect to its left argument \(x\).}
+
+\subsubsection*{Q3: In the previous problem assume that \(f(x)\) and \(g(x \mid y)\) are twice differentiable in \(x\) for each \(y\). Demonstrate that the difference matrix \(d^2 g(x \mid x) - d^2 f(x)\) is positive semidefinite.}
+
+\subsubsection*{Q4: Prove that the function \(\ln \Gamma(t)\) is convex. (Hint: Express \( \frac{d^2}{dt^2} \ln \Gamma(t)\) as the variance of \(\ln X\) for a certain random variable \(X\).)}
+
+\subsubsection*{Q5: Derive the balanced ANOVA estimates (9.8) by the method of Lagrange multipliers.}
+
+\subsubsection*{Q6 Prove the majorization
+\[
+(x + y - z)^2 \leq -(x_n + y_n - z_n)^2 + 2(x_n + y_n - z_n)(x + y - z) + 3[(x - x_n)^2 + (y - y_n)^2 + (z - z_n)^2]
+\]
+separating the variables \(x\), \(y\), and \(z\). In Example 9.5 this would facilitate penalizing parameter curvature rather than changes in parameter values.}
+
+\subsubsection*{Q7 Find a quadratic upper bound majorizing the function \( e^{-x^2} \) around the point \( x_n \).}
+
+\subsubsection*{Q8 For the function \( f(x) = \ln(1 + e^x) \), derive the majorization
+\[
+f(x) \leq f(x_n) + f'(x_n)(x - x_n) + \frac{1}{8} (x - x_n)^2
+\]
+by the quadratic upper bound principle.}
+
+\subsubsection*{Q9 Demonstrate the majorizations}
+\[
+xy \leq \frac{1}{2} (x^2 + y^2) + \frac{1}{2} (x_n - y_n)^2 - (x_n - y_n)(x - y)
+\]
+\[
+-xy \leq \frac{1}{2} (x^2 + y^2) + \frac{1}{2} (x_n + y_n)^2 - (x_n + y_n)(x + y).
+\]
+
+\subsubsection*{Q10 Based on problem (9), consider minimizing Rosenbrock’s function
+\[
+f(x) = 100(x_1^2 - x_2)^2 + (x_1 - 1)^2.
+\]
+Show that up to an irrelevant constant \(f(x)\) is majorized by the sum of the two functions
+\[
+g_1(x_1 | x_n) = 200x_1^4 - [200(x_n^2 + x_{n2}) - 1]x_1^2 - 2x_1
+\]
+\[
+g_2(x_2 | x_n) = 200x_2^2 - 200(x_{n1}^2 + x_{n2})x_2.
+\]
+Hence, to implement the corresponding MM algorithm, one must minimize a quartic in \(x_1\) and a quadratic in \(x_2\) at each iteration. Program the MM algorithm, and check whether it converges to the global minimum of \(f(x)\) at \(x = 1\).}
+
+\subsubsection*{Q11 Verify the majorization \(- \ln x \leq - \ln x_n + \frac{x_n}{x} - 1\) for \(x\) and \(x_n\) positive. Use this to design an MM algorithm for minimizing the convex function \(f(x) = ax - \ln x\) for \(a > 0\). Why do the iterates converge to \(a^{-1}\)?}
+
+\subsubsection*{Q12 A number \(\mu_q\) is said to be a \(q\) quantile of the \(m\) numbers \(x_1, \ldots, x_m\) if it satisfies
+\[
+\frac{1}{m} \sum_{x_i \leq \mu_q} 1 \geq q \quad \text{and} \quad \frac{1}{m} \sum_{x_i \geq \mu_q} 1 \geq 1 - q.
+\]
+If we define
+\[
+\rho_q(r) = \begin{cases} 
+qr & r \geq 0 \\ 
+-(1 - q)r & r < 0 
+\end{cases},
+\]
+then it turns out that \(\mu\) is a \(q\) quantile if and only if \(\mu\) minimizes the function
+\[
+f_q(\mu) = \sum_{i=1}^m \rho_q(x_i - \mu).
+\]
+Medians correspond to the case \(q = 1/2\). Show that \(\rho_q(r)\) is majorized by the quadratic
+\[
+\zeta_q(r \mid r_n) = \frac{1}{4} \left[ \frac{r^2}{|r_n|} + (4q - 2)r + |r_n| \right].
+\]
+Deduce from this majorization the MM algorithm
+\[
+\mu_{n+1} = \frac{m(2q - 1) + \sum_{i=1}^m w_{ni} x_i}{\sum_{i=1}^m w_{ni}}
+\]
+\[
+w_{ni} = \frac{1}{|x_i - \mu_n|}
+\]
+for finding a \(q\) quantile. This interesting algorithm involves no sorting, only arithmetic operations.}
+
+\subsubsection*{Q15 A random variable \(X\) concentrated on the nonnegative integers is said to have a power series distribution if
+\[
+\Pr(X = k) = \frac{c_k \theta^k}{q(\theta)}.
+\]
+In equation (9.13), \(\theta\) is a positive parameter, the coefficients \(c_k\) are nonnegative, and \(q(\theta) = \sum_{k=0}^\infty c_k \theta^k\) is the appropriate normalizing constant. Examples include the binomial, negative binomial, Poisson, and logarithmic families and versions of these families truncated at 0. If \(x_1, \ldots, x_m\) is a random sample from the discrete density (9.13) and \(q(\theta)\) is log-concave, then devise an MM algorithm with updates
+\[
+\theta_{n+1} = \frac{\bar{x} q(\theta_n)}{q'(\theta_n)},
+\]
+where \(\bar{x}\) is the sample average of the observations \(x_i\).}
+
+\subsubsection*{Q18 Consider a random sample \( x_1, \ldots, x_m \) from a two-parameter Weibull density
+\[
+f(x) = \frac{\kappa}{\lambda} \left( \frac{x}{\lambda} \right)^{\kappa - 1} e^{-(x / \lambda)^\kappa}
+\]
+over the interval \((0, \infty)\). Show that the maximum of the loglikelihood with respect to \(\lambda > 0\) for \(\kappa > 0\) fixed satisfies \(\lambda^\kappa = \frac{1}{m} \sum_{i=1}^m x_i^\kappa\) [6]. Derive the profile loglikelihood
+\[
+m \ln \kappa - m \ln \left( \sum_{i=1}^m e^{\kappa \ln x_i} \right) + (\kappa - 1) \sum_{i=1}^m \ln x_i + \text{constant}
+\]
+by substituting this \(\lambda\) into the ordinary loglikelihood. Since the second term of the profile loglikelihood is concave in \(\kappa\), one can apply the majorization (9.3). Prove that this leads to the MM algorithm
+\[
+\frac{1}{\kappa_{n+1}} = \frac{\sum_{i=1}^m x_i^{\kappa_n} \ln x_i}{\sum_{i=1}^m x_i^{\kappa_n}} - \frac{1}{m} \sum_{i=1}^m \ln x_i.
+\]
+
+\subsubsection*{Q19 The Rasch model of test taking says that person \(i\) gives a correct response to question \(j\) of an exam with probability
+\[
+\frac{e^{\alpha_i + \beta_j}}{1 + e^{\alpha_i + \beta_j}}.
+\]
+Justify the loglikelihood
+\[
+L(\alpha, \beta) = \sum_{i=1}^p x_i \alpha_i + \sum_{j=1}^s y_j \beta_j - \sum_{i=1}^p \sum_{j=1}^s \ln(1 + e^{\alpha_i + \beta_j}),
+\]
+where \(x_i\) is the number of correct answers given by person \(i\), and \(y_j\) is the number of correct answers of question \(j\) given by all test takers. Based on the previous problem, majorize \(-L(\alpha, \beta)\) by a quadratic. Minimizing the quadratic can be accomplished by one step of Newton’s method. Thus, the Rasch model succumbs to a straightforward MM algorithm.
+
+\newpage
+\section*{Chapter 10: Data Mining}
 
 
 
