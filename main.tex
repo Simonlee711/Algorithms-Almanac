@@ -1839,7 +1839,7 @@ m \ln \kappa - m \ln \left( \sum_{i=1}^m e^{\kappa \ln x_i} \right) + (\kappa - 
 by substituting this \(\lambda\) into the ordinary loglikelihood. Since the second term of the profile loglikelihood is concave in \(\kappa\), one can apply the majorization (9.3). Prove that this leads to the MM algorithm
 \[
 \frac{1}{\kappa_{n+1}} = \frac{\sum_{i=1}^m x_i^{\kappa_n} \ln x_i}{\sum_{i=1}^m x_i^{\kappa_n}} - \frac{1}{m} \sum_{i=1}^m \ln x_i.
-\]
+\]}
 
 \subsubsection*{Q19 The Rasch model of test taking says that person \(i\) gives a correct response to question \(j\) of an exam with probability
 \[
@@ -1849,13 +1849,128 @@ Justify the loglikelihood
 \[
 L(\alpha, \beta) = \sum_{i=1}^p x_i \alpha_i + \sum_{j=1}^s y_j \beta_j - \sum_{i=1}^p \sum_{j=1}^s \ln(1 + e^{\alpha_i + \beta_j}),
 \]
-where \(x_i\) is the number of correct answers given by person \(i\), and \(y_j\) is the number of correct answers of question \(j\) given by all test takers. Based on the previous problem, majorize \(-L(\alpha, \beta)\) by a quadratic. Minimizing the quadratic can be accomplished by one step of Newton’s method. Thus, the Rasch model succumbs to a straightforward MM algorithm.
+where \(x_i\) is the number of correct answers given by person \(i\), and \(y_j\) is the number of correct answers of question \(j\) given by all test takers. Based on the previous problem, majorize \(-L(\alpha, \beta)\) by a quadratic. Minimizing the quadratic can be accomplished by one step of Newton’s method. Thus, the Rasch model succumbs to a straightforward MM algorithm.}
 
 \newpage
 \section*{Chapter 10: Data Mining}
 
+\subsubsection*{Q3: In the EM clustering model, suppose we relax the assumption that the cluster distributions share a common covariance matrix \(\Omega\). This can cause the likelihood function to be unbounded. Imposing a prior stabilizes estimation \([28]\). It is mathematically convenient to impose independent inverse Wishart priors on the different covariance matrices \(\Omega_j\). This amounts to adding the logprior
+\[
+- \sum_{j=1}^{k} \left[ \frac{a}{2} \ln \det \Omega_j + \frac{b}{2} \operatorname{tr}(\Omega_j^{-1} S_j) \right]
+\]
+to the loglikelihood, where the positive constants \(a\) and \(b\) and the positive definite matrices \(S_j\) must be determined. Show that imposition of this prior does not change the MM updates of the fractions \(\pi_j\) or the cluster centers \(\mu_j\). The most natural choice is to take all \(S_j\) equal to the sample variance matrix
+\[
+S = \frac{1}{m} \sum_{i=1}^{m} (y_i - \bar{y})(y_i - \bar{y})^*.
+\]
+Show that the MM updates of the \(\Omega_j\) are now
+\[
+\Omega_{n+1,j} = \frac{a}{a + \sum_{i=1}^{m} w_{nij}} \left( \frac{b}{a} S \right) + \frac{\sum_{i=1}^{m} w_{nij}}{a + \sum_{i=1}^{m} w_{nij}} \tilde{\Omega}_{n+1,j}
+\]
+\[
+\tilde{\Omega}_{n+1,j} = \frac{1}{\sum_{i=1}^{m} w_{nij}} \sum_{i=1}^{m} w_{nij} (y_i - \mu_{n+1,j})(y_i - \mu_{n+1,j})^*.
+\]
+In other words, the penalized EM update is a convex combination of the standard EM update and the mode \(\frac{b}{a} S\) of the prior. Chen and Tan \([28]\) tentatively recommend the choice \(a = b = \frac{2}{\sqrt{m}}\).}
 
+\subsubsection*{Q4: The mean shift algorithm is a technique for finding the local maxima of an empirically constructed probability density \([55, 59]\). The algorithm has applications in computer vision and image processing. Suppose \( y_1, \ldots, y_m \) is a random sample of points from some unknown density function. One can approximate the density by a weighted sum
+\[
+f(x) = \sum_i w_i h(\|x - y_i\|^2)
+\]
+of shifted versions of a density \( h(\|x\|^2) \). Let us assume that \( h(s) \) is nonnegative, decreasing, convex, and differentiable on \([0, \infty)\). The mean shift algorithm looks for a local maximum of \( f(x) \) in a neighborhood of an initial point \( x_0 \) and iterates according to
+\[
+x_{n+1} = \frac{\sum_i w_i h'(\|x_n - y_i\|^2) y_i}{\sum_i w_i h'(\|x_n - y_i\|^2)}.
+\]
+Prove that the iterates constitute an MM algorithm for maximizing \( f(x) \). What are the iterates in the Gaussian setting \( h(s) = e^{-cs} \)?}
 
+\subsubsection*{Q6: In MCDA there are an infinity of regular simplexes. One appealing simplex has vertices
+\[
+\mathbf{v}_j = 
+\begin{cases} 
+(c - 1)^{-1/2} \mathbf{1} & \text{if } j = 1 \\ 
+r \mathbf{1} + s \mathbf{e}_{j-1} & \text{if } 2 \leq j \leq c, 
+\end{cases}
+\]
+where
+\[
+r = \frac{-1 + \sqrt{c}}{(c - 1)^{3/2}}, \quad s = \sqrt{\frac{c}{c - 1}},
+\]
+and \(\mathbf{e}_j\) is the \(j\)th standard coordinate vector in \(\mathbb{R}^{c-1}\). Show that these choices place the \(c\) vertices on the surface of the unit sphere in \(\mathbb{R}^{c-1}\) and that all vertex pairs are equidistant. Any rotation, dilation, or translation of these vectors preserves the equidistant property.}
+
+\subsubsection*{Q7: Demonstrate that it is impossible to situate \(c + 1\) points in \(\mathbb{R}^{c-1}\) so that all pairs of points are equidistant under the Euclidean norm [174].}
+
+\subsubsection*{Q8: If the matrix \(A\) has full svd \(U \Sigma V^*\), then the best rank \(r\) approximation of \(A\) in the Frobenius norm is
+\[
+B = \sum_{j=1}^r \sigma_j u_j v_j^*
+\]
+based on the columns of \(U\) and \(V\) and diagonal entries of \(\Sigma\). This is the content of the Eckart–Young theorem [53] as proved in Proposition A.6.4. Given this result, use existing utilities in Julia to write a function for matrix completion.}
+
+\subsubsection*{Q9: In the Kullback–Leibler divergence version of NMF, suppose the entries \(y_{ij}\) of \(\mathbf{Y}\) are integers. They can then be viewed as realizations of independent Poisson random variables with means \(\sum_k u_{ik}v_{kj}\). In this setting the loglikelihood is
+\[
+L(U, V) = \sum_i \sum_j \left[ y_{ij} \ln \left( \sum_k u_{ik}v_{kj} \right) - \sum_k u_{ik}v_{kj} \right].
+\]
+\noindent Maximization with respect to \(U\) and \(V\) should lead to a good factorization. Verify the minorization
+\[
+\ln \left( \sum_k u_{ik}v_{kj} \right) \geq \sum_k \frac{a_{nikj}}{s_{nij}} \ln \left( \frac{s_{nij}}{a_{nikj}} u_{ik}v_{kj} \right),
+\]
+\noindent where
+\[
+a_{nikj} = u_{nik}v_{nkj}, \quad s_{nij} = \sum_k a_{nikj},
+\]
+\noindent and \(n\) indicates the current iteration. Given this minorization, derive the alternating multiplicative updates
+\[
+u_{n+1,ik} = u_{nik} \frac{\sum_j y_{ij} \frac{v_{nkj}}{s_{nij}}}{\sum_j v_{nkj}}
+\]
+\noindent and
+\[
+v_{n+1,kj} = v_{nkj} \frac{\sum_i y_{ij} \frac{u_{nik}}{s_{nij}}}{\sum_i u_{nik}}.
+\]}
+
+\subsubsection*{Q10: In problem (9) calculate the partial derivative}
+\[
+\frac{\partial}{\partial u_{il}} L(U, V) = \sum_j v_{lj} \left( \frac{y_{ij}}{\sum_k u_{ik}v_{kj}} - 1 \right).
+\]
+\noindent Show that the conditions \(\min\{u_{il}, - \frac{\partial}{\partial u_{il}} L(U, V)\} = 0\) for all pairs \((i, l)\) are both necessary and sufficient for \(U\) to maximize \(L(U, V)\) when \(V\) is fixed. The same conditions apply in minimizing the Frobenius criterion \(\|\mathbf{Y} - \mathbf{U} \mathbf{V}\|_F^2\) with different partial derivatives.
+
+\subsubsection*{Q11: In the matrix factorization, it may be worthwhile shrinking the estimates of the entries of \(U\) and \(V\) toward 0 [140]. Let \(\lambda\) and \(\mu\) be positive constants, and consider the penalized objective functions
+\[
+l(U, V) = L(U, V) - \lambda \sum_i \sum_k u_{ik} - \mu \sum_k \sum_j v_{kj}
+\]
+\[
+r(V, W) = \|\mathbf{Y} - \mathbf{UV}\|_F^2 + \lambda \sum_i \sum_k u_{ik}^2 + \mu \sum_k \sum_j v_{kj}^2
+\]
+\noindent with lasso and ridge penalties, respectively. Here the Poisson loglikelihood \(L(U, V)\) is studied in problem (9). Derive block optimization updates for these objective functions. Explain why the updates maintain positivity and why shrinkage is obvious, with stronger shrinkage for the lasso penalty with small parameters.}
+
+\subsubsection*{Q12: Find the Euclidean projection operators for the four following closed convex sets in \(\mathbb{R}^p\): (a) closed ball \(\{x : \|x - z\| \leq r\}\), (b) closed rectangle \(\{x : a \leq x \leq b\}\), (c) hyperplane \(\{x : a^* x = b\}\) for \(a \neq 0\), and (d) closed halfspace \(\{x : a^* x \leq b\}\).}
+
+\subsubsection*{Q13: Let \(\mathrm{Sym}_n\) denote the subspace of \(n \times n\) symmetric matrices. Find the Euclidean projection mapping an arbitrary \(n \times n\) matrix \(\mathbf{X}\) onto \(\mathrm{Sym}_n\).}
+
+\subsubsection*{Q14: Let \(\mathrm{Skew}_n\) denote the subspace of \(n \times n\) skew-symmetric matrices. Show that the map \(\mathbf{X} \mapsto \frac{1}{2} (\mathbf{X} - \mathbf{X}^*)\) constitutes projection onto \(\mathrm{Skew}_n\) and that the subspaces \(\mathrm{Sym}_n\) and \(\mathrm{Skew}_n\) are orthogonal complements under the Frobenius inner product.}
+
+\subsubsection*{Q15: Let \(\mathrm{Pos}_n\) denote the set of \(n \times n\) positive semidefinite matrices. Find the Euclidean projection mapping an \(n \times n\) symmetric matrix \(\mathbf{X}\) onto \(\mathrm{Pos}_n\). (Hint: The Frobenius norm is invariant under multiplication of its argument by an orthogonal matrix.)}
+
+\subsubsection*{Q16: Let \(S_r\) be the set whose points have at most \(r\) nonzero coordinates. Show that projecting \(\mathbf{y}\) onto \(S_r\) amounts to sorting the coordinates of \(\mathbf{y}\) by magnitude, saving the \(r\) largest, and sending the remaining \(n - r\) coordinates to zero. For what \(\mathbf{y}\) is the projection multivalued?}
+
+\subsubsection*{Q17: The set \(U_k^n = \{0,1\}^n \cap \{x \in \mathbb{R}^n : \mathbf{x}^* \mathbf{1} = k\}\) is the collection of \(\binom{n}{k}\) vertices of the unit cube whose coordinates sum to \(k\). Show that projection of \(\mathbf{y}\) onto \(U_k^n\) replaces the \(k\) largest entries of \(\mathbf{y}\) by \(1\) and the remaining entries by \(0\).}
+
+\subsubsection*{Q18: According to Geman and McClure [62], robust regression can be achieved by minimizing the following amendment
+\[
+f(\beta) = \sum_{i=1}^{n} \frac{(y_i - \mathbf{x}_i^* \beta)^2}{c^2 + (y_i - \mathbf{x}_i^* \beta)^2}
+\]
+of the usual least linear regression criterion. Based on the concavity of the function \(s \mapsto \frac{s}{c^2 + s}\), devise a weighted least squares MM algorithm for minimizing \(f(\beta)\).}
+
+\subsubsection*{Q19: Consider the piecewise linear function \( f(\mu) = c\mu + \sum_{i=1}^{n} w_i |y_i - \mu| \), where the points \( y_i \) satisfy \( y_1 < y_2 < \cdots < y_n \) and the positive weights satisfy \( \sum_{i=1}^{n} w_i = 1 \). Show that \( f(\mu) \) has no minimum when \( |c| > 1 \). What happens when \( c = 1 \) or \( c = -1 \)? This leaves the case \( |c| < 1 \). Show that a minimum occurs when
+\[
+\sum_{y_i > \mu} w_i - \sum_{y_i \leq \mu} w_i \leq c \quad \text{and} \quad \sum_{y_i \geq \mu} w_i - \sum_{y_i < \mu} w_i \geq c.
+\]
+The case \( c = 0 \) produces the weighted median. (Hints: A crude plot of \( f(\mu) \) might help. What conditions on the right-hand and left-hand derivatives of \( f(\mu) \) characterize a minimum?)}
+
+\newpage
+\section*{Chapter 11: Fast Fourier Transfrom}
+
+\newpage
+\section*{Chapter 12: Monte Carlo Methods}
+
+\newpage
+\section*{Chapter 13: Neural Networks}
 
 
 
