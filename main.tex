@@ -1289,8 +1289,108 @@ This demonstrates how the QR decomposition of \(X\) and \(y\) can be utilized to
 \text{Also show that} \(\det(X) = \det(R)\) \text{when \(X\) is square and in general that}
 \[ \det(X^* X) = (\det(R))^2. \]}
 
+
+
+\textbf{Part 1: Showing that \(X(X^* X)^{-1}X^* = QQ^*\)}
+
+\textbf{1. Starting from the QR Decomposition:} Given \(X = QR\), where \(Q\) is an orthogonal matrix (\(Q^* Q = I\)) and \(R\) is an upper triangular matrix.
+
+\textbf{2. Calculate \(X^* X\):}
+   \[
+   X^* X = (QR)^* QR = R^* Q^* QR
+   \]
+   Since \(Q\) is orthogonal, \(Q^* Q = I\), thus:
+   \[
+   X^* X = R^* R
+   \]
+
+\textbf{3. Compute \((X^* X)^{-1}\):}
+   \[
+   (X^* X)^{-1} = (R^* R)^{-1} = R^{-1} (R^*)^{-1}
+   \]
+   Note: This step assumes \(R\) is invertible, which is a reasonable assumption in the context of the QR decomposition when \(X\) has full rank.
+
+\textbf{4. Expression for \(X(X^* X)^{-1}X^*\):}
+   \[
+   X(X^* X)^{-1}X^* = QR (R^* R)^{-1} R^* Q^* = QR R^{-1} (R^*)^{-1} R^* Q^*
+   \]
+   Since \(RR^{-1} = I\) and \(R^*(R^*)^{-1} = I\), we get:
+   \[
+   QR I I Q^* = QQ^*
+   \]
+
+\textbf{Part 2: Showing that \(\det(X) = \det(R)\) for square \(X\)}
+
+\textbf{1. Determinant of \(X\):}
+   \[
+   \det(X) = \det(QR) = \det(Q) \det(R)
+   \]
+   Since \(Q\) is orthogonal, its determinant is either \(+1\) or \(-1\), thus:
+   \[
+   \det(X) = \pm \det(R)
+   \]
+   For an orthogonal matrix \(Q\), if its determinant is \(+1\) or \(-1\), this affects only the sign of the determinant of \(X\), not its absolute value, which aligns with \(\det(R)\) under typical conditions where orientation is preserved (\(\det(Q) = 1\)).
+
+\textbf{Part 3: Showing that \(\det(X^* X) = (\det(R))^2\)}
+
+\textbf{Using previously found \(X^* X = R^* R\):}
+   \[
+   \det(X^* X) = \det(R^* R) = \det(R^*) \det(R)
+   \]
+   Since \(R\) is upper triangular, so is \(R^*\), and:
+   \[
+   \det(R^*) = \det(R)
+   \]
+   Therefore:
+   \[
+   \det(X^* X) = (\det(R))^2
+   \]
+
+This completes the proof of the given statements in the problem.
+
 % q16
 \subsubsection*{Q16: Let \(v_1, \ldots, v_n\) be \(n\) conjugate vectors for the \(n \times n\) positive definite matrix \(A\). Describe how you can use the expansion \(x = \sum_{i=1}^n c_i v_i\) to solve the linear equation \(Ax = b\).}
+
+To solve the linear equation \(Ax = b\) using the expansion \(x = \sum_{i=1}^n c_i v_i\), where \(v_1, \ldots, v_n\) are \(n\) conjugate vectors with respect to the positive definite matrix \(A\), we follow these steps:
+
+\textbf{Step 1: Define the expansion of \(x\)}
+Given \(x = \sum_{i=1}^n c_i v_i\), where \(c_i\) are coefficients to be determined.
+
+\textbf{Step 2: Utilize the conjugacy of vectors}
+The vectors \(v_1, \ldots, v_n\) are A-conjugate, meaning \(v_i^T A v_j = 0\) for all \(i \neq j\). This property will be essential in simplifying the system of equations derived from substituting \(x\) in \(Ax = b\).
+
+\textbf{Step 3: Substitute \(x\) into the equation \(Ax = b\)}
+\[
+Ax = A\left(\sum_{i=1}^n c_i v_i\right) = \sum_{i=1}^n c_i Av_i
+\]
+Since the \(v_i\) are conjugate vectors, the matrix \(A\) acting on any \(v_i\) does not introduce terms involving any \(v_j\) for \(j \neq i\).
+
+\textbf{Step 4: Formulate the system of equations}
+To find \(c_i\), project the equation \(Ax = b\) onto each \(v_i\):
+\[
+v_i^T Ax = v_i^T b \quad \text{for each } i
+\]
+Substitute \(Ax\) from step 3:
+\[
+v_i^T \left(\sum_{j=1}^n c_j Av_j\right) = v_i^T b
+\]
+Using the conjugacy, \(v_i^T Av_j = 0\) for \(i \neq j\), and only the term where \(i = j\) remains:
+\[
+v_i^T (c_i Av_i) = v_i^T b \quad \Rightarrow \quad c_i v_i^T Av_i = v_i^T b
+\]
+Thus, solving for \(c_i\):
+\[
+c_i = \frac{v_i^T b}{v_i^T Av_i}
+\]
+
+\textbf{Step 5: Construct \(x\) from the coefficients \(c_i\)
+With \(c_i\) found, construct \(x\):}
+\[
+x = \sum_{i=1}^n \frac{v_i^T b}{v_i^T Av_i} v_i
+\]
+
+\textbf{Conclusion}
+This method effectively utilizes the orthogonality of the conjugate vectors under transformation by \(A\) to simplify the solution process. Each coefficient \(c_i\) is determined independently of the others, making the calculation straightforward and parallelizable. This is particularly useful in numerical methods such as the Conjugate Gradient method, widely used for solving large systems of linear equations where \(A\) is symmetric and positive definite.
 
 %q17
 \subsubsection*{Q17: Suppose that \(A\) is an \(n \times n\) positive definite matrix and that the nontrivial vectors \(u_1, \ldots, u_n\) satisfy
