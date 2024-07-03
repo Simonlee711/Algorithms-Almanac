@@ -1731,17 +1731,169 @@ This analysis highlights the intricate relationship between the differentiabilit
 
 \subsubsection*{Q7: Characterize the behavior of Newton’s method in minimizing the function \(f(x) = \sqrt{x^2 + 1}\). When the method converges, what is its order of convergence?}
 
+To analyze the behavior of Newton’s method when used to minimize the function \(f(x) = \sqrt{x^2 + 1}\), and determine the order of convergence when the method converges, let's proceed step by step:
+
+\textbf{Analyzing the Function and Its Derivatives}
+
+The function given is:
+\[
+f(x) = \sqrt{x^2 + 1}
+\]
+This function is continuously differentiable everywhere, and its derivatives are necessary for Newton's method.
+
+1. \textbf{First Derivative:}
+   \[
+   f'(x) = \frac{1}{2}(x^2 + 1)^{-1/2} \cdot 2x = \frac{x}{\sqrt{x^2 + 1}}
+   \]
+   This represents the gradient of the function, which Newton's method uses to find zeros that correspond to stationary points (minima, maxima, or saddle points).
+
+2. \textbf{Second Derivative:}
+   \[
+   f''(x) = \frac{(x^2 + 1) - x^2}{(x^2 + 1)^{3/2}} = \frac{1}{(x^2 + 1)^{3/2}}
+   \]
+   This second derivative is always positive, indicating that the function is convex, and any stationary point found will be a minimum.
+
+\textbf{Newton's Method for Minimization}
+
+Newton’s method for finding a minimum involves iteratively updating guesses based on the first and second derivatives:
+\[
+x_{n+1} = x_n - \frac{f'(x_n)}{f''(x_n)}
+\]
+Substituting \(f'(x)\) and \(f''(x)\):
+\[
+x_{n+1} = x_n - \frac{\frac{x_n}{\sqrt{x_n^2 + 1}}}{\frac{1}{(x_n^2 + 1)^{3/2}}} = x_n - x_n(x_n^2 + 1) = x_n - x_n^3 - x_n
+\]
+Simplifying, we find:
+\[
+x_{n+1} = -x_n^3
+\]
+This iteration implies that each step squares the value of \(x_n\) and negates it, magnifying any non-zero initial guess.
+
+Behavior and Convergence Analysis\textbf{
+}
+1. \textbf{Behavior:}
+   - If \(x_0 = 0\), then \(x_n = 0\) for all \(n\), which is a stationary point and indeed a global minimum of \(f(x)\).
+   - If \(x_0 \neq 0\), the magnitude of \(x_n\) increases rapidly due to the cubic term, leading to divergence.
+
+2. \textbf{Convergence:}
+   - When \(x_0 = 0\), convergence is trivial as the initial guess is already at the minimum.
+   - For any other initial guess, the method does not converge but diverges.
+
+3. \textbf{Order of Convergence:}
+   - When the method converges (i.e., from the initial guess \(x_0 = 0\)), it is stationary at every step; thus, discussing the order of convergence in the usual sense (which measures improvement in approximation per iteration) is somewhat moot. However, in cases where the method theoretically converges (if not diverging), it is typically quadratic for well-behaved functions, though this specific setup with \(f(x) = \sqrt{x^2 + 1}\) does not exhibit typical convergence.
+
+\textbf{Conclusion}
+
+Newton’s method applied to minimize \(f(x) = \sqrt{x^2 + 1}\) is only stable and convergent if started exactly at \(x = 0\), the global minimum. Any other starting point leads to divergence due to the cubic growth induced by the iteration formula. This behavior illustrates the importance of careful initial guess selection and the limitations of Newton's method in handling even seemingly simple, smooth functions without careful consideration of the starting conditions and the nature of the function's derivatives.
+
 \subsubsection*{Q8: For any positive number \(x\), show that
 \[ \log_2 x = m \pm \log_2 (1 + w) = m \pm \frac{\ln(1 + w)}{\ln 2} \]
 for an integer \(m\) and a real \(w \in \left[0, \frac{1}{2}\right]\) [177]. (Hints: Write \(x = 2^n + b\) with
 \[ 0 \leq b < 2^n. \text{ Then } \log_2 x = n + \log_2 (1 + r) \text{ for } r = \frac{b}{2^n}. \text{ When } r \geq \frac{1}{2}, \text{ write } \]
 \[ n + \log_2 (1 + r) = n + 1 - \log_2 \left(1 + \frac{1 - r}{1 + r}\right). \]}
 
+To show that for any positive number \(x\), the expression \(\log_2 x = m \pm \log_2 (1 + w) = m \pm \frac{\ln(1 + w)}{\ln 2}\) holds for an integer \(m\) and a real \(w \in \left[0, \frac{1}{2}\right]\), let's proceed with the provided hints and additional steps:
+
+\textbf{Step 1: Decompose \(x\) into \(2^n + b\)}
+
+For any positive \(x\), there exists an integer \(n\) such that \(2^n \leq x < 2^{n+1}\). Write \(x\) as:
+\[ x = 2^n + b \]
+where \(0 \leq b < 2^n\). 
+
+\textbf{Step 2: Define \(r\) and Express \(\log_2 x\)}
+
+Define \(r = \frac{b}{2^n}\), which satisfies \(0 \leq r < 1\). We can express \(\log_2 x\) as:
+\[ \log_2 x = \log_2 (2^n + b) = \log_2 (2^n(1 + r)) = \log_2 (2^n) + \log_2 (1 + r) = n + \log_2 (1 + r) \]
+
+\textbf{Step 3: Analyze \(r\) and Adjust the Expression}
+
+The hint suggests adjusting the expression when \(r \geq \frac{1}{2}\):
+\[ n + \log_2 (1 + r) = n + 1 - \log_2 \left(\frac{2}{1 + r}\right) = n + 1 - \log_2 \left(1 + \frac{1 - r}{1 + r}\right) \]
+This re-expression utilizes the fact that:
+\[ \log_2 (1 + r) = \log_2 \left(\frac{2}{2/(1 + r)}\right) = 1 - \log_2 \left(\frac{2}{1 + r}\right) \]
+
+\textbf{Step 4: Set \(m\) and \(w\)}
+
+Depending on whether \(r \geq \frac{1}{2}\) or \(r < \frac{1}{2}\), adjust the value of \(m\) and \(w\):
+- If \(r < \frac{1}{2}\), then \(m = n\) and \(w = r\). Here:
+  \[ \log_2 x = n + \log_2 (1 + r) \]
+  \[ m = n, \ w = r \]
+
+- If \(r \geq \frac{1}{2}\), rewrite it as:
+  \[ \log_2 x = n + 1 - \log_2 \left(1 + \frac{1 - r}{1 + r}\right) \]
+  Since \(\frac{1 - r}{1 + r} \leq \frac{1}{2}\), let \(w = \frac{1 - r}{1 + r}\). Then:
+  \[ m = n + 1, \ w = \frac{1 - r}{1 + r} \]
+  \[ \log_2 x = m - \log_2 (1 + w) \]
+
+\textbf{Conclusion}
+
+We have shown that for any positive \(x\), \(\log_2 x\) can be expressed as \(m \pm \log_2 (1 + w)\) for some integer \(m\) and \(w \in \left[0, \frac{1}{2}\right]\). The choice of \(\pm\) and the specific values of \(m\) and \(w\) depend on the value of \(r = \frac{b}{2^n}\), ensuring that \(w\) remains within the specified range. This method effectively breaks down the logarithmic calculation into manageable parts using the properties of logarithms and clever algebraic manipulation.
+
 \subsubsection*{Q9: For \(y\) positive the positive root of the equation \(f(x) = \frac{1}{x^2} - y = 0\) is \(\frac{1}{\sqrt{y}}\). Show that the Newton iterates for finding the root are
 \[ x_{n+1} = \frac{x_n(3 - yx_n^2)}{2}. \]
 Alternatively, \(x = \frac{1}{\sqrt{y}}\) solves the equation \(g(x) = yx^2 - 1 = 0\). Demonstrate that this formulation gives rise to the Newton updates
 \[ x_{n+1} = \frac{1}{2} \left( x_n + \frac{1}{yx_n} \right). \]
 The first scheme involves no reciprocals, but the second scheme has better convergence guarantees. Show that the second scheme satisfies \(x_{n+1} \geq \frac{1}{\sqrt{y}}\) regardless of the value of \(x_n > 0\). Also show that \(x_{n+1} \leq x_n\) whenever \(x_n \geq \frac{1}{\sqrt{y}}\). Hence, global convergence is assured.}
+
+To solve and analyze the provided equations for finding the root \(x = \frac{1}{\sqrt{y}}\) using Newton's method, we'll handle each equation separately and then compare the characteristics of their respective Newton update schemes.
+
+\textbf{
+Analyzing the First Equation \(f(x) = \frac{1}{x^2} - y = 0\)}
+
+\textbf{1. Function and Derivative:}
+   \[
+   f(x) = \frac{1}{x^2} - y
+   \]
+   \[
+   f'(x) = -\frac{2}{x^3}
+   \]
+
+\textbf{2. Newton's Update Formula:}
+   Applying Newton's method:
+   \[
+   x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} = x_n - \frac{\frac{1}{x_n^2} - y}{-\frac{2}{x_n^3}} = x_n + \frac{x_n^3(\frac{1}{x_n^2} - y)}{2} = \frac{x_n(3 - yx_n^2)}{2}
+   \]
+
+\textbf{Analyzing the Second Equation \(g(x) = yx^2 - 1 = 0\)}
+
+\textbf{1. Function and Derivative:}
+   \[
+   g(x) = yx^2 - 1
+   \]
+   \[
+   g'(x) = 2yx
+   \]
+
+\textbf{2. Newton's Update Formula:}
+   \[
+   x_{n+1} = x_n - \frac{g(x_n)}{g'(x_n)} = x_n - \frac{yx_n^2 - 1}{2yx_n} = x_n - \frac{yx_n^2}{2yx_n} + \frac{1}{2yx_n} = \frac{1}{2} \left(x_n + \frac{1}{yx_n}\right)
+   \]
+
+\textbf{Properties of the Second Newton Update Scheme}
+
+\textbf{Claim 1: \(x_{n+1} \geq \frac{1}{\sqrt{y}}\) for \(x_n > 0\)}
+
+Given the update formula:
+   \[
+   x_{n+1} = \frac{1}{2} \left(x_n + \frac{1}{yx_n}\right)
+   \]
+Applying the AM-GM inequality:
+   \[
+   x_{n+1} = \frac{1}{2} \left(x_n + \frac{1}{yx_n}\right) \geq \frac{1}{2} \cdot 2\sqrt{x_n \cdot \frac{1}{yx_n}} = \frac{1}{\sqrt{y}}
+   \]
+This holds for any positive \(x_n\).
+
+\textbf{Claim 2: \(x_{n+1} \leq x_n\) whenever \(x_n \geq \frac{1}{\sqrt{y}}\)}
+
+Again using the update formula, for \(x_n \geq \frac{1}{\sqrt{y}}\):
+\[
+x_{n+1} = \frac{1}{2} \left(x_n + \frac{1}{yx_n}\right) \leq \frac{1}{2} \left(x_n + \frac{1}{y\left(\frac{1}{\sqrt{y}}\right)}\right) = \frac{1}{2} \left(x_n + \sqrt{y}\frac{1}{\sqrt{y}}\right) = x_n
+\]
+This inequality holds because \(\frac{1}{yx_n} \leq \sqrt{y}\) when \(x_n \geq \frac{1}{\sqrt{y}}\).
+
+\textbf{Conclusion}
+
+The second Newton scheme, which uses \(g(x) = yx^2 - 1\), not only ensures that each iterate is at least as large as \(\frac{1}{\sqrt{y}}\) but also that the sequence of iterates is non-increasing whenever starting from any \(x_n \geq \frac{1}{\sqrt{y}}\). Therefore, it offers a global convergence guarantee, converging monotonically to the root \(\frac{1}{\sqrt{y}}\) from any positive initial guess, making it superior in terms of convergence behavior compared to the first scheme derived from \(f(x) = \frac{1}{x^2} - y\).
 
 \subsubsection*{Q10: The binomial theorem states that for \(r\) real and \(|x| < 1\)
 \[ (1 + x)^r = \sum_{k=0}^{\infty} \binom{r}{k} x^k = \sum_{k=0}^{\infty} \frac{r(r-1) \cdots (r-k+1)}{k!} x^k. \]
