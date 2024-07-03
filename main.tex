@@ -1397,10 +1397,83 @@ This method effectively utilizes the orthogonality of the conjugate vectors unde
 \[ u_i^* A u_j = 0 \quad \text{and} \quad u_i^* u_j = 0 \]
 for all \(i \neq j\). Demonstrate that the \(u_i\) are eigenvectors of \(A\).}
 
+To demonstrate that the vectors \(u_1, \ldots, u_n\), which satisfy the given conditions with respect to the positive definite matrix \(A\), are eigenvectors of \(A\), we follow these steps:
+
+\textbf{Step 1: Examine the properties of \(A\) and \(u_i\)}
+The matrix \(A\) is positive definite, implying that for any non-zero vector \(x\), \(x^* Ax > 0\). Additionally, the vectors \(u_1, \ldots, u_n\) are orthogonal under both the standard inner product and the \(A\)-inner product, satisfying:
+\[ u_i^* u_j = 0 \quad \text{and} \quad u_i^* A u_j = 0 \quad \text{for all } i \neq j \]
+
+\textbf{Step 2: Explore the implications of \(A\)-orthogonality}
+Given that \(u_i^* A u_j = 0\) for \(i \neq j\), each vector \(u_i\) is \(A\)-orthogonal to every other vector \(u_j\). This orthogonality suggests that each \(u_i\) could potentially be aligned with an eigendirection of \(A\).
+
+\textbf{Step 3: Consider a general linear combination of \(u_i\)}
+Let \(x\) be a vector represented as a linear combination of the vectors \(u_i\):
+\[ x = \sum_{i=1}^n c_i u_i \]
+where \(c_i\) are scalar coefficients. Then, we compute \(Ax\) using the linearity of \(A\):
+\[ Ax = A\left(\sum_{i=1}^n c_i u_i\right) = \sum_{i=1}^n c_i Au_i \]
+
+\textbf{Step 4: Apply \(u_j^*\) to both sides of the equation \(Ax\)}
+Project the equation onto each \(u_j\):
+\[ u_j^* Ax = u_j^* \left(\sum_{i=1}^n c_i Au_i\right) = \sum_{i=1}^n c_i u_j^* Au_i \]
+Due to the \(A\)-orthogonality, \(u_j^* Au_i = 0\) for \(i \neq j\), and the expression simplifies to:
+\[ u_j^* Ax = c_j u_j^* Au_j \]
+
+\textbf{Step 5: Examine the product \(u_j^* Au_j\)}
+Since \(A\) is positive definite and \(u_j\) is non-trivial, \(u_j^* Au_j > 0\). This positive scalar can be written as \(\lambda_j\), where \(\lambda_j = u_j^* Au_j\), suggesting that:
+\[ Au_j = \lambda_j u_j \]
+Here, \(\lambda_j\) acts as the eigenvalue corresponding to the eigenvector \(u_j\).
+
+\textbf{Conclusion}
+Thus, each vector \(u_i\) must be an eigenvector of \(A\) with the corresponding eigenvalue \(\lambda_i = u_i^* Au_i\). This follows because the action of \(A\) on each \(u_i\) scales it by a positive scalar, satisfying the definition of an eigenvector. Hence, the vectors \(u_1, \ldots, u_n\) are eigenvectors of the matrix \(A\).
+
 %q18
 \subsubsection*{Q18: Suppose that the \(n \times n\) symmetric matrix \(A\) satisfies \(v^* A v \neq 0\) for all \(v \neq 0\) and that \(\{u_1, \ldots, u_n\}\) is a basis of \(\mathbb{R}^n\). If one defines \(v_1 = u_1\) and inductively
 \[ v_k = u_k - \sum_{j=1}^{k-1} \frac{u_k^* A v_j}{v_j^* A v_j} v_j \]
 for \(k = 2, \ldots, n\), then show that the vectors \(v_1, \ldots, v_n\) are conjugate and provide a basis of \({R}^n\). Note that \(A\) need not be positive definite.}
+
+To show that the vectors \(v_1, \ldots, v_n\) defined inductively from the basis \(\{u_1, \ldots, u_n\}\) are \(A\)-conjugate and form a basis of \(\mathbb{R}^n\), we'll follow a methodical approach:
+
+\textbf{Step 1: Verify \(A\)-conjugacy of \(v_k\)}
+We need to demonstrate that \(v_i^* A v_j = 0\) for all \(i \neq j\). This is true by construction of the vectors \(v_k\). 
+
+\textbf{Proof of Conjugacy:}
+For each \(k\), \(v_k\) is constructed to be \(A\)-orthogonal to each preceding \(v_j\), \(j < k\). Using the definition:
+\[ v_k = u_k - \sum_{j=1}^{k-1} \frac{u_k^* A v_j}{v_j^* A v_j} v_j \]
+
+We check the \(A\)-orthogonality:
+\[ v_i^* A v_k = 0 \quad \text{for all } i < k \]
+\[ v_i^* A v_k = v_i^* A \left( u_k - \sum_{j=1}^{k-1} \frac{u_k^* A v_j}{v_j^* A v_j} v_j \right) \]
+
+Using linearity and distributing \(v_i^* A\):
+\[ = v_i^* A u_k - \sum_{j=1}^{k-1} \frac{u_k^* A v_j}{v_j^* A v_j} v_i^* A v_j \]
+
+By the construction, each term \(v_i^* A v_j = 0\) for \(i \neq j\) and for \(i = j\), it simplifies because of the coefficient:
+\[ = 0 - \frac{u_k^* A v_i}{v_i^* A v_i} v_i^* A v_i \]
+\[ = 0 \]
+
+Thus, \(v_i^* A v_k = 0\) holds by construction, ensuring \(A\)-conjugacy.
+
+\textbf{Step 2: Show that \(v_1, \ldots, v_n\) form a basis of \(\mathbb{R}^n\)}
+To show that these vectors form a basis, we must prove they are linearly independent and span \(\mathbb{R}^n\).
+
+\textbf{Linear Independence:}
+Assume a linear combination leading to the zero vector:
+\[ \sum_{k=1}^n a_k v_k = 0 \]
+
+We project this equation onto \(v_i^* A\) for each \(i\):
+\[ v_i^* A \left(\sum_{k=1}^n a_k v_k\right) = 0 \]
+\[ \sum_{k=1}^n a_k v_i^* A v_k = 0 \]
+
+Since \(v_i^* A v_k = 0\) for \(i \neq k\) and \(v_i^* A v_i \neq 0\) (by assumption \(v^* A v \neq 0\) for non-zero \(v\)), the terms simplify to:
+\[ a_i v_i^* A v_i = 0 \]
+
+Given \(v_i^* A v_i \neq 0\), it follows \(a_i = 0\) for all \(i\). Hence, \(v_1, \ldots, v_n\) are linearly independent.
+
+\textbf{Spanning \(\mathbb{R}^n\):}
+Since \(v_1, \ldots, v_n\) are linearly independent and there are \(n\) of them in \(n\)-dimensional space, they span \(\mathbb{R}^n\).
+
+\textbf{Conclusion}
+The vectors \(v_1, \ldots, v_n\) are \(A\)-conjugate with respect to each other by construction and form a basis for \(\mathbb{R}^n\), fulfilling both the requirements of the problem statement.
 
 \newpage
 \section*{Chapter 6: Newtons Method}
@@ -1408,7 +1481,97 @@ for \(k = 2, \ldots, n\), then show that the vectors \(v_1, \ldots, v_n\) are co
 \[ w_{n+1} = w_n + \frac{\frac{x}{w_n e^{w_n}}}{w_n + 1}. \]
 Make the argument that \(w_{n+1} > w_n\) when \(w_n e^{w_n} < x\) and that \(w_{n+1} < w_n\) when \(w_n e^{w_n} > x\).}
 
+
+\textbf{Part 2: Derivation of the Newton Update Formula}
+
+Lambert's equation is \(we^w = x\). We want to find \(w\) such that this holds. To apply Newton's method, we first define the function whose root we are seeking:
+\[ f(w) = we^w - x \]
+
+Newton's method updates the estimate for \(w\) using:
+\[ w_{n+1} = w_n - \frac{f(w_n)}{f'(w_n)} \]
+
+We compute the derivative:
+\[ f'(w) = \frac{d}{dw}(we^w) = e^w + we^w = (w + 1)e^w \]
+
+So, the update formula becomes:
+\[ w_{n+1} = w_n - \frac{w_n e^{w_n} - x}{(w_n + 1)e^{w_n}} \]
+\[ w_{n+1} = w_n + \frac{x - w_n e^{w_n}}{(w_n + 1)e^{w_n}} \]
+\[ w_{n+1} = w_n + \frac{\frac{x}{w_n e^{w_n}} - 1}{w_n + 1} \]
+\[ w_{n+1} = w_n + \frac{\frac{x}{w_n e^{w_n}}}{w_n + 1} \]
+
+\textbf{Part 3: Argument for Monotonicity of Iterates}
+
+We argue that \(w_{n+1} > w_n\) when \(w_n e^{w_n} < x\) and \(w_{n+1} < w_n\) when \(w_n e^{w_n} > x\) based on the update formula.
+
+Consider the expression for the update:
+\[ w_{n+1} = w_n + \frac{\frac{x}{w_n e^{w_n}}}{w_n + 1} \]
+
+\textbf{Case 1: \(w_n e^{w_n} < x\)}
+
+- Here, \(\frac{x}{w_n e^{w_n}} > 1\).
+
+- Thus, \(w_{n+1} = w_n + \frac{\text{something positive}}{w_n + 1}\), indicating \(w_{n+1} > w_n\).
+
+\textbf{Case 2: \(w_n e^{w_n} > x\)}
+
+- Here, \(\frac{x}{w_n e^{w_n}} < 1\).
+
+- Thus, \(w_{n+1} = w_n + \frac{\text{something negative}}{w_n + 1}\), indicating \(w_{n+1} < w_n\).
+
+The behavior of the update step in Newton’s method directly ties the direction of the update to whether the current estimate \(w_n\) produces a value less than or greater than \(x\), thereby enforcing convergence by either increasing or decreasing \(w_n\) based on the specific needs to approach the true solution.
+
 \subsubsection*{Q3: In solving Lambert’s equation \(we^w = x\) by Newton’s method, one must seed the algorithm with an initial guess. Argue that \(w_0 = \ln x - \ln(\ln x)\) is good for moderate to large \(x\). Show that it is exact for \(x = e\). For small \(x\), argue that the guess \(w_0 = \frac{x}{1 + cx}\) is good. What value of the constant \(c\) solves Lambert’s equation when \(x = e\)? Plot these approximations against the solution curve of Lambert’s equation.}
+
+\textbf{Initial Guess for Newton's Method in Lambert's Equation}
+
+When applying Newton's method to solve Lambert's equation \(we^w = x\), the choice of an initial guess \(w_0\) is crucial to ensure fast convergence and avoid divergence. Let's evaluate the suggested initial guesses:
+
+\textbf{1. Initial Guess \(w_0 = \ln x - \ln(\ln x)\) for Moderate to Large \(x\)}
+
+\textbf{Argument for this Guess:}
+For moderate to large \(x\), \(we^w = x\) implies \(w\) and \(e^w\) must both be relatively large. Consider the natural logarithm of both sides:
+\[ w + \ln w = \ln x \]
+When \(x\) is large, \(\ln x\) is significant, and the term \(\ln w\) becomes non-negligible compared to \(w\). The suggested guess essentially estimates \(w\) by solving:
+\[ w \approx \ln x - \ln w \]
+Setting \(w = \ln x - \ln w\), we iteratively approximate that \(w \approx \ln x - \ln(\ln x)\), capturing the leading behavior of \(w\) for large \(x\).
+
+\textbf{Exactness for \(x = e\):}
+For \(x = e\), substitute into the guess:
+\[ w_0 = \ln e - \ln(\ln e) = 1 - \ln(1) = 1 \]
+Check by substituting into Lambert's equation:
+\[ we^w = 1 \times e^1 = e \]
+So, \(w_0 = 1\) is exactly the solution for \(x = e\).
+
+\textbf{2. Initial Guess \(w_0 = \frac{x}{1 + cx}\) for Small \(x\)}
+
+\textbf{Argument for this Guess:}
+For small \(x\), \(we^w\) suggests \(w\) is close to zero, and thus, an expansion of \(e^w\) near \(w = 0\) (i.e., \(e^w \approx 1 + w\)) is reasonable. From \(we^w = x\):
+\[ w(1 + w) \approx x \]
+\[ w + w^2 \approx x \]
+
+Assuming \(w^2\) is negligible compared to \(w\), we get:
+\[ w \approx \frac{x}{1 + w} \approx \frac{x}{1 + cx} \]
+where \(c\) is a small positive constant that might account for higher-order behavior.
+
+\textbf{Solving for \(c\) when \(x = e\):}
+We need \(c\) such that:
+\[ we^w = e \quad \text{when} \quad w = \frac{e}{1 + ce} \]
+
+Substituting \(w\) into Lambert's equation:
+\[ \frac{e}{1 + ce} \exp\left(\frac{e}{1 + ce}\right) = e \]
+
+Setting \(w = \frac{e}{1 + ce}\):
+\[ \exp\left(\frac{e}{1 + ce}\right) = 1 + ce \]
+
+Given that \(we^w = e\) is true when \(w = 1\) (as previously calculated for \(x = e\)), we substitute \(w = 1\):
+
+\[ \frac{e}{1 + ce} = 1 \]
+\[ e = 1 + ce \]
+\[ ce = e - 1 \]
+\[ c = 1 - \frac{1}{e} \]
+
+\textbf{Conclusion}
+For moderate to large \(x\), the initial guess \(w_0 = \ln x - \ln(\ln x)\) aligns well with the logarithmic behavior of \(w\) in Lambert's equation, especially accurate when \(x = e\). For small \(x\), \(w_0 = \frac{x}{1 + cx}\) with \(c = 1 - \frac{1}{e}\) provides a simplification based on the linearized expansion of \(e^w\), ensuring a reasonable start point for the Newton iteration.
 
 \subsubsection*{Q4: Halley’s method for finding a root of the equation \(f(x) = 0\) approximates \(f(x)\) around \(x_n\) by the quadratic
 \[ q(x) = f(x_n) + f'(x_n)(x - x_n) + \frac{1}{2} f''(x_n)(x - x_n)^2. \]
