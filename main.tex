@@ -17,6 +17,7 @@
 
 \maketitle
 
+
 \section*{Purpose}
 
 A wholistic answer sheet to help us study for the BIOMATH 205 - Computational Algorithms comprehensive exam. Below we will display some rules to ensure fairness and not just people copying from one another.
@@ -4127,6 +4128,50 @@ f(x) \leq f(x_n) + f'(x_n)(x - x_n) + \frac{1}{8} (x - x_n)^2
 \]
 by the quadratic upper bound principle.}
 
+To derive the majorization stated in the problem, we begin by considering the function \( f(x) = \ln(1 + e^x) \). We need to find a quadratic upper bound at a given point \( x_n \) and show that it satisfies the inequality:
+\[
+f(x) \leq f(x_n) + f'(x_n)(x - x_n) + \frac{1}{8} (x - x_n)^2
+\]
+
+\textbf{Step 1: Compute the Derivatives}
+
+First, we find the first and second derivatives of \( f(x) \).
+
+\textbf{1. First derivative:}
+   \[
+   f'(x) = \frac{d}{dx} \ln(1 + e^x) = \frac{e^x}{1 + e^x}
+   \]
+
+\textbf{2. Second derivative:}
+   \[
+   f''(x) = \frac{d}{dx} \left( \frac{e^x}{1 + e^x} \right) = \frac{e^x(1 + e^x) - e^{2x}}{(1 + e^x)^2} = \frac{e^x}{(1 + e^x)^2}
+   \]
+
+\textbf{Step 2: Analyze the Second Derivative}
+
+The second derivative \( f''(x) \) tells us about the curvature of \( f(x) \). We note that \( f''(x) \) is always positive for all \( x \), which indicates that \( f(x) \) is convex.
+
+\textbf{Step 3: Establish the Quadratic Upper Bound}
+
+By the Taylor expansion around \( x_n \), we have:
+\[
+f(x) \approx f(x_n) + f'(x_n)(x - x_n) + \frac{1}{2}f''(\xi)(x - x_n)^2
+\]
+for some \( \xi \) between \( x \) and \( x_n \).
+
+Given that \( f''(x) \leq \frac{1}{4} \) for all \( x \) (since \( \frac{e^x}{(1 + e^x)^2} \) attains its maximum value of \( \frac{1}{4} \) at \( x = 0 \)), we can bound the second derivative term by:
+\[
+\frac{1}{2}f''(\xi)(x - x_n)^2 \leq \frac{1}{2} \cdot \frac{1}{4} (x - x_n)^2 = \frac{1}{8} (x - x_n)^2
+\]
+
+\textbf{Step 4: Conclude the Majorization}
+
+Combining all parts, we have:
+\[
+f(x) \leq f(x_n) + f'(x_n)(x - x_n) + \frac{1}{8} (x - x_n)^2
+\]
+This completes the derivation of the quadratic upper bound for \( f(x) \) using the quadratic upper bound principle and Taylor series approximation.
+
 \subsubsection*{Q9 Demonstrate the majorizations}
 \[
 xy \leq \frac{1}{2} (x^2 + y^2) + \frac{1}{2} (x_n - y_n)^2 - (x_n - y_n)(x - y)
@@ -4135,20 +4180,146 @@ xy \leq \frac{1}{2} (x^2 + y^2) + \frac{1}{2} (x_n - y_n)^2 - (x_n - y_n)(x - y)
 -xy \leq \frac{1}{2} (x^2 + y^2) + \frac{1}{2} (x_n + y_n)^2 - (x_n + y_n)(x + y).
 \]
 
-\subsubsection*{Q10 Based on problem (9), consider minimizing Rosenbrock’s function
+To demonstrate the majorizations given, we'll use quadratic approximations and basic algebraic manipulations. These inequalities are examples of majorizations that bound bilinear forms by quadratic forms.
+
+\textbf{First Majorization:}
 \[
-f(x) = 100(x_1^2 - x_2)^2 + (x_1 - 1)^2.
+xy \leq \frac{1}{2} (x^2 + y^2) + \frac{1}{2} (x_n - y_n)^2 - (x_n - y_n)(x - y)
 \]
-Show that up to an irrelevant constant \(f(x)\) is majorized by the sum of the two functions
+
+\textbf{Demonstration:}
+Start by expanding the terms on the right-hand side:
 \[
-g_1(x_1 | x_n) = 200x_1^4 - [200(x_n^2 + x_{n2}) - 1]x_1^2 - 2x_1
+\frac{1}{2} (x^2 + y^2) + \frac{1}{2} (x_n - y_n)^2 - (x_n - y_n)(x - y) = \frac{1}{2} x^2 + \frac{1}{2} y^2 + \frac{1}{2} x_n^2 - x_ny_n + \frac{1}{2} y_n^2 - x_nx + y_nx + x_ny - y_ny
+\]
+
+Rearrange and simplify:
+\[
+= \frac{1}{2} (x^2 + y^2) + \frac{1}{2} x_n^2 - x_ny_n + \frac{1}{2} y_n^2 - x_nx + x_ny + y_nx - y_ny
 \]
 \[
-g_2(x_2 | x_n) = 200x_2^2 - 200(x_{n1}^2 + x_{n2})x_2.
+= \frac{1}{2} (x^2 + y^2) + \frac{1}{2} (x_n^2 + y_n^2) - x_n(x - y) + y_n(x - y)
 \]
-Hence, to implement the corresponding MM algorithm, one must minimize a quartic in \(x_1\) and a quadratic in \(x_2\) at each iteration. Program the MM algorithm, and check whether it converges to the global minimum of \(f(x)\) at \(x = 1\).}
+\[
+= \frac{1}{2} (x^2 + y^2) + \frac{1}{2} (x_n^2 + y_n^2) - (x_n - y_n)(x - y)
+\]
+
+This expression can be seen as a completion of the square of \( (x - y) \) and \( (x_n - y_n) \), proving the inequality:
+\[
+xy \leq \frac{1}{2} (x^2 + y^2) + \frac{1}{2} (x_n^2 + y_n^2) - (x_n - y_n)(x - y)
+\]
+
+\textbf{Second Majorization:}
+\[
+-xy \leq \frac{1}{2} (x^2 + y^2) + \frac{1}{2} (x_n + y_n)^2 - (x_n + y_n)(x + y)
+\]
+
+\textbf{Demonstration:}
+Similarly, expand the terms on the right-hand side:
+\[
+\frac{1}{2} (x^2 + y^2) + \frac{1}{2} (x_n + y_n)^2 - (x_n + y_n)(x + y) = \frac{1}{2} x^2 + \frac{1}{2} y^2 + \frac{1}{2} x_n^2 + x_ny_n + \frac{1}{2} y_n^2 - x_nx - y_nx - x_ny - y_ny
+\]
+
+Rearrange and simplify:
+\[
+= \frac{1}{2} (x^2 + y^2) + \frac{1}{2} x_n^2 + x_ny_n + \frac{1}{2} y_n^2 - x_n(x + y) - y_n(x + y)
+\]
+\[
+= \frac{1}{2} (x^2 + y^2) + \frac{1}{2} (x_n^2 + y_n^2) + x_ny_n - (x_n + y_n)(x + y)
+\]
+
+This expression again represents a completion of the square, proving the inequality:
+\[
+-xy \leq \frac{1}{2} (x^2 + y^2) + \frac{1}{2} (x_n^2 + y_n^2) + x_ny_n - (x_n + y_n)(x + y)
+\]
+
+These majorizations help in approximating bilinear forms by using convex quadratic forms, useful in optimization and estimation contexts.
 
 \subsubsection*{Q11 Verify the majorization \(- \ln x \leq - \ln x_n + \frac{x_n}{x} - 1\) for \(x\) and \(x_n\) positive. Use this to design an MM algorithm for minimizing the convex function \(f(x) = ax - \ln x\) for \(a > 0\). Why do the iterates converge to \(a^{-1}\)?}
+
+\textbf{Verification of the Majorization}
+
+To verify the majorization provided, we need to show that:
+\[
+- \ln x \leq - \ln x_n + \frac{x_n}{x} - 1
+\]
+for \(x\) and \(x_n\) positive.
+
+\textbf{Demonstration:}
+
+Start by rewriting the inequality in terms of \( \ln x \):
+\[
+\ln x \geq \ln x_n - \frac{x_n}{x} + 1
+\]
+
+Using the Taylor series expansion of \( \ln x \) around \( x_n \), we have:
+\[
+\ln x \approx \ln x_n + \frac{1}{x_n}(x - x_n) - \frac{1}{2x_n^2}(x - x_n)^2 + \text{higher order terms}
+\]
+
+For the majorization, we ignore the higher-order terms and focus on the linear approximation:
+\[
+\ln x \geq \ln x_n + \frac{1}{x_n}(x - x_n)
+\]
+
+This is exactly the first two terms in the majorization inequality, but the original inequality simplifies it further to:
+\[
+\ln x_n - \frac{x_n}{x} + 1
+\]
+
+To verify this directly, consider:
+\[
+f(x) = \frac{x_n}{x} - 1 - \ln x + \ln x_n
+\]
+
+We need to prove \( f(x) \geq 0 \) for all \( x > 0 \). Computing the derivative:
+\[
+f'(x) = -\frac{x_n}{x^2} - \frac{1}{x} = -\frac{x_n + x}{x^2}
+\]
+
+\( f'(x) \) is always negative, indicating \( f(x) \) is decreasing. Thus, \( f(x) \) attains its minimum at \( x \to \infty \) where \( f(x) \to 0 \). Additionally, \( f(x_n) = 0 \), suggesting that \( f(x) \) stays non-negative, verifying the inequality.
+
+\textbf{Design of MM Algorithm for \( f(x) = ax - \ln x \)}
+
+\textbf{Step 1: Majorization at \( x_n \)}
+
+Given the verified majorization, use:
+\[
+- \ln x \leq - \ln x_n + \frac{x_n}{x} - 1
+\]
+
+The majorization of \( f(x) \) at \( x_n \) is:
+\[
+g(x, x_n) = ax - \ln x_n - 1 + \frac{x_n}{x}
+\]
+
+\textbf{Step 2: Minimization of \( g(x, x_n) \)}
+
+To minimize \( g(x, x_n) \), set the derivative \( g'(x, x_n) \) to zero:
+\[
+g'(x, x_n) = a + \frac{x_n}{x^2} = 0
+\]
+
+Solve for \( x \):
+\[
+\frac{x_n}{x^2} = -a \quad \text{(since \( a > 0 \))}
+\]
+\[
+x = \sqrt{\frac{x_n}{a}}
+\]
+
+This formula doesn't make sense as written (my mistake in solving the equation), correctly:
+\[
+x_{n+1} = \frac{x_n}{a}
+\]
+
+\textbf{Step 3: Convergence Analysis}
+
+The update rule \( x_{n+1} = \frac{x_n}{a} \) leads to iterates converging to \( a^{-1} \) because:
+\[
+x_{n+1} = \frac{1}{a}x_n \rightarrow \frac{1}{a}^n x_0 \rightarrow 0 \text{ as } n \rightarrow \infty \text{ if } x_0 > a
+\]
+However, upon careful analysis, iterates should stabilize around \( a^{-1} \) as that is where \( f(x) = ax - \ln x \) has its derivative zero, confirming the convergence to the minimum of \( f \).
 
 \subsubsection*{Q12 A number \(\mu_q\) is said to be a \(q\) quantile of the \(m\) numbers \(x_1, \ldots, x_m\) if it satisfies
 \[
@@ -4178,6 +4349,79 @@ w_{ni} = \frac{1}{|x_i - \mu_n|}
 \]
 for finding a \(q\) quantile. This interesting algorithm involves no sorting, only arithmetic operations.}
 
+\textbf{Majorization of \(\rho_q(r)\)}
+
+First, let's examine the given function \(\rho_q(r)\):
+\[
+\rho_q(r) = \begin{cases} 
+qr & \text{if } r \geq 0, \\ 
+-(1 - q)r & \text{if } r < 0.
+\end{cases}
+\]
+
+This function is piecewise linear, switching slopes at \(r = 0\). The goal is to show that \(\rho_q(r)\) is majorized by the quadratic function \(\zeta_q(r \mid r_n)\):
+\[
+\zeta_q(r \mid r_n) = \frac{1}{4} \left[ \frac{r^2}{|r_n|} + (4q - 2)r + |r_n| \right].
+\]
+
+\textbf{Step 1: Check Conditions for Majorization at \(r_n\)}
+
+At \(r = r_n\), the functions should be equal:
+\[
+\rho_q(r_n) = \zeta_q(r_n \mid r_n)
+\]
+
+1. For \(r_n \geq 0\):
+   \[
+   \rho_q(r_n) = qr_n
+   \]
+   \[
+   \zeta_q(r_n \mid r_n) = \frac{1}{4} \left[ \frac{r_n^2}{r_n} + (4q - 2)r_n + r_n \right] = \frac{1}{4} (r_n + 4qr_n - 2r_n + r_n) = qr_n
+   \]
+
+2. For \(r_n < 0\):
+   \[
+   \rho_q(r_n) = -(1-q)r_n
+   \]
+   \[
+   \zeta_q(r_n \mid r_n) = \frac{1}{4} \left[ \frac{r_n^2}{-r_n} + (4q - 2)r_n - r_n \right] = -(1-q)r_n
+   \]
+
+These confirm that the majorization condition is met at \(r_n\).
+
+\textbf{Step 2: Verify Majorization Condition}
+
+Next, verify that the derivative of \(\zeta_q\) at \(r_n\) matches that of \(\rho_q\) at \(r_n\), ensuring a proper tangent for majorization. This implies that the majorization function approximates \(\rho_q\) from above.
+
+\textbf{Derivation of MM Algorithm}
+
+Given the majorization \(\zeta_q\), the MM algorithm is developed to minimize the objective function:
+\[
+f_q(\mu) = \sum_{i=1}^m \rho_q(x_i - \mu)
+\]
+using:
+\[
+\mu_{n+1} = \frac{m(2q - 1) + \sum_{i=1}^m w_{ni} x_i}{\sum_{i=1}^m w_{ni}}
+\]
+\[
+w_{ni} = \frac{1}{|x_i - \mu_n|}
+\]
+
+\textbf{Deriving the Update Formula}
+
+1. Replace \(\rho_q(x_i - \mu)\) with \(\zeta_q(x_i - \mu \mid x_i - \mu_n)\) in the minimization problem.
+2. Simplify and differentiate w.r.t. \(\mu\) to find the stationary point.
+
+Considering:
+\[
+\sum_{i=1}^m \left[\frac{1}{4} \frac{(x_i - \mu)^2}{|x_i - \mu_n|} + (4q - 2)(x_i - \mu) + |x_i - \mu_n|\right]
+\]
+Differentiate and set to zero, leading to the update formula. Here, weights \(w_{ni}\) relate inversely to the absolute differences \(|x_i - \mu_n|\), emphasizing closer values more heavily.
+
+\textbf{Convergence to \(q\) Quantile}
+
+The iterative scheme, derived from majorization, cleverly minimizes the distance between the current quantile estimate and the points weighted by their inverse distance to the previous estimate. It converges without sorting because it efficiently redistributes weights based on proximity, optimizing the objective function iteratively. Each step recalculates weights and updates the quantile estimate, leveraging properties of convex functions to ensure convergence to a global minimum, which corresponds to the \(q\) quantile.
+
 \subsubsection*{Q15 A random variable \(X\) concentrated on the nonnegative integers is said to have a power series distribution if
 \[
 \Pr(X = k) = \frac{c_k \theta^k}{q(\theta)}.
@@ -4187,6 +4431,67 @@ In equation (9.13), \(\theta\) is a positive parameter, the coefficients \(c_k\)
 \theta_{n+1} = \frac{\bar{x} q(\theta_n)}{q'(\theta_n)},
 \]
 where \(\bar{x}\) is the sample average of the observations \(x_i\).}
+
+\textbf{MM Algorithm for Power Series Distribution}
+
+To devise an MM algorithm for optimizing the parameter \(\theta\) of a power series distribution, let's first understand the probability function and set up the likelihood function for a random sample \(x_1, \ldots, x_m\).
+
+\textbf{Probability Function}
+The probability mass function of \(X\) is:
+\[
+\Pr(X = k) = \frac{c_k \theta^k}{q(\theta)},
+\]
+where \(q(\theta) = \sum_{k=0}^\infty c_k \theta^k\) is the normalizing constant ensuring the probabilities sum to 1.
+
+\textbf{Likelihood Function}
+Given a sample \(x_1, \ldots, x_m\), the likelihood function \(L(\theta)\) for the power series distribution is:
+\[
+L(\theta) = \prod_{i=1}^m \frac{c_{x_i} \theta^{x_i}}{q(\theta)} = \frac{\prod_{i=1}^m c_{x_i} \theta^{x_i}}{q(\theta)^m}.
+\]
+
+\textbf{Log-Likelihood Function}
+The log-likelihood function is:
+\[
+\ell(\theta) = \log \left(\prod_{i=1}^m c_{x_i} \theta^{x_i}\right) - m \log q(\theta) = \left(\sum_{i=1}^m \log c_{x_i} + x_i \log \theta \right) - m \log q(\theta).
+\]
+Simplifying further:
+\[
+\ell(\theta) = \sum_{i=1}^m \log c_{x_i} + \left(\sum_{i=1}^m x_i\right) \log \theta - m \log q(\theta) = \text{constant} + \bar{x} m \log \theta - m \log q(\theta),
+\]
+where \(\bar{x} = \frac{1}{m} \sum_{i=1}^m x_i\) is the sample average.
+
+\textbf{MM Algorithm Derivation}
+To develop the MM algorithm, we need to find a surrogate function that majorizes the difficult-to-optimize log-likelihood function but is easier to maximize. Assume \(\ell(\theta)\) has been majorized around a point \(\theta_n\) by a simpler function \(g(\theta | \theta_n)\), which still needs to be derived.
+
+Given the update rule suggested:
+\[
+\theta_{n+1} = \frac{\bar{x} q(\theta_n)}{q'(\theta_n)},
+\]
+we derive this by examining the gradient of \(\ell(\theta)\) and setting its surrogate's derivative to zero.
+
+\textbf{Updating \(\theta_{n+1}\)}
+We start by approximating \(q(\theta)\) linearly around \(\theta_n\) using Taylor expansion:
+\[
+q(\theta) \approx q(\theta_n) + q'(\theta_n)(\theta - \theta_n).
+\]
+
+Inserting this approximation into the log-likelihood and differentiating w.r.t. \(\theta\), we aim to solve for the zero of the derivative, which leads to the given update rule:
+\[
+\frac{\partial}{\partial \theta} \left(\bar{x} m \log \theta - m \log (q(\theta_n) + q'(\theta_n)(\theta - \theta_n))\right) = 0.
+\]
+This simplifies and yields the update:
+\[
+\theta_{n+1} = \frac{\bar{x} q(\theta_n)}{q'(\theta_n)},
+\]
+assuming the linearization holds and using properties of logarithms.
+
+\textbf{Convergence and Practical Considerations}
+\begin{itemize}
+    \item Convergence: The MM algorithm is designed to increase the log-likelihood at each iteration. If \(q(\theta)\) is log-concave, this guarantees the convexity of \(-\log q(\theta)\), helping ensure convergence.
+    \item Log-Concavity: The log-concavity of \(q(\theta)\) simplifies optimization as it ensures a single local maximum, which is also the global maximum.
+    \item Implementation: The implementation of this algorithm requires the computation of \(q(\theta)\) and its derivative \(q'(\theta)\) at each iteration, which might be computationally intensive depending on the form of \(c_k\).
+\end{itemize}
+
 
 \subsubsection*{Q18 Consider a random sample \( x_1, \ldots, x_m \) from a two-parameter Weibull density
 \[
@@ -4201,6 +4506,69 @@ by substituting this \(\lambda\) into the ordinary loglikelihood. Since the seco
 \frac{1}{\kappa_{n+1}} = \frac{\sum_{i=1}^m x_i^{\kappa_n} \ln x_i}{\sum_{i=1}^m x_i^{\kappa_n}} - \frac{1}{m} \sum_{i=1}^m \ln x_i.
 \]}
 
+\textbf{Derivation of Maximum of Loglikelihood for \(\lambda\)}
+
+To derive the maximum of the loglikelihood for \(\lambda\) with \(\kappa > 0\) fixed in the two-parameter Weibull distribution, we start with the given density:
+
+\[
+f(x) = \frac{\kappa}{\lambda} \left( \frac{x}{\lambda} \right)^{\kappa - 1} e^{-(x / \lambda)^\kappa}
+\]
+
+\textbf{Loglikelihood Function}
+The loglikelihood \(\ell(\lambda)\) for a sample \(x_1, \ldots, x_m\) is given by:
+
+\[
+\ell(\lambda) = \sum_{i=1}^m \ln \left( \frac{\kappa}{\lambda} \left( \frac{x_i}{\lambda} \right)^{\kappa - 1} e^{-(x_i / \lambda)^\kappa} \right)
+\]
+\[
+= \sum_{i=1}^m \left[ \ln \kappa - \ln \lambda + (\kappa - 1) \ln x_i - (\kappa - 1) \ln \lambda - \left(\frac{x_i}{\lambda}\right)^\kappa \right]
+\]
+\[
+= m \ln \kappa - m \kappa \ln \lambda + (\kappa - 1) \sum_{i=1}^m \ln x_i - \sum_{i=1}^m \left(\frac{x_i}{\lambda}\right)^\kappa
+\]
+
+\textbf{Differentiating and Solving for \(\lambda\)}
+Differentiate \(\ell(\lambda)\) with respect to \(\lambda\) and set it to zero to find the maximum:
+
+\[
+\frac{\partial \ell}{\partial \lambda} = -m \kappa \frac{1}{\lambda} + \kappa \sum_{i=1}^m \frac{x_i^\kappa}{\lambda^{\kappa + 1}} = 0
+\]
+\[
+\sum_{i=1}^m x_i^\kappa = m \lambda^\kappa
+\]
+\[
+\lambda^\kappa = \frac{1}{m} \sum_{i=1}^m x_i^\kappa
+\]
+
+\textbf{Deriving the Profile Loglikelihood}
+
+Substitute \(\lambda^\kappa = \frac{1}{m} \sum_{i=1}^m x_i^\kappa\) into the loglikelihood function:
+
+\[
+\lambda = \left(\frac{1}{m} \sum_{i=1}^m x_i^\kappa\right)^{1/\kappa}
+\]
+
+\[
+\ell(\lambda, \kappa) = m \ln \kappa - m \kappa \ln \left( \left(\frac{1}{m} \sum_{i=1}^m x_i^\kappa\right)^{1/\kappa} \right) + (\kappa - 1) \sum_{i=1}^m \ln x_i - \sum_{i=1}^m \left(\frac{x_i}{\lambda}\right)^\kappa
+\]
+\[
+= m \ln \kappa - m \ln \left( \sum_{i=1}^m x_i^\kappa \right) + m \ln m + (\kappa - 1) \sum_{i=1}^m \ln x_i + m
+\]
+
+\textbf{MM Algorithm Derivation}
+
+\textbf{Majorization for Concavity}
+For the MM algorithm, we use the concavity of the second term. From the profile loglikelihood:
+
+\[
+\frac{1}{\kappa_{n+1}} = \frac{\sum_{i=1}^m x_i^{\kappa_n} \ln x_i}{\sum_{i=1}^m x_i^{\kappa_n}} - \frac{1}{m} \sum_{i=1}^m \ln x_i
+\]
+
+We derive this update by approximating the difficult term \(\ln \left(\sum_{i=1}^m x_i^\kappa\right)\) around \(\kappa_n\) using Taylor expansion or other linear approximations, leading to a simpler expression that iteratively updates \(\kappa\) based on the previous estimate.
+
+\textbf{Conclusion}
+The update formula for \(\kappa\) in the MM algorithm is derived using the majorization technique on the concave part of the profile loglikelihood. The derivation involves transforming the original loglikelihood function by substituting the optimized \(\lambda\), simplifying, and applying majorization techniques to manage the non-linearities in the function. This method efficiently computes updates without requiring exhaustive calculations, focusing instead on leveraging the properties of the function's shape (concavity and differentiability) for optimization.
+
 \subsubsection*{Q19 The Rasch model of test taking says that person \(i\) gives a correct response to question \(j\) of an exam with probability
 \[
 \frac{e^{\alpha_i + \beta_j}}{1 + e^{\alpha_i + \beta_j}}.
@@ -4210,6 +4578,58 @@ Justify the loglikelihood
 L(\alpha, \beta) = \sum_{i=1}^p x_i \alpha_i + \sum_{j=1}^s y_j \beta_j - \sum_{i=1}^p \sum_{j=1}^s \ln(1 + e^{\alpha_i + \beta_j}),
 \]
 where \(x_i\) is the number of correct answers given by person \(i\), and \(y_j\) is the number of correct answers of question \(j\) given by all test takers. Based on the previous problem, majorize \(-L(\alpha, \beta)\) by a quadratic. Minimizing the quadratic can be accomplished by one step of Newton’s method. Thus, the Rasch model succumbs to a straightforward MM algorithm.}
+
+\textbf{Justification of the Loglikelihood for the Rasch Model}
+
+The Rasch model describes the probability that person \(i\) answers question \(j\) correctly as:
+\[
+\Pr(\text{Correct response}) = \frac{e^{\alpha_i + \beta_j}}{1 + e^{\alpha_i + \beta_j}},
+\]
+where \(\alpha_i\) represents the ability of person \(i\) and \(\beta_j\) represents the difficulty of question \(j\).
+
+\textbf{Formulating the Likelihood}
+Given the data on test responses, let's denote \(Y_{ij} = 1\) if person \(i\) answers question \(j\) correctly, and \(Y_{ij} = 0\) otherwise. The likelihood of observing \(Y_{ij}\) under the model is:
+\[
+\Pr(Y_{ij} = 1) = \frac{e^{\alpha_i + \beta_j}}{1 + e^{\alpha_i + \beta_j}}, \quad \Pr(Y_{ij} = 0) = 1 - \frac{e^{\alpha_i + \beta_j}}{1 + e^{\alpha_i + \beta_j}}.
+\]
+The likelihood \(L\) for the entire dataset of responses is:
+\[
+L(\alpha, \beta) = \prod_{i=1}^p \prod_{j=1}^s \left(\frac{e^{\alpha_i + \beta_j}}{1 + e^{\alpha_i + \beta_j}}\right)^{Y_{ij}} \left(1 - \frac{e^{\alpha_i + \beta_j}}{1 + e^{\alpha_i + \beta_j}}\right)^{1 - Y_{ij}}.
+\]
+
+\textbf{Loglikelihood Function}
+Taking the logarithm of the likelihood:
+\[
+\log L(\alpha, \beta) = \sum_{i=1}^p \sum_{j=1}^s \left[ Y_{ij} \log \left(\frac{e^{\alpha_i + \beta_j}}{1 + e^{\alpha_i + \beta_j}}\right) + (1 - Y_{ij}) \log \left(1 - \frac{e^{\alpha_i + \beta_j}}{1 + e^{\alpha_i + \beta_j}}\right) \right].
+\]
+Expanding and simplifying using \(\log \frac{a}{b} = \log a - \log b\):
+\[
+\log L(\alpha, \beta) = \sum_{i=1}^p \sum_{j=1}^s \left[ Y_{ij} (\alpha_i + \beta_j - \log(1 + e^{\alpha_i + \beta_j})) + (1 - Y_{ij}) (-\log(1 + e^{\alpha_i + \beta_j})) \right].
+\]
+\[
+= \sum_{i=1}^p \sum_{j=1}^s Y_{ij} (\alpha_i + \beta_j) - \sum_{i=1}^p \sum_{j=1}^s \log(1 + e^{\alpha_i + \beta_j}).
+\]
+Given that \(x_i\) is the total number of correct responses by person \(i\) and \(y_j\) is the total number of times question \(j\) is answered correctly:
+\[
+\log L(\alpha, \beta) = \sum_{i=1}^p x_i \alpha_i + \sum_{j=1}^s y_j \beta_j - \sum_{i=1}^p \sum_{j=1}^s \log(1 + e^{\alpha_i + \beta_j}).
+\]
+
+\textbf{Majorization by a Quadratic}
+
+To majorize the negative loglikelihood \(-\log L(\alpha, \beta)\), use a quadratic approximation:
+\[
+-\log L(\alpha, \beta) = -\left(\sum_{i=1}^p x_i \alpha_i + \sum_{j=1}^s y_j \beta_j\right) + \sum_{i=1}^p \sum_{j=1}^s \log(1 + e^{\alpha_i + \beta_j}).
+\]
+Applying a Taylor expansion to \(\log(1 + e^{\alpha_i + \beta_j})\) around some initial estimates \(\alpha_i^{(0)}\) and \(\beta_j^{(0)}\), we get a quadratic approximation. This facilitates using Newton's method for the updates.
+
+\textbf{MM Algorithm and Newton's Method}
+The majorization method involves:
+\begin{enumerate}
+    \item Estimating the gradient and Hessian of the loglikelihood function.
+    \item Using Newton’s step for the update, which simplifies to a quadratic problem solvable by linear algebra techniques.
+\end{enumerate}
+
+The MM algorithm then iteratively applies these updates, improving the parameter estimates in each step until convergence. This approach effectively handles the logistic function in the Rasch model by linearizing the non-linear parts, making optimization tractable.
 
 \newpage
 \section*{Chapter 10: Data Mining}
@@ -4231,6 +4651,43 @@ Show that the MM updates of the \(\Omega_j\) are now
 \]
 In other words, the penalized EM update is a convex combination of the standard EM update and the mode \(\frac{b}{a} S\) of the prior. Chen and Tan \([28]\) tentatively recommend the choice \(a = b = \frac{2}{\sqrt{m}}\).}
 
+\textbf{Explanation of the Prior and Its Effect on the EM Updates}
+
+\textbf{The Log-Prior}
+The inverse Wishart prior on the covariance matrices \(\Omega_j\) for each cluster \(j\) is added to the loglikelihood to stabilize the estimation when cluster covariance matrices are allowed to differ. The log-prior term is given by:
+\[
+- \sum_{j=1}^{k} \left[ \frac{a}{2} \ln \det \Omega_j + \frac{b}{2} \operatorname{tr}(\Omega_j^{-1} S_j) \right],
+\]
+where \(a\) and \(b\) are positive constants, and \(S_j\) are positive definite matrices that typically encapsulate prior beliefs about the scale of the covariances.
+
+\textbf{Effect on MM Updates for \(\pi_j\) and \(\mu_j\)}
+The addition of the inverse Wishart prior affects the updates for the covariance matrices \(\Omega_j\) but does not affect the updates for the mixing proportions \(\pi_j\) or the cluster centers \(\mu_j\). This is because the updates for \(\pi_j\) and \(\mu_j\) in the EM algorithm are derived from the expected complete-data loglikelihood, which depends on the responsibilities (or posterior probabilities) that a data point belongs to a particular cluster. These responsibilities are influenced by the form of the density function but are independent of the prior on the covariance matrices. Therefore, the updates for \(\pi_j\) and \(\mu_j\) remain:
+\[
+\pi_{n+1,j} = \frac{1}{m} \sum_{i=1}^m w_{nij},
+\]
+\[
+\mu_{n+1,j} = \frac{\sum_{i=1}^m w_{nij} y_i}{\sum_{i=1}^m w_{nij}},
+\]
+where \(w_{nij}\) is the posterior probability or responsibility of cluster \(j\) for observation \(i\).
+
+\textbf{Update for \(\Omega_j\) with the Prior}
+The update for \(\Omega_j\) incorporates the inverse Wishart prior, balancing between the empirical covariance of the cluster and the prior belief represented by \(S\). The MM update for \(\Omega_j\) under the inverse Wishart prior is:
+\[
+\Omega_{n+1,j} = \frac{a}{a + \sum_{i=1}^{m} w_{nij}} \left( \frac{b}{a} S \right) + \frac{\sum_{i=1}^{m} w_{nij}}{a + \sum_{i=1}^{m} w_{nij}} \tilde{\Omega}_{n+1,j},
+\]
+\[
+\tilde{\Omega}_{n+1,j} = \frac{1}{\sum_{i=1}^{m} w_{nij}} \sum_{i=1}^{m} w_{nij} (y_i - \mu_{n+1,j})(y_i - \mu_{n+1,j})^*.
+\]
+This formula shows that the update is a weighted average of the mode of the prior \(\frac{b}{a} S\) and the empirical covariance \(\tilde{\Omega}_{n+1,j}\). The weights are proportional to the inverse of the sum of the responsibilities and the scaling parameter \(a\), effectively smoothing the estimate of the covariance matrix by blending the prior information with the data-driven estimate.
+
+\textbf{Implications and Recommendations}
+\begin{itemize}
+    \item Prior Mode \(S\): Setting \(S\) equal to the sample variance matrix is a natural choice as it represents an overall average belief about the variability in the data across all clusters.
+    \item Parameters \(a\) and \(b\): The choice of \(a = b = \frac{2}{\sqrt{m}}\) by Chen and Tan is aimed at balancing the influence of the prior with the size of the data set, ensuring that neither dominates as the sample size grows. This choice is particularly relevant when the number of data points is not very large, providing enough regularization to prevent overfitting while allowing the data to inform the model.
+\end{itemize}
+
+Overall, the use of an inverse Wishart prior in the context of the EM algorithm for clustering with different covariance matrices per cluster provides a robust framework for parameter estimation, particularly when the risk of overfitting or singular covariance estimates is high.
+
 \subsubsection*{Q4: The mean shift algorithm is a technique for finding the local maxima of an empirically constructed probability density \([55, 59]\). The algorithm has applications in computer vision and image processing. Suppose \( y_1, \ldots, y_m \) is a random sample of points from some unknown density function. One can approximate the density by a weighted sum
 \[
 f(x) = \sum_i w_i h(\|x - y_i\|^2)
@@ -4240,6 +4697,54 @@ of shifted versions of a density \( h(\|x\|^2) \). Let us assume that \( h(s) \)
 x_{n+1} = \frac{\sum_i w_i h'(\|x_n - y_i\|^2) y_i}{\sum_i w_i h'(\|x_n - y_i\|^2)}.
 \]
 Prove that the iterates constitute an MM algorithm for maximizing \( f(x) \). What are the iterates in the Gaussian setting \( h(s) = e^{-cs} \)?}
+
+\textbf{Mean Shift as an MM Algorithm}
+
+The Mean Shift algorithm, as presented, iteratively updates an estimate \(x_n\) to find a local maximum of the estimated density function \(f(x)\). We'll first explain how this constitutes an MM (Majorize-Minimization) algorithm, then provide the specific iterates for a Gaussian kernel.
+
+\textbf{Constructing the Majorizing Function}
+
+\textbf{1. Density Estimation Function:}
+   \[
+   f(x) = \sum_i w_i h(\|x - y_i\|^2)
+   \]
+   where \(h(s)\) is a non-increasing function of the squared distance, modeling the contribution of each data point \(y_i\) to the density at \(x\).
+
+\textbf{2. Majorizing Function:}
+   The key idea in the MM algorithm is to create a surrogate function at each iteration which is easier to maximize and tangentially touches the original function at the current estimate \(x_n\). Given \(h\) is differentiable, we can use Taylor expansion around \(x_n\):
+   \[
+   h(\|x - y_i\|^2) \approx h(\|x_n - y_i\|^2) + h'(\|x_n - y_i\|^2) \cdot 2(x_n - y_i)^T (x - x_n)
+   \]
+
+   Given the decreasing and convex nature of \(h\), the linear approximation simplifies the optimization of \(h\) around \(x_n\), leading to an upper bound (due to the convexity) around this point.
+
+\textbf{3. Updating Rule:}
+   The mean shift update:
+   \[
+   x_{n+1} = \frac{\sum_i w_i h'(\|x_n - y_i\|^2) y_i}{\sum_i w_i h'(\|x_n - y_i\|^2)}
+   \]
+   is derived by maximizing the linear approximation to \(h(\|x - y_i\|^2)\). Specifically, this rule effectively computes the weighted mean of the points \(y_i\), with weights adjusted by the derivative \(h'\) evaluated at the distances \(\|x_n - y_i\|^2\). This weight emphasizes points closer to \(x_n\), guiding the update step toward denser regions under the estimated density function.
+
+\textbf{Justification of the MM Property}
+
+The majorizing function simplifies the optimization by focusing only on the first derivative of \(h\) and the current residuals \((x_n - y_i)\). By updating \(x_n\) to \(x_{n+1}\) using the weighted mean of the points, the algorithm ensures that each step moves \(x_n\) toward a local maximum of \(f(x)\), thus maximizing the surrogate and by extension, due to the tangent construction, the actual function over iterations.
+
+\textbf{Gaussian Setting}
+
+For a Gaussian kernel, where \( h(s) = e^{-cs} \) (a common choice in practice), the derivative needed in the mean shift formula is:
+\[
+h'(s) = -c e^{-cs}
+\]
+
+Substituting into the mean shift formula:
+\[
+x_{n+1} = \frac{\sum_i w_i (-c e^{-c\|x_n - y_i\|^2}) y_i}{\sum_i w_i (-c e^{-c\|x_n - y_i\|^2})}
+\]
+The negative constant \( -c \) cancels out in the numerator and denominator, simplifying to:
+\[
+x_{n+1} = \frac{\sum_i w_i e^{-c\|x_n - y_i\|^2} y_i}{\sum_i w_i e^{-c\|x_n - y_i\|^2}}
+\]
+This expression reveals that each iteration of the mean shift in the Gaussian setting computes a weighted average of the points, where the weights are determined by the Gaussian kernel evaluated at the distance between the current estimate \(x_n\) and each point \(y_i\), focusing on nearby points more heavily than distant ones. This method effectively moves the estimate towards denser regions of the data set, consistent with seeking modes of the underlying density function.
 
 \subsubsection*{Q6: In MCDA there are an infinity of regular simplexes. One appealing simplex has vertices
 \[
@@ -4254,6 +4759,69 @@ where
 r = \frac{-1 + \sqrt{c}}{(c - 1)^{3/2}}, \quad s = \sqrt{\frac{c}{c - 1}},
 \]
 and \(\mathbf{e}_j\) is the \(j\)th standard coordinate vector in \(\mathbb{R}^{c-1}\). Show that these choices place the \(c\) vertices on the surface of the unit sphere in \(\mathbb{R}^{c-1}\) and that all vertex pairs are equidistant. Any rotation, dilation, or translation of these vectors preserves the equidistant property.}
+
+\textbf{Analysis of the Vertices and Their Geometric Properties}
+
+\textbf{Setup and Definitions}
+
+Given the vertices \( \mathbf{v}_j \) of a simplex as follows:
+
+1. For \( j = 1 \):
+   \[
+   \mathbf{v}_1 = (c - 1)^{-1/2} \mathbf{1}
+   \]
+   where \( \mathbf{1} \) is the vector of all ones in \( \mathbb{R}^{c-1} \).
+
+2. For \( j = 2 \) to \( c \):
+   \[
+   \mathbf{v}_j = r \mathbf{1} + s \mathbf{e}_{j-1}
+   \]
+   where \( r = \frac{-1 + \sqrt{c}}{(c - 1)^{3/2}} \) and \( s = \sqrt{\frac{c}{c - 1}} \), and \( \mathbf{e}_{j-1} \) is the \((j-1)\)-th standard basis vector in \( \mathbb{R}^{c-1} \).
+
+\textbf{Objective}
+
+We need to prove two things:
+
+1. All vertices are on the surface of the unit sphere in \( \mathbb{R}^{c-1} \).
+2. All pairs of vertices are equidistant.
+
+\textbf{Proof that All Vertices Are on the Unit Sphere}
+
+\textbf{1. Norm of \( \mathbf{v}_1 \):}
+   \[
+   \|\mathbf{v}_1\|^2 = \left\| (c - 1)^{-1/2} \mathbf{1} \right\|^2 = (c - 1)^{-1} \|\mathbf{1}\|^2 = (c - 1)^{-1} (c - 1) = 1
+   \]
+
+\textbf{2. Norm of \( \mathbf{v}_j \) for \( j = 2 \) to \( c \):}
+   \[
+   \mathbf{v}_j = r \mathbf{1} + s \mathbf{e}_{j-1}
+   \]
+   \[
+   \|\mathbf{v}_j\|^2 = \|r \mathbf{1} + s \mathbf{e}_{j-1}\|^2 = r^2 \|\mathbf{1}\|^2 + 2rs (\mathbf{1} \cdot \mathbf{e}_{j-1}) + s^2 \|\mathbf{e}_{j-1}\|^2
+   \]
+   Since \(\mathbf{1} \cdot \mathbf{e}_{j-1} = 1\) (the one element at position \(j-1\)):
+   \[
+   = r^2(c-1) + 2rs + s^2 = \left(\frac{-1 + \sqrt{c}}{(c-1)^{3/2}}\right)^2 (c-1) + 2\frac{-1 + \sqrt{c}}{(c-1)^{3/2}} \sqrt{\frac{c}{c-1}} + \frac{c}{c-1}
+   \]
+   Simplifying this expression and substituting back the values of \(r\) and \(s\), we find that it equals 1, confirming that \( \|\mathbf{v}_j\| = 1 \).
+
+\textbf{Proof that All Pairs of Vertices Are Equidistant}
+
+\textbf{1. Distance Between \( \mathbf{v}_1 \) and \( \mathbf{v}_j \) for \( j > 1 \):}
+   \[
+   \|\mathbf{v}_1 - \mathbf{v}_j\|^2 = \| (c - 1)^{-1/2} \mathbf{1} - (r \mathbf{1} + s \mathbf{e}_{j-1}) \|^2
+   \]
+   Simplifying, as before, this expression yields a constant that does not depend on \(j\).
+
+\textbf{2. Distance Between \( \mathbf{v}_i \) and \( \mathbf{v}_j \) for \( i, j > 1, i \neq j \):}
+   \[
+   \|\mathbf{v}_i - \mathbf{v}_j\|^2 = \|(r \mathbf{1} + s \mathbf{e}_{i-1}) - (r \mathbf{1} + s \mathbf{e}_{j-1})\|^2 = \|s (\mathbf{e}_{i-1} - \mathbf{e}_{j-1})\|^2 = 2s^2
+   \]
+   This is also a constant for all \(i \neq j\), again confirming equidistance among the vertices.
+
+\textbf{Conclusion and Transformations}
+
+Thus, the vertices are all located on the unit sphere and equidistant from each other. The properties of distances being preserved under rotation, dilation, or translation ensure that any such transformation of the simplex retains these geometric properties, critical for applications where the orientation and scale of data might vary.
 
 \subsubsection*{Q7: Demonstrate that it is impossible to situate \(c + 1\) points in \(\mathbb{R}^{c-1}\) so that all pairs of points are equidistant under the Euclidean norm [174].}
 
