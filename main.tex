@@ -6131,7 +6131,7 @@ To prove that the Hadamard matrix \(H_m\) satisfies \(H_m^* = H_m\) (self-adjoin
 
 \textbf{Base Case}
 
-1. **Initial Condition**: 
+1. Initial Condition: 
    - \(H_0 = 1\). 
    - Clearly, \(H_0^* = H_0\) and \(H_0^2 = 1 = I\), where \(I\) here is the \(1 \times 1\) identity matrix.
 
@@ -6445,6 +6445,87 @@ f(x|\delta, \gamma) = \frac{\gamma}{\delta} x^{\gamma-1} e^{-\left(\frac{x}{\del
 \]
 where \(\alpha\), \(\beta\), \(\gamma\), \(\delta\), and \(\sigma\) are taken positive.}
 
+To generate random variables from specific distributions using the inverse transform method, we first need to derive the cumulative distribution function (CDF) for each distribution and then find its inverse. Once we have the inverse CDF, we can generate uniform random variables \( U \) from the interval [0, 1] and transform these using the inverse CDF to obtain samples from the desired distribution.
+
+\textbf{(a) Continuous Logistic Distribution}
+
+\textbf{Density Function:}
+\[
+f(x|\mu, \sigma) = \frac{e^{-\frac{x-\mu}{\sigma}}}{\sigma [1 + e^{-\frac{x-\mu}{\sigma}}]^2}
+\]
+
+\textbf{Cumulative Distribution Function (CDF):}
+To find the CDF, integrate the density function:
+\[
+F(x|\mu, \sigma) = \int_{-\infty}^x \frac{e^{-\frac{t-\mu}{\sigma}}}{\sigma [1 + e^{-\frac{t-\mu}{\sigma}}]^2} \, dt
+\]
+This integrates to:
+\[
+F(x|\mu, \sigma) = \frac{1}{1 + e^{-\frac{x-\mu}{\sigma}}}
+\]
+
+\textbf{Inverse CDF:}
+Solve \( F(x|\mu, \sigma) = u \) for \( x \):
+\[
+u = \frac{1}{1 + e^{-\frac{x-\mu}{\sigma}}}
+\]
+\[
+1 + e^{-\frac{x-\mu}{\sigma}} = \frac{1}{u}
+\]
+\[
+e^{-\frac{x-\mu}{\sigma}} = \frac{1}{u} - 1
+\]
+\[
+x = \mu + \sigma \log\left(\frac{u}{1-u}\right)
+\]
+Thus, \( x = \mu - \sigma \log\left(\frac{1-u}{u}\right) \) where \( u \sim U(0, 1) \).
+
+\textbf{(b) Pareto Distribution}
+
+\textbf{Density Function:}
+\[
+f(x|\alpha, \beta) = \frac{\beta \alpha^\beta}{x^{\beta+1}} 1_{(\alpha, \infty)}(x)
+\]
+
+\textbf{CDF:}
+\[
+F(x|\alpha, \beta) = 1 - \left(\frac{\alpha}{x}\right)^\beta \text{ for } x \geq \alpha
+\]
+
+\textbf{Inverse CDF:}
+Solve \( F(x|\alpha, \beta) = u \) for \( x \):
+\[
+1 - u = \left(\frac{\alpha}{x}\right)^\beta
+\]
+\[
+x = \alpha (1 - u)^{-1/\beta}
+\]
+So, generate \( x = \alpha u^{-1/\beta} \) where \( u \sim U(0, 1) \).
+
+\textbf{(c) Weibull Distribution}
+
+\textbf{Density Function:}
+\[
+f(x|\delta, \gamma) = \frac{\gamma}{\delta} x^{\gamma-1} e^{-\left(\frac{x}{\delta}\right)^\gamma} 1_{(0, \infty)}(x)
+\]
+
+\textbf{CDF:}
+\[
+F(x|\delta, \gamma) = 1 - e^{-\left(\frac{x}{\delta}\right)^\gamma} \text{ for } x \geq 0
+\]
+
+\textbf{Inverse CDF:}
+Solve \( F(x|\delta, \gamma) = u \) for \( x \):
+\[
+1 - u = e^{-\left(\frac{x}{\delta}\right)^\gamma}
+\]
+\[
+x = \delta \left(-\log(1-u)\right)^{1/\gamma}
+\]
+So, generate \( x = \delta (-\log(1-u))^{1/\gamma} \) where \( u \sim U(0, 1) \).
+
+By following these steps, you can use the inverse method to generate random variables from the logistic, Pareto, and Weibull distributions using uniformly distributed random variables.
+
 \subsubsection*{Q2:
 Continuing problem (1), discuss how the inverse method applies to (d) the Gumbel density
 \[
@@ -6460,6 +6541,95 @@ f(x) = \alpha x^{\alpha-1} 1_{(0,1)}(x),
 \]
 where \(\alpha > 0\).}
 
+To generate random variables from specified distributions using the inverse transform method, we start by deriving the cumulative distribution function (CDF) for each distribution and then determine its inverse. The process involves integrating the probability density function (PDF) to obtain the CDF, and then solving for the inverse CDF. This inverse function is used to transform uniformly distributed random numbers into random numbers following the desired distribution.
+
+\textbf{(d) Gumbel Distribution}
+
+\textbf{Density Function:}
+\[
+f(x) = e^{-x} e^{-e^{-x}}
+\]
+
+\textbf{Cumulative Distribution Function (CDF):}
+The CDF is the integral of the PDF:
+\[
+F(x) = \int_{-\infty}^x e^{-t} e^{-e^{-t}} \, dt
+\]
+Change the variable \( u = e^{-t} \), \( du = -e^{-t} \, dt \):
+\[
+F(x) = \int_{\infty}^{e^{-x}} e^{-u} \, du = -e^{-u} \bigg|_{\infty}^{e^{-x}} = 1 - e^{-e^{-x}}
+\]
+
+\textbf{Inverse CDF:}
+To find the inverse, set \( F(x) = u \):
+\[
+u = 1 - e^{-e^{-x}}
+\]
+\[
+e^{-e^{-x}} = 1 - u
+\]
+\[
+-e^{-x} = \log(1 - u)
+\]
+\[
+x = -\log(-\log(1 - u))
+\]
+To sample from this distribution, generate \( u \sim U(0, 1) \) and compute \( x \) as \( x = -\log(-\log(1 - u)) \).
+
+\textbf{(e) Arcsine Distribution}
+
+\textbf{Density Function:}
+\[
+f(x) = \frac{1}{\pi \sqrt{x(1-x)}} \text{ for } x \in (0, 1)
+\]
+
+\textbf{Cumulative Distribution Function (CDF):}
+\[
+F(x) = \int_0^x \frac{1}{\pi \sqrt{t(1-t)}} \, dt
+\]
+This integral is recognized as the integral for the arcsine law:
+\[
+F(x) = \frac{2}{\pi} \arcsin(\sqrt{x})
+\]
+
+\textbf{Inverse CDF:}
+\[
+u = \frac{2}{\pi} \arcsin(\sqrt{x})
+\]
+\[
+\arcsin(\sqrt{x}) = \frac{\pi u}{2}
+\]
+\[
+\sqrt{x} = \sin\left(\frac{\pi u}{2}\right)
+\]
+\[
+x = \sin^2\left(\frac{\pi u}{2}\right)
+\]
+Generate \( u \sim U(0, 1) \) and compute \( x = \sin^2(\pi u / 2) \).
+
+\textbf{(f) Slash Distribution}
+
+\textbf{Density Function:}
+\[
+f(x) = \alpha x^{\alpha-1} \text{ for } x \in (0, 1)
+\]
+
+\textbf{Cumulative Distribution Function (CDF):}
+\[
+F(x) = \int_0^x \alpha t^{\alpha-1} \, dt = x^\alpha
+\]
+
+\textbf{Inverse CDF:}
+\[
+u = x^\alpha
+\]
+\[
+x = u^{1/\alpha}
+\]
+To sample from this distribution, generate \( u \sim U(0, 1) \) and compute \( x = u^{1/\alpha} \).
+
+These methods utilize the inverse transform technique effectively by transforming uniformly distributed random variables into random variables with the desired distribution based on their CDFs.
+
 \subsubsection*{Q3:
 Suppose the random variable \(X\) has distribution function \(F(x)\). If \(U\) is uniformly distributed on \([0, 1]\), then show that
 \[
@@ -6471,6 +6641,54 @@ Z = F^{-1}\{F(t) + U[1 - F(t)]\}
 \]
 is distributed as \(X\) conditional on \(X > t\).}
 
+To show that \(Y\) and \(Z\) are distributed as \(X\) conditional on \(X \leq t\) and \(X > t\) respectively, we will rely on properties of the distribution function and the inverse transform method.
+
+\textbf{Part 1: Distribution of \(Y\)}
+
+Given that \(Y = F^{-1}[UF(t)]\), where \(U\) is uniformly distributed on \([0, 1]\), we want to show that \(Y\) is distributed as \(X\) given \(X \leq t\).
+
+\textbf{Understanding \(UF(t)\):}
+- \(F(t)\) is the probability that \(X \leq t\), so \(UF(t)\) is uniformly distributed between 0 and \(F(t)\).
+- Hence, \(UF(t)\) corresponds to choosing a random quantile from the part of the distribution of \(X\) that lies below or at \(t\).
+
+\textbf{Inverse Transformation Method:}
+- The inverse transformation method states that if \(U\) is uniform on \([0, 1]\), then \(F^{-1}(U)\) is distributed according to \(F\), the distribution function of \(X\).
+- Therefore, \(F^{-1}[UF(t)]\) transforms these uniformly distributed values (from 0 to \(F(t)\)) back into the values of \(X\) such that \(X \leq t\). 
+
+\textbf{CDF of \(Y\):}
+- The cumulative distribution function (CDF) of \(Y\) for \(y \leq t\) is:
+  \[
+  P(Y \leq y) = P(F^{-1}[UF(t)] \leq y) = P(UF(t) \leq F(y))
+  \]
+  Since \(UF(t)\) is uniform on \([0, F(t)]\),
+  \[
+  P(UF(t) \leq F(y)) = \frac{F(y)}{F(t)}
+  \]
+  for \(y \leq t\). This is exactly the CDF of \(X\) given \(X \leq t\), showing that \(Y\) is distributed as \(X\) conditional on \(X \leq t\).
+
+\textbf{Part 2: Distribution of \(Z\)}
+
+Given \(Z = F^{-1}\{F(t) + U[1 - F(t)]\}\), where \(U\) is uniformly distributed on \([0, 1]\), we want to show that \(Z\) is distributed as \(X\) given \(X > t\).
+
+\textbf{Understanding \(\{F(t) + U[1 - F(t)]\}\):}
+- \(F(t)\) is the probability that \(X \leq t\).
+- \(1 - F(t)\) is the probability that \(X > t\).
+- Therefore, \(F(t) + U[1 - F(t)]\) corresponds to the part of the distribution where \(X > t\), transforming \(U\) to this interval.
+
+\textbf{CDF of \(Z\):}
+- The CDF of \(Z\) for \(z > t\) is:
+  \[
+  P(Z \leq z) = P(F^{-1}\{F(t) + U[1 - F(t)]\} \leq z) = P(\{F(t) + U[1 - F(t)]\} \leq F(z))
+  \]
+  \[
+  = P(U \leq \frac{F(z) - F(t)}{1 - F(t)}) = \frac{F(z) - F(t)}{1 - F(t)}
+  \]
+  for \(z > t\). This is exactly the CDF of \(X\) given \(X > t\), showing that \(Z\) is distributed as \(X\) conditional on \(X > t\).
+
+\textbf{Conclusion}
+
+The transformations \(Y = F^{-1}[UF(t)]\) and \(Z = F^{-1}\{F(t) + U[1 - F(t)]\}\) indeed map the uniform distribution \(U\) onto the conditional distributions of \(X\) given \(X \leq t\) and \(X > t\), respectively, using the properties of the distribution function and its inverse. This demonstrates how conditional distributions can be generated from a known distribution and a uniformly distributed random variable.
+
 \subsubsection*{Q4:
 One can implement the inverse method even when the quantile function \(F^{-1}(y)\) is not explicitly available. Show that Newton's method for solving \(F(x) = y\) has the update
 \[
@@ -6478,17 +6696,224 @@ x_{n+1} = x_n - \frac{F(x_n) - y}{f(x_n)}
 \]
 when \(F(x)\) has density \(f(x) = F'(x)\). Observe that if \(F(x_n) > y\), then \(x_{n+1} < x_n\), and if \(F(x_n) < y\), then \(x_{n+1} > x_n\). Prove that \(x_n\) approaches the solution from above if \(F(x)\) is convex and from below if \(F(x)\) is concave. Implement Newton's method for the standard normal distribution, and describe its behavior.}
 
+To implement the inverse method using Newton's method when the quantile function \( F^{-1}(y) \) is not explicitly available, we need to iteratively solve for \( x \) in \( F(x) = y \). Newton's method can be used to find the root of the equation \( F(x) - y = 0 \).
+
+\textbf{Derivation of Newton's Method Update}
+
+Newton's method for finding the root of a function \( g(x) = 0 \) involves iterating according to the update rule:
+\[
+x_{n+1} = x_n - \frac{g(x_n)}{g'(x_n)}
+\]
+
+In our case, \( g(x) = F(x) - y \). Thus:
+\[
+g'(x) = F'(x) = f(x)
+\]
+
+Substituting into the Newton's method update formula, we get:
+\[
+x_{n+1} = x_n - \frac{F(x_n) - y}{f(x_n)}
+\]
+
+This is the desired update rule for solving \( F(x) = y \) using Newton's method.
+
+\textbf{Behavior of the Update Rule}
+
+1. If \( F(x_n) > y \):
+   \[
+   x_{n+1} = x_n - \frac{F(x_n) - y}{f(x_n)} < x_n
+   \]
+   Here, \( x_{n+1} \) is less than \( x_n \), indicating that the next iterate moves leftward.
+
+2. If \( F(x_n) < y \):
+   \[
+   x_{n+1} = x_n - \frac{F(x_n) - y}{f(x_n)} > x_n
+   \]
+   Here, \( x_{n+1} \) is greater than \( x_n \), indicating that the next iterate moves rightward.
+
+\textbf{Convergence Properties}
+
+- Convex \( F(x) \): If \( F(x) \) is convex, then \( f(x) = F'(x) \) is non-decreasing. Newton's method will approach the solution from above because each update step will be appropriately decreasing.
+
+- Concave \( F(x) \): If \( F(x) \) is concave, then \( f(x) = F'(x) \) is non-increasing. Newton's method will approach the solution from below because each update step will be appropriately increasing.
+
+\textbf{Implementation for the Standard Normal Distribution}
+
+The standard normal CDF \( \Phi(x) \) does not have a simple closed-form inverse, but its density \( \phi(x) \) is given by:
+\[
+\phi(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2/2}
+\]
+
+The CDF \( \Phi(x) \) is the integral of \( \phi(x) \):
+\[
+\Phi(x) = \int_{-\infty}^x \frac{1}{\sqrt{2\pi}} e^{-t^2/2} \, dt
+\]
+
+Using Newton's method to solve \( \Phi(x) = y \):
+\[
+x_{n+1} = x_n - \frac{\Phi(x_n) - y}{\phi(x_n)}
+\]
+
+\textbf{Algorithm}
+
+1. Initialize \( x_0 \) (e.g., using an approximation like the mean or a standard normal quantile approximation).
+2. Iterate using the update rule until convergence:
+   \[
+   x_{n+1} = x_n - \frac{\Phi(x_n) - y}{\phi(x_n)}
+   \]
+3. Stop when \( |x_{n+1} - x_n| \) is sufficiently small.
+
+\textbf{Description of Behavior}
+
+- The method converges quickly due to the smooth nature of the standard normal CDF \( \Phi(x) \).
+- The convergence rate is quadratic near the root because the normal distribution's CDF is well-behaved and smooth.
+- Newton's method will oscillate around the true quantile value and quickly zero in on the correct value due to the symmetry and properties of the normal distribution.
+
+
 \subsubsection*{Q8:
 Based on random normal deviates, discuss how one can generate random deviates from the log normal, chi-square, \(F\), and Student’s \(t\) distributions.}
+
+\textbf{Log-Normal Distributions:}
+To generate random deviates from a log-normal distribution, one can take the exponential of a normally distributed random variable. If $X$ is normally distributed with the means $\mu$ and standard deviation $\sigma$, then $Y = e^{X}$ follows a log-normal distribution with the parameters $\mu$ and $\sigma$. \\ 
+
+\textbf{Chi-squared distributions:} For generating random deviates from a chi-squared distribution with $k$
+degrees of freedom, sum the squares of $k$ independent standard normal deviates. If $Z_1, Z_2,...,Z_k$ are independent standard normal variables, then $X = Z_1^2 +  Z_2^2+...+Z_k^2$ follows a chi-squared distribution with $k$ degrees of freedom. \\
+
+\textbf{F-Distributions} To generate random deviates from an F-distribution with parameters $d_1$ and $d_2$, one can take the ratio of two independent chi-squared variables. If $X_1$ follows a chi-squared distribution with $d_1$ degrees of freedom and $X_2$ follows a chi-squared distribution with $d_2$ degrees of freedom, then $Y = \frac{X_1/d_1}{X_2/d_2}$ follows an F-distribution with $d_1$ and $d_2$ degrees of freedom. \\
+
+\textbf{Student's t-Distribution} Random deviates from a t-distribution with $n$ degrees of freedom can be generated by dividing a standard normal deviate by the square root of an independent chi-squared variable divided by its degrees of freedom. If $Z$ is a standard normal variable and $X$ is a chi-squared variable with $n$ degrees of freedom, then $T= \frac{Z}{\sqrt{X/n}}$ follows the t-distribution with $n$ degrees of freedom. \\
 
 \subsubsection*{Q9:
 The transition matrix \(P\) of a finite Markov chain is said to be doubly stochastic if each of its column sums equals 1. Find an equilibrium distribution in this setting. Prove that symmetric transition matrices are doubly stochastic.}
 
+\textbf{Finding an Equilibrium Distribution for a Doubly Stochastic Matrix}
+
+A matrix \(P\) is doubly stochastic if both the row sums and column sums equal 1. To find an equilibrium distribution \(\pi\) of a Markov chain with such a transition matrix, consider the following:
+
+\textbf{1. Equilibrium Distribution Condition:}
+   \[
+   \pi P = \pi
+   \]
+   This equation means that the vector \(\pi\) must be a left eigenvector of \(P\) corresponding to the eigenvalue 1.
+
+\textbf{2. Properties of Doubly Stochastic Matrices:}
+   - Since the sum of each row and each column of \(P\) is 1, \(\pi\) should also sum to 1 to maintain probability distribution properties. 
+
+\textbf{3. Uniform Distribution:}
+   - Given that \(P\) is doubly stochastic, an important observation is that if \(\pi\) is the vector where each entry is \(\frac{1}{n}\) (where \(n\) is the number of states in the Markov chain), then \(\pi\) is an equilibrium distribution:
+     \[
+     \pi_i = \frac{1}{n} \quad \text{for all } i
+     \]
+   - To verify \(\pi P = \pi\), compute:
+     \[
+     (\pi P)_j = \sum_{i=1}^n \pi_i P_{ij} = \sum_{i=1}^n \frac{1}{n} P_{ij} = \frac{1}{n} \sum_{i=1}^n P_{ij}
+     \]
+   - Since each column of \(P\) sums to 1:
+     \[
+     \frac{1}{n} \sum_{i=1}^n P_{ij} = \frac{1}{n} \cdot 1 = \frac{1}{n}
+     \]
+   - Hence, \(\pi P = \pi\), proving that \(\pi\) is indeed an equilibrium distribution.
+
+\textbf{Proving Symmetric Transition Matrices are Doubly Stochastic}
+
+For symmetric matrices, we know:
+   \[
+   P = P^T
+   \]
+This implies \(P_{ij} = P_{ji}\) for all \(i, j\).
+
+\textbf{1. Row and Column Sum Property:}
+   - Since \(P\) is a transition matrix of a Markov chain, the sum of the entries in each row is 1:
+     \[
+     \sum_{j=1}^n P_{ij} = 1 \quad \text{for all } i
+     \]
+   - Given that \(P\) is symmetric (\(P = P^T\)), this property transfers to its columns due to the equality of off-diagonal elements reflected about the diagonal and equal row sums:
+     \[
+     \sum_{i=1}^n P_{ij} = \sum_{j=1}^n P_{ji} = 1 \quad \text{for all } j
+     \]
+
+Hence, if \(P\) is symmetric, it necessarily satisfies the property of being doubly stochastic.
+
+\textbf{Conclusion}
+
+In conclusion, for a doubly stochastic Markov chain, a uniform distribution \(\pi = \left(\frac{1}{n}, \frac{1}{n}, \ldots, \frac{1}{n}\right)\) is an equilibrium distribution. Moreover, symmetric transition matrices are doubly stochastic as their symmetry ensures equal row and column sums, thus satisfying the doubly stochastic condition. This property simplifies the analysis and computation of equilibrium states in such Markov chains.
+
 \subsubsection*{Q10:
 The random variable \(Y\) stochastically dominates the random variable \(X\) provided \(\Pr(Y \leq u) \leq \Pr(X \leq u)\) for all real \(u\). Using quantile coupling, we can construct on a common probability space probabilistic copies \(X_c\) of \(X\) and \(Y_c\) of \(Y\) such that \(X_c \leq Y_c\) with probability 1. If \(X\) has distribution function \(F(x)\) and \(Y\) has distribution function \(G(y)\), then define \(F^{-1}(u)\) and \(G^{-1}(u)\). If \(U\) is uniformly distributed on \([0, 1]\), demonstrate that \(X_c = F^{-1}(U)\) and \(Y_c = G^{-1}(U)\) yield quantile couplings with the property \(X_c \leq Y_c\).}
 
+To demonstrate that \(X_c = F^{-1}(U)\) and \(Y_c = G^{-1}(U)\), where \(U\) is uniformly distributed on \([0, 1]\), yield quantile couplings with the property \(X_c \leq Y_c\), we will explore the relationship between the cumulative distribution functions (CDFs) \(F(x)\) and \(G(y)\) of \(X\) and \(Y\) respectively, under the assumption that \(Y\) stochastically dominates \(X\).
+
+\textbf{Definitions and Assumptions}
+\textbf{1. Stochastic Dominance}: \(Y\) stochastically dominates \(X\) implies \(\Pr(Y \leq u) \leq \Pr(X \leq u)\) for all \(u\), or equivalently, \(G(u) \leq F(u)\) for all \(u\) (since \(F\) and \(G\) are the CDFs of \(X\) and \(Y\), respectively).
+
+\textbf{2. Inverse CDFs}: The inverse CDFs, or quantile functions, for \(X\) and \(Y\) are defined as:
+   - \(F^{-1}(u) = \inf \{ x : F(x) \geq u \}\)
+   - \(G^{-1}(u) = \inf \{ y : G(y) \geq u \}\)
+
+\textbf{Constructing the Quantile Couplings}
+- Uniform Random Variable \(U\): Let \(U\) be uniformly distributed over \([0, 1]\). Then \(F^{-1}(U)\) and \(G^{-1}(U)\) represent the quantiles of \(X\) and \(Y\) respectively at the same uniform probability level \(U\).
+
+\textbf{Proving \(X_c \leq Y_c\)}
+To prove that \(X_c \leq Y_c\) almost surely:
+\textbf{1. Uniform Distribution of \(U\)}: Since \(U\) is uniform on \([0, 1]\), the probability of \(U\) taking any particular value within this range is the same. Therefore, \(U\) generates every possible quantile level.
+
+\textbf{2. Quantile Coupling}: Given that \(U\) is the same for both \(X_c\) and \(Y_c\), we consider the relationship:
+   \[
+   X_c = F^{-1}(U) \quad \text{and} \quad Y_c = G^{-1}(U)
+   \]
+
+\textbf{3. Stochastic Dominance and Quantiles}: Since \(G(u) \leq F(u)\) for all \(u\) (from the stochastic dominance of \(Y\) over \(X\)), and because \(G(u)\) and \(F(u)\) are non-decreasing:
+   - The set \(\{ y : G(y) \geq u \}\) starts at a value less than or equal to the starting value of \(\{ x : F(x) \geq u \}\) for the same \(u\). Hence, \(G^{-1}(u) \geq F^{-1}(u)\) for all \(u\).
+
+\textbf{4. Almost Sure Inequality}: Given \(U \sim \text{Uniform}(0, 1)\),
+   \[
+   Y_c = G^{-1}(U) \geq F^{-1}(U) = X_c
+   \]
+   almost surely.
+
+\textbf{Conclusion}
+This quantile coupling, by ensuring \(Y_c \geq X_c\) almost surely, effectively constructs \(X_c\) and \(Y_c\) on a common probability space such that \(X_c \leq Y_c\) with probability 1, adhering to the requirement that \(Y\) stochastically dominates \(X\). This proof leverages the properties of uniform distributions, quantile functions, and stochastic dominance to establish the desired relationship between coupled versions of \(X\) and \(Y\).
+
 \subsubsection*{Q11:
 Let \(Z_0, Z_1, Z_2, \ldots\) be a realization of a finite-state ergodic chain. If we sample every \(k\)th epoch, then show (a) that the sampled chain \(Z_0, Z_k, Z_{2k}, \ldots\) is ergodic, (b) that it possesses the same equilibrium distribution as the original chain, and (c) that it is reversible if the original chain is. Thus, based on the ergodic theorem, we can estimate theoretical means by sample averages using only every \(k\)th epoch of the original chain.}
+
+To address the properties of the sub-sampled Markov chain where we take every \(k\)-th observation from an original finite-state ergodic chain, let's consider each part of the question:
+
+\textbf{(a) Ergodicity of the Sampled Chain}
+
+\textbf{Definition}: A Markov chain is ergodic if it is both irreducible and aperiodic, meaning that it is possible to get from any state to any other state (irreducibility), and that the greatest common divisor of return times to any state is 1 (aperiodicity).
+
+\textbf{Given}: The original chain is ergodic.
+
+\textbf{Proof}:
+\textbf{- Irreducibility}: If the original chain is irreducible, any state can be reached from any other state. Thus, if there is a path from state \(i\) to state \(j\) in the original chain with length \(m\), there is also a path from \(i\) to \(j\) in the sampled chain of length \(m'\) such that \(m'k = m\). Hence, every state reachable in the original is reachable in the sub-sampled chain.
+  
+\textbf{- Aperiodicity}: If the original chain is aperiodic, the sampled chain also inherits this property. The period of a state in a Markov chain is the gcd of the set of times it takes to return to that state. If in the original chain a state has period 1, then under sampling every \(k\)th step, the period might change but since the original chain can return at multiples of any number, so can the sub-sampled chain, adjusted by \(k\). Specifically, the ability to return at non-multiples of \(k\) in the original chain ensures the sub-sampled chain's period divides \(k\), maintaining aperiodicity if \(k\) is chosen appropriately (not introducing a common divisor greater than 1).
+
+\textbf{(b) Equilibrium Distribution}
+
+\textbf{Given}: The original chain has an equilibrium distribution, say \(\pi\).
+
+\textbf{Proof}:
+- The equilibrium distribution \(\pi\) satisfies \(\pi P = \pi\) for the original chain's transition matrix \(P\).
+- For the sampled chain, its transition matrix is \(P^k\). Therefore, \(\pi P^k = \pi (P P \ldots P) = \pi P \ldots P = \pi\), since applying \(P\) repeatedly still results in \(\pi\). Hence, \(\pi\) is also the equilibrium distribution for the sub-sampled chain.
+
+\textbf{(c) Reversibility}
+
+\textbf{Definition:} A chain is reversible if it satisfies the detailed balance condition \(\pi_i P_{ij} = \pi_j P_{ji}\) for all states \(i, j\).
+
+\textbf{Given:} The original chain is reversible.
+
+\textbf{Proof:}
+- Since the original chain satisfies \(\pi_i P_{ij} = \pi_j P_{ji}\), applying the transition matrix \(P\) repeatedly to form \(P^k\) retains this property because:
+  \[
+  \pi_i P^k_{ij} = \pi_i \sum_{\ell_1, \ell_2, \ldots, \ell_{k-1}} P_{i\ell_1} P_{\ell_1\ell_2} \ldots P_{\ell_{k-1}j} = \pi_j P^k_{ji}
+  \]
+  due to the reversibility of each step in the chain and the symmetry in the roles of \(i\) and \(j\).
+
+\textbf{Conclusion}
+
+The sampled chain \(Z_0, Z_k, Z_{2k}, \ldots\) is indeed ergodic, shares the same equilibrium distribution as the original chain, and is reversible if the original chain is reversible. Therefore, the ergodic theorem applies, allowing theoretical means to be estimated using sample averages from only every \(k\)-th epoch of the original chain. This result confirms that sub-sampling a Markov chain while preserving its fundamental stochastic properties is viable, providing a practical approach to reducing data while retaining analytical capabilities.
 
 \subsubsection*{Q12:
 An acceptance function \(a : (0, \infty) \mapsto [0, 1]\) satisfies the functional identity \(a(x) = x a(1/x)\). Prove that the detailed balance condition
@@ -6501,6 +6926,63 @@ a_{ij} = a \left( \frac{\pi_j q_{ji}}{\pi_i q_{ij}} \right)
 \]
 in terms of an acceptance function \(a(x)\). Check that the Barker function \(a(x) = x / (1 + x)\) qualifies as an acceptance function and that any acceptance function is dominated by the Metropolis acceptance function in the sense that \(a(x) \leq \min\{x, 1\}\) for all \(x\).}
 
+\textbf{Part 1: Proving the Detailed Balance Condition}
+
+Let's demonstrate that the detailed balance condition is met when acceptance probabilities are defined using the acceptance function \( a(x) \) that satisfies the identity \( a(x) = x a(1/x) \).
+
+Given the acceptance probability:
+\[
+a_{ij} = a \left( \frac{\pi_j q_{ji}}{\pi_i q_{ij}} \right)
+\]
+and the acceptance function identity \( a(x) = x a(1/x) \), we want to show that:
+\[
+\pi_i q_{ij} a_{ij} = \pi_j q_{ji} a_{ji}
+\]
+
+Substituting the definitions of \(a_{ij}\) and \(a_{ji}\):
+\[
+a_{ij} = a \left( \frac{\pi_j q_{ji}}{\pi_i q_{ij}} \right)
+\]
+\[
+a_{ji} = a \left( \frac{\pi_i q_{ij}}{\pi_j q_{ji}} \right)
+\]
+
+Now, apply the identity \( a(x) = x a(1/x) \) to \( a_{ji} \):
+\[
+a_{ji} = a \left( \frac{\pi_i q_{ij}}{\pi_j q_{ji}} \right) = \frac{\pi_j q_{ji}}{\pi_i q_{ij}} a \left( \frac{\pi_i q_{ij}}{\pi_j q_{ji}} \right)^{-1} = \frac{\pi_j q_{ji}}{\pi_i q_{ij}} a_{ij}
+\]
+
+Thus,
+\[
+\pi_j q_{ji} a_{ji} = \pi_j q_{ji} \frac{\pi_j q_{ji}}{\pi_i q_{ij}} a_{ij} = \pi_i q_{ij} a_{ij}
+\]
+which confirms the detailed balance condition is satisfied.
+
+\textbf{Part 2: Verification of the Barker Function}
+
+The Barker function is given by:
+\[
+a(x) = \frac{x}{1 + x}
+\]
+
+To check if this function qualifies as an acceptance function under the identity \( a(x) = x a(1/x) \), we compute \( x a(1/x) \):
+\[
+x a\left(\frac{1}{x}\right) = x \frac{\frac{1}{x}}{1 + \frac{1}{x}} = \frac{1}{1 + x} x = \frac{x}{1 + x} = a(x)
+\]
+Thus, the Barker function satisfies the required functional identity and is a valid acceptance function.
+
+\textbf{Part 3: Dominance of the Metropolis Acceptance Function}
+
+Let's check if \(a(x) \leq \min\{x, 1\}\) for all \(x\).
+
+Given \(a(x) = x a(1/x)\), it's evident that \(a(x)\) should adjust between the values of \(x\) and \(1/x\) to balance probabilities. Specifically, \(a(x)\) should provide a fair probability that never exceeds the minimal probability condition \( \min\{x, 1\} \).
+
+For the Metropolis function \( \min\{x, 1\} \):
+- If \( x \geq 1 \), \( a(x) = 1 \), so \( a(x) \leq x \).
+- If \( x \leq 1 \), \( a(x) = x \), so \( a(x) \leq 1 \).
+
+Hence, any acceptance function that satisfies the identity \( a(x) = x a(1/x) \) will never exceed \( \min\{x, 1\} \) for all \(x\), ensuring that the condition of being dominated by the Metropolis acceptance function is met.
+
 \subsubsection*{Q13:
 Consider the Cartesian product space \(\{0, 1\} \times \{0, 1\}\) equipped with the probability distribution
 \[
@@ -6508,11 +6990,122 @@ Consider the Cartesian product space \(\{0, 1\} \times \{0, 1\}\) equipped with 
 \]
 Demonstrate that sequential Gibbs sampling does not satisfy detailed balance by showing that \(\pi_{00} s_{00, 11} \neq \pi_{11} s_{11, 00}\), where \(s_{00, 11}\) and \(s_{11, 00}\) are entries of the matrix \(S\) for first resampling component one and then resampling component two.}
 
+To demonstrate that sequential Gibbs sampling does not satisfy the detailed balance condition in the given setting, let's start by understanding the problem and then calculating the respective transition probabilities for sequential Gibbs sampling.
+
+\textbf{Problem Setting:}
+We have the Cartesian product space \(\{0, 1\} \times \{0, 1\}\) equipped with the probability distribution:
+\[
+(\pi_{00}, \pi_{01}, \pi_{10}, \pi_{11}) = \left( \frac{1}{2}, \frac{1}{4}, \frac{1}{8}, \frac{1}{8} \right).
+\]
+where \(\pi_{ij}\) represents the probability of the state being \((i, j)\).
+
+\textbf{Sequential Gibbs Sampling Process:}
+Sequential Gibbs sampling updates each component of the state vector in sequence, given the current states of the other components. Let's compute the transition probabilities for transitions \(s_{00, 11}\) and \(s_{11, 00}\), where:
+\begin{itemize}
+    \item \(s_{00, 11}\) is the probability of transitioning from state \((0, 0)\) to \((1, 1)\) by sequentially updating the first and then the second component.
+    \item \(s_{11, 00}\) is the probability of transitioning from state \((1, 1)\) to \((0, 0)\) by sequentially updating the first and then the second component.
+\end{itemize}
+
+\textbf{Step 1: Calculate \(s_{00, 11}\)}
+\textbf{1. Update the first component from 0 to 1, given the second component is 0. This requires calculating the conditional distribution:}
+   \[
+   P(X_1 = 1 | X_2 = 0) = \frac{\pi_{10}}{\pi_{00} + \pi_{10}} = \frac{\frac{1}{8}}{\frac{1}{2} + \frac{1}{8}} = \frac{1}{6}.
+   \]
+\textbf{2. Then, update the second component from 0 to 1, now given the first component is 1. This requires calculating the conditional distribution:}
+   \[
+   P(X_2 = 1 | X_1 = 1) = \frac{\pi_{11}}{\pi_{10} + \pi_{11}} = \frac{\frac{1}{8}}{\frac{1}{8} + \frac{1}{8}} = \frac{1}{2}.
+   \]
+\textbf{3. Product of the probabilities:}
+   \[
+   s_{00, 11} = \frac{1}{6} \times \frac{1}{2} = \frac{1}{12}.
+   \]
+
+\textbf{Step 2: Calculate \(s_{11, 00}\)}
+\textbf{1. Update the first component from 1 to 0, given the second component is 1. This requires calculating the conditional distribution:}
+   \[
+   P(X_1 = 0 | X_2 = 1) = \frac{\pi_{01}}{\pi_{01} + \pi_{11}} = \frac{\frac{1}{4}}{\frac{1}{4} + \frac{1}{8}} = \frac{2}{3}.
+   \]
+\textbf{2. Then, update the second component from 1 to 0, now given the first component is 0. This requires calculating the conditional distribution:}
+   \[
+   P(X_2 = 0 | X_1 = 0) = \frac{\pi_{00}}{\pi_{00} + \pi_{01}} = \frac{\frac{1}{2}}{\frac{1}{2} + \frac{1}{4}} = \frac{2}{3}.
+   \]
+\textbf{3. Product of the probabilities:}
+   \[
+   s_{11, 00} = \frac{2}{3} \times \frac{2}{3} = \frac{4}{9}.
+   \]
+
+\textbf{Verification of Detailed Balance:}
+To check detailed balance:
+\[
+\pi_{00} s_{00, 11} = \frac{1}{2} \times \frac{1}{12} = \frac{1}{24},
+\]
+\[
+\pi_{11} s_{11, 00} = \frac{1}{8} \times \frac{4}{9} = \frac{1}{18}.
+\]
+Since \(\pi_{00} s_{00, 11} \neq \pi_{11} s_{11, 00}\) (\(\frac{1}{24} \neq \frac{1}{18}\)), it is evident that the detailed balance condition is not satisfied.
+
+\textbf{Conclusion:}
+Sequential Gibbs sampling, in this case, does not satisfy the detailed balance condition, showing that this method does not always produce a Markov chain that
+
+ is reversible. This example illustrates the importance of checking the detailed balance condition explicitly when designing Markov Chain Monte Carlo (MCMC) algorithms, especially when using sequential updating schemes like Gibbs sampling.
+
 \subsubsection*{Q20:
 Devise a simulated annealing algorithm to approximate the maximum number of 1’s that can occur in the hardcore model.}
 
+To devise a simulated annealing algorithm for approximating the maximum number of 1's in the hardcore model on a graph, let's define the problem and the key components of the algorithm. The hardcore model is a type of graph-based statistical model where vertices can either be occupied (1) or unoccupied (0), with the constraint that no two adjacent vertices can both be occupied.
+
+### Problem Setup
+Given a graph \( G = (V, E) \), the objective is to find the configuration \( \{x_v\}_{v \in V} \) (where \( x_v \in \{0, 1\} \) for all \( v \)) that maximizes the number of 1's, subject to the constraint that no adjacent vertices can both be set to 1. This is equivalent to finding the maximum independent set of the graph.
+
+### Simulated Annealing Algorithm
+
+Simulated annealing is a probabilistic technique for approximating the global optimum of a given function. It is particularly useful for large problems where other methods are not feasible. Here are the steps for the simulated annealing algorithm tailored for the hardcore model:
+
+\textbf{1. Initialization}
+\begin{itemize}
+    \item \textbf{State Representation}: Represent a state of the system by a vector \( x \) where each entry corresponds to a vertex and is either 0 or 1.
+    \item \textbf{Initial State}: Generate an initial feasible state \( x \), ensuring no two adjacent vertices are both set to 1. This can be done randomly or by starting with an empty set and adding vertices incrementally while maintaining feasibility.
+\end{itemize}
+
+\textbf{2. Define the Cost Function}
+\begin{itemize}
+    \item \textbf{Objective Function:}Let the cost function be \( C(x) = -\sum_{v \in V} x_v \). The goal is to maximize the number of 1's, hence minimizing this cost function.
+\end{itemize}
+
+\textbf{3. Neighbor Generation}
+\begin{itemize}
+    \item \textbf{Generate Neighbors:} Define a move as flipping the state (from 0 to 1 or vice versa) of a randomly chosen vertex \( v \), but only if this flip does not violate the adjacency constraint. This involves checking that if \( x_v \) is set from 0 to 1, none of \( v \)'s neighbors are set to 1.
+\end{itemize}
+
+\textbf{4. Annealing Schedule}
+\begin{itemize}
+    \item \textbf{Temperature Schedule:} Define a cooling schedule for the temperature \( T \), typically \( T_{new} = \alpha T_{old} \) where \( 0 < \alpha < 1 \). Start from a high temperature and gradually decrease it.
+\end{itemize}
+
+\textbf{5. Metropolis Criterion}
+\begin{itemize}
+    \item \textbf{Acceptance Probability}: If \( C(x_{new}) < C(x_{current}) \), always accept \( x_{new} \). If \( C(x_{new}) > C(x_{current}) \), accept \( x_{new} \) with probability \( e^{-\frac{C(x_{new}) - C(x_{current})}{T}} \).
+\end{itemize}
+
+\textbf{6. Algorithm Execution}
+\begin{itemize}
+    \item \textbf{ Iteration:} At each iteration, generate a neighbor, calculate its cost, and decide whether to move to this new state based on the Metropolis criterion.
+    \item \textbf{Convergence:} Repeat the process until the system stabilizes or a maximum number of iterations is reached.
+\end{itemize}
+
+\textbf{7. Result}
+\begin{itemize}
+    \item \textbf{Output:} The configuration \( x \) that gives the lowest value of \( C(x) \) (i.e., the maximum number of 1's) during the course of the algorithm.
+\end{itemize}
+
+\textbf{Conclusion}
+
+Simulated annealing provides a robust framework for addressing complex optimization problems like the hardcore model on a graph, where traditional methods might be inefficient or infeasible. By carefully tuning the cooling schedule and acceptance probabilities, simulated annealing can effectively explore the space of feasible solutions to approximate the global maximum number of 1's satisfying the model's constraints.
+
 \newpage
 \section*{Chapter 13: Neural Networks}
+
+\subsubsection*{Q1: Apply the central difference formulas (13.2) and (13.3) to approximate \( f''(1) \), where \( f(x) = x^{-1} \) and \(\delta = 10^{-k}\) for \( k = 1, \ldots, 6 \). Find the approximation errors and check if the predicted error estimates are accurate.}
 
 
 
