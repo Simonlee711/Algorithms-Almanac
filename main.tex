@@ -4447,7 +4447,86 @@ Prove that the sum or product of two circulant matrices of the same size is circ
 \newpage
 \section*{Chapter 12: Monte Carlo Methods}
 
+\subsubsection*{Q1:
+Discuss how you would use the inverse method to generate a random variable with (a) the continuous logistic density
+\[
+f(x|\mu, \sigma) = \frac{e^{-\frac{x-\mu}{\sigma}}}{\sigma [1 + e^{-\frac{x-\mu}{\sigma}}]^2},
+\]
+(b) the Pareto density
+\[
+f(x|\alpha, \beta) = \frac{\beta \alpha^\beta}{x^{\beta+1}} 1_{(\alpha, \infty)}(x),
+\]
+and (c) the Weibull density
+\[
+f(x|\delta, \gamma) = \frac{\gamma}{\delta} x^{\gamma-1} e^{-\left(\frac{x}{\delta}\right)^\gamma} 1_{(0, \infty)}(x),
+\]
+where \(\alpha\), \(\beta\), \(\gamma\), \(\delta\), and \(\sigma\) are taken positive.}
 
+\subsubsection*{Q2:
+Continuing problem (1), discuss how the inverse method applies to (d) the Gumbel density
+\[
+f(x) = e^{-x} e^{-e^{-x}},
+\]
+(e) the arcsine density
+\[
+f(x) = \frac{1}{\pi \sqrt{x(1-x)}} 1_{(0,1)}(x),
+\]
+and (f) the slash density
+\[
+f(x) = \alpha x^{\alpha-1} 1_{(0,1)}(x),
+\]
+where \(\alpha > 0\).}
+
+\subsubsection*{Q3:
+Suppose the random variable \(X\) has distribution function \(F(x)\). If \(U\) is uniformly distributed on \([0, 1]\), then show that
+\[
+Y = F^{-1}[UF(t)]
+\]
+is distributed as \(X\) conditional on \(X \leq t\) and that
+\[
+Z = F^{-1}\{F(t) + U[1 - F(t)]\}
+\]
+is distributed as \(X\) conditional on \(X > t\).}
+
+\subsubsection*{Q4:
+One can implement the inverse method even when the quantile function \(F^{-1}(y)\) is not explicitly available. Show that Newton's method for solving \(F(x) = y\) has the update
+\[
+x_{n+1} = x_n - \frac{F(x_n) - y}{f(x_n)}
+\]
+when \(F(x)\) has density \(f(x) = F'(x)\). Observe that if \(F(x_n) > y\), then \(x_{n+1} < x_n\), and if \(F(x_n) < y\), then \(x_{n+1} > x_n\). Prove that \(x_n\) approaches the solution from above if \(F(x)\) is convex and from below if \(F(x)\) is concave. Implement Newton's method for the standard normal distribution, and describe its behavior.}
+
+\subsubsection*{Q8:
+Based on random normal deviates, discuss how one can generate random deviates from the log normal, chi-square, \(F\), and Student’s \(t\) distributions.}
+
+\subsubsection*{Q9:
+The transition matrix \(P\) of a finite Markov chain is said to be doubly stochastic if each of its column sums equals 1. Find an equilibrium distribution in this setting. Prove that symmetric transition matrices are doubly stochastic.}
+
+\subsubsection*{Q10:
+The random variable \(Y\) stochastically dominates the random variable \(X\) provided \(\Pr(Y \leq u) \leq \Pr(X \leq u)\) for all real \(u\). Using quantile coupling, we can construct on a common probability space probabilistic copies \(X_c\) of \(X\) and \(Y_c\) of \(Y\) such that \(X_c \leq Y_c\) with probability 1. If \(X\) has distribution function \(F(x)\) and \(Y\) has distribution function \(G(y)\), then define \(F^{-1}(u)\) and \(G^{-1}(u)\). If \(U\) is uniformly distributed on \([0, 1]\), demonstrate that \(X_c = F^{-1}(U)\) and \(Y_c = G^{-1}(U)\) yield quantile couplings with the property \(X_c \leq Y_c\).}
+
+\subsubsection*{Q11:
+Let \(Z_0, Z_1, Z_2, \ldots\) be a realization of a finite-state ergodic chain. If we sample every \(k\)th epoch, then show (a) that the sampled chain \(Z_0, Z_k, Z_{2k}, \ldots\) is ergodic, (b) that it possesses the same equilibrium distribution as the original chain, and (c) that it is reversible if the original chain is. Thus, based on the ergodic theorem, we can estimate theoretical means by sample averages using only every \(k\)th epoch of the original chain.}
+
+\subsubsection*{Q12:
+An acceptance function \(a : (0, \infty) \mapsto [0, 1]\) satisfies the functional identity \(a(x) = x a(1/x)\). Prove that the detailed balance condition
+\[
+\pi_i q_{ij} a_{ij} = \pi_j q_{ji} a_{ji}
+\]
+holds if the acceptance probability \(a_{ij}\) is defined by
+\[
+a_{ij} = a \left( \frac{\pi_j q_{ji}}{\pi_i q_{ij}} \right)
+\]
+in terms of an acceptance function \(a(x)\). Check that the Barker function \(a(x) = x / (1 + x)\) qualifies as an acceptance function and that any acceptance function is dominated by the Metropolis acceptance function in the sense that \(a(x) \leq \min\{x, 1\}\) for all \(x\).}
+
+\subsubsection*{Q13:
+Consider the Cartesian product space \(\{0, 1\} \times \{0, 1\}\) equipped with the probability distribution
+\[
+(\pi_{00}, \pi_{01}, \pi_{10}, \pi_{11}) = \left( \frac{1}{2}, \frac{1}{4}, \frac{1}{8}, \frac{1}{8} \right).
+\]
+Demonstrate that sequential Gibbs sampling does not satisfy detailed balance by showing that \(\pi_{00} s_{00, 11} \neq \pi_{11} s_{11, 00}\), where \(s_{00, 11}\) and \(s_{11, 00}\) are entries of the matrix \(S\) for first resampling component one and then resampling component two.}
+
+\subsubsection*{Q20:
+Devise a simulated annealing algorithm to approximate the maximum number of 1’s that can occur in the hardcore model.}
 
 \newpage
 \section*{Chapter 13: Neural Networks}
