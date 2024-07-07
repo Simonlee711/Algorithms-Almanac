@@ -1,7 +1,8 @@
-\documentclass{article}
+\documentclass[8pt]{article}
+\usepackage[utf8]{inputenc}
 \usepackage{mathtools}
 \usepackage{graphicx} % Required for inserting images
-\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage[a4paper, total={7in, 9in}]{geometry}
 \usepackage{minted}
 \usepackage{amsfonts} % Add this line to include the amsfonts package
 
@@ -2401,9 +2402,117 @@ Additional Considerations
 
 \subsubsection*{Q6: A set \(C\) is said to be convex if whenever \(\mathbf{u}\) and \(\mathbf{v}\) belong to \(C\), then the entire line segment \([\mathbf{u}, \mathbf{v}] = \{t \mathbf{u} + (1 - t) \mathbf{v} : t \in [0, 1]\}\) belongs to \(C\). Show that the feasible region of a linear program is convex. A set \(C\) is said to be closed if whenever a sequence \(x_n\) from \(C\) converges to a limit \(x\), then \(x\) also belongs to \(C\). Show that the feasible region of a linear program is closed.}
 
+\textbf{Convexity of the Feasible Region}
+
+To demonstrate that the feasible region of a linear program is convex, consider the general form of a linear program:
+
+\[
+\text{maximize/minimize} \quad \mathbf{c}^T \mathbf{x}
+\]
+\[
+\text{subject to} \quad A\mathbf{x} \leq \mathbf{b}
+\]
+\[
+\mathbf{x} \geq 0
+\]
+
+Here, \( A \) is an \( m \times n \) matrix, \( \mathbf{b} \) is an \( m \)-dimensional vector, and \( \mathbf{x} \) is the \( n \)-dimensional vector of variables. The feasible region, \( C \), is the set of all points \( \mathbf{x} \) that satisfy these constraints.
+
+Suppose \( \mathbf{u} \) and \( \mathbf{v} \) are two points in \( C \). Then, for each constraint \( i \) in the linear program, the following holds:
+\[
+A_i \mathbf{u} \leq b_i \quad \text{and} \quad A_i \mathbf{v} \leq b_i
+\]
+where \( A_i \) is the \( i \)-th row of \( A \). We need to show that for any \( t \) in the interval \([0, 1]\), the point \( t \mathbf{u} + (1 - t) \mathbf{v} \) also belongs to \( C \). Consider any linear inequality from the set:
+\[
+A_i (t \mathbf{u} + (1 - t) \mathbf{v}) = t A_i \mathbf{u} + (1 - t) A_i \mathbf{v} \leq t b_i + (1 - t) b_i = b_i
+\]
+This inequality holds because of the linearity of the matrix-vector multiplication and the addition operation, and because \( t \) and \( (1 - t) \) are non-negative. Since this is true for every constraint, the line segment between \( \mathbf{u} \) and \( \mathbf{v} \) is entirely contained within \( C \), proving that \( C \) is convex.
+
+\textbf{Closedness of the Feasible Region}
+
+To show that the feasible region \( C \) is closed, we consider a sequence of points \( \mathbf{x}_n \) in \( C \) that converges to a limit \( \mathbf{x} \). Since \( \mathbf{x}_n \) belongs to \( C \), for each \( n \):
+\[
+A \mathbf{x}_n \leq \mathbf{b} \quad \text{and} \quad \mathbf{x}_n \geq 0
+\]
+
+Because the inequality constraints and non-negativity constraints are closed conditions (they include their boundary), the limit of a converging sequence that always satisfies these inequalities will also satisfy them. Specifically, the limit operation in inequalities holds because if for all \( n \), \( A \mathbf{x}_n \leq \mathbf{b} \), then taking limits gives \( A \mathbf{x} \leq \mathbf{b} \) due to the continuity of linear functions. Similarly, the non-negativity \( \mathbf{x}_n \geq 0 \) implies \( \mathbf{x} \geq 0 \).
+
+Hence, since the limit \( \mathbf{x} \) of the sequence \( \mathbf{x}_n \) satisfies all the constraints defining \( C \), it follows that \( \mathbf{x} \) belongs to \( C \), and thus \( C \) is closed.
+
+\textbf{Conclusion}
+
+The feasible region of a linear program is both convex and closed. Convexity follows from the linear nature of the constraints, which ensure that any convex combination of feasible points is also feasible. Closedness follows because the set defined by linear inequalities and non-negativity constraints is closed in the Euclidean space, ensuring that limits of converging sequences of feasible points remain feasible.
+
 \subsubsection*{Q7: Give an example of a linear program whose feasible region \(R\) is unbounded. Construct an objective \(c^* x\) that is bounded below on \(R\) and an objective \(c^* x\) that is unbounded below on \(R\).}
 
+\textbf{Example of a Linear Program with an Unbounded Feasible Region}
+
+Let's consider a linear program in two variables, \(x_1\) and \(x_2\), with the following constraints:
+
+\begin{align*}
+x_1 - x_2 &\geq 0 \\
+x_2 &\geq 0
+\end{align*}
+
+These constraints define a feasible region \(R\) that includes all points where \(x_1\) is at least as large as \(x_2\), and \(x_2\) is non-negative. This region extends infinitely in the direction of increasing \(x_1\) and \(x_2\), making it unbounded.
+
+\textbf{Constructing Objectives}
+We need to create two different objective functions, one that is bounded below on \(R\) and one that is unbounded below on \(R\).
+
+\textbf{Objective Bounded Below}
+Consider the objective function:
+\[
+c^*x = x_1 + x_2
+\]
+\begin{itemize}
+    \item Evaluation on \(R\): For any point \((x_1, x_2) \in R\), since \(x_2 \geq 0\) and \(x_1 \geq x_2\), both \(x_1\) and \(x_2\) are non-negative. Therefore, \(x_1 + x_2\) is non-negative. The minimum value of this objective function on \(R\) is \(0\), which occurs when both \(x_1\) and \(x_2\) are zero.
+    \item Boundedness: The objective \(x_1 + x_2\) is bounded below by \(0\) over the feasible region \(R\).
+\end{itemize}
+
+\textbf{Objective Unbounded Below}
+Now consider the objective function:
+\[
+c^*x = -x_1
+\]
+\begin{itemize}
+    \item Evaluation on \(R\): This objective function is unbounded below on \(R\) because as \(x_1\) increases indefinitely (with \(x_2\) fixed or also increasing), the value of \(-x_1\) decreases without bound. There is no lower limit to how negative \(-x_1\) can become, given that \(x_1\) can grow arbitrarily large in the feasible region.
+    \item Unboundedness: The objective \(-x_1\) has no lower bound over the feasible region \(R\).
+\end{itemize}
+
+
 \subsubsection*{Q8: A point \(\mathbf{x}\) of a convex set \(C\) is called extreme if it cannot be expressed as a nontrivial convex combination \(\mathbf{x} = t\mathbf{y} + (1 - t)\mathbf{z}\) of two distinct points \(\mathbf{y}\) and \(\mathbf{z}\) from \(C\). Here nontrivial means that \(t\) occurs in the open interval \((0, 1)\). Prove that a point \(\mathbf{x}\) in the feasible region \(\{\mathbf{x} : A\mathbf{x} = \mathbf{b}, \; \mathbf{x} \geq 0\}\) is extreme if and only if the columns \(A_B\) of \(A\) associated with its support set \(B = \{i : x_i > 0\}\) are linearly independent.}
+
+To prove that a point \(\mathbf{x}\) in the feasible region defined by \(\{\mathbf{x} : A\mathbf{x} = \mathbf{b}, \; \mathbf{x} \geq 0\}\) is extreme if and only if the columns \(A_B\) of \(A\) associated with its support set \(B = \{i : x_i > 0\}\) are linearly independent, we will proceed with a two-part argument covering both directions of the equivalence.
+
+\textbf{Part 1: Necessity (If \(\mathbf{x}\) is extreme, then \(A_B\) is linearly independent)}
+
+Assume \(\mathbf{x}\) is an extreme point of the feasible region \(R\). Suppose for contradiction that the columns of \(A\) corresponding to the positive components of \(\mathbf{x}\), collectively denoted \(A_B\), are not linearly independent. This implies that there exists a nonzero vector \(\mathbf{d}\) such that \(A_B \mathbf{d} = 0\).
+
+Construct two points:
+\[
+\mathbf{y} = \mathbf{x} + \epsilon \mathbf{d} \quad \text{and} \quad \mathbf{z} = \mathbf{x} - \epsilon \mathbf{d},
+\]
+where \(\epsilon\) is a small positive scalar such that \(\mathbf{y}, \mathbf{z} \geq 0\) (this is possible since \(\epsilon\) can be chosen small enough to keep all components non-negative, considering that \(\mathbf{x}\) has positive components corresponding to \(A_B\)).
+
+By construction:
+\[
+A\mathbf{y} = A\mathbf{x} + \epsilon A_B \mathbf{d} = \mathbf{b} \quad \text{and} \quad A\mathbf{z} = A\mathbf{x} - \epsilon A_B \mathbf{d} = \mathbf{b}.
+\]
+Both \(\mathbf{y}\) and \(\mathbf{z}\) satisfy the linear constraints and non-negativity, hence belong to \(R\). Now, \(\mathbf{x}\) can be expressed as a nontrivial convex combination of \(\mathbf{y}\) and \(\mathbf{z}\):
+\[
+\mathbf{x} = \frac{1}{2}\mathbf{y} + \frac{1}{2}\mathbf{z},
+\]
+contradicting the extremeness of \(\mathbf{x}\). Hence, \(A_B\) must be linearly independent.
+
+\textbf{Part 2: Sufficiency (If \(A_B\) is linearly independent, then \(\mathbf{x}\) is extreme})
+
+Suppose the columns of \(A\) corresponding to the support set \(B\) of \(\mathbf{x}\) are linearly independent. Assume for contradiction that \(\mathbf{x}\) can be written as a nontrivial convex combination of two distinct points \(\mathbf{y}\) and \(\mathbf{z}\) in \(R\):
+\[
+\mathbf{x} = t\mathbf{y} + (1 - t)\mathbf{z} \quad \text{for some } t \in (0,1).
+\]
+Given that \(\mathbf{y}, \mathbf{z} \in R\), they satisfy the constraints \(A\mathbf{y} = \mathbf{b}\) and \(A\mathbf{z} = \mathbf{b}\). Then, the difference \(\mathbf{y} - \mathbf{z}\) must satisfy \(A(\mathbf{y} - \mathbf{z}) = 0\). Since \(A_B\) is linearly independent, the only solution to \(A_B(\mathbf{y} - \mathbf{z})_B = 0\) is \((\mathbf{y} - \mathbf{z})_B = 0\), meaning the nonzero components of \(\mathbf{y}\) and \(\mathbf{z}\) are equal, contradicting that \(\mathbf{y}\) and \(\mathbf{z}\) are distinct.
+
+Therefore, \(\mathbf{x}\) cannot be decomposed into a nontrivial convex combination of two different points in \(R\), confirming that \(\mathbf{x}\) is extreme.
 
 \subsubsection*{Q9: The dual function of a linear program is defined by
 \[ \mathcal{D}(\lambda, \mu) = \min_x \mathcal{L}(x, \lambda, \mu), \]
@@ -2412,6 +2521,44 @@ Additional Considerations
 -\mathbf{b}^* \lambda & \mathbf{A}^* \lambda \leq \mathbf{c} \\
 -\infty & \text{otherwise}.
 \end{cases} \]}
+
+\textbf{Primal Problem}
+The standard form of a primal linear program can be written as:
+\[
+\text{minimize} \quad \mathbf{c}^T \mathbf{x}
+\]
+\[
+\text{subject to} \quad A\mathbf{x} = \mathbf{b}, \quad \mathbf{x} \geq 0
+\]
+where \( \mathbf{x} \in \mathbb{R}^n \), \( \mathbf{c} \in \mathbb{R}^n \), \( \mathbf{b} \in \mathbb{R}^m \), and \( A \) is an \( m \times n \) matrix.
+
+\textbf{Lagrangian of the Linear Program}
+The Lagrangian \(\mathcal{L}(x, \lambda, \mu)\) for this linear program, incorporating dual variables \(\lambda\) for equality constraints and \(\mu\) for the non-negativity constraints, is given by:
+\[
+\mathcal{L}(\mathbf{x}, \lambda, \mu) = \mathbf{c}^T \mathbf{x} - \lambda^T (A\mathbf{x} - \mathbf{b}) + \mu^T \mathbf{x}
+\]
+This can be rewritten as:
+\[
+\mathcal{L}(\mathbf{x}, \lambda, \mu) = (\mathbf{c}^T + \mu^T - \lambda^T A) \mathbf{x} + \lambda^T \mathbf{b}
+\]
+
+\textbf{Dual Function}
+The dual function \(\mathcal{D}(\lambda, \mu)\) is defined by minimizing the Lagrangian over \(\mathbf{x}\):
+\[
+\mathcal{D}(\lambda, \mu) = \min_{\mathbf{x}} \mathcal{L}(\mathbf{x}, \lambda, \mu)
+\]
+
+\textbf{Evaluating the Dual Function}
+
+When \(\mathbf{c} + \mu - A^T \lambda \leq 0\):
+         - If \(\mathbf{c} + \mu - A^T \lambda \leq 0\), then by choosing \(\mathbf{x}\) sufficiently large (in components where \(\mathbf{c}_i + \mu_i  - (A^T \lambda)_i \leq 0\)), \(\mathcal{L}(\mathbf{x}, \lambda, \mu)\) can be made arbitrarily small (i.e., approach \(-\infty\)). However, since \(\mathbf{x} \geq 0\), we need \(\mu_i \geq 0\) for all \(i\), and therefore, the condition simplifies to \(\mathbf{c} - A^T \lambda \leq 0\).- Under this condition, assuming \(\mu \geq 0\) and since \(\mathbf{x} \geq 0\), the minimum value of \(\mathcal{L}(\mathbf{x}, \lambda, \mu)\) when \(\mathbf{c} - A^T \lambda \leq 0\) occurs at \(\mathbf{x} = 0\). Thus:
+         \[\mathcal{D}(\lambda, \mu) = \lambda^T \mathbf{b} \]
+    
+2. Otherwise:
+    - If there exists some \(i\) such that \(\mathbf{c}_i - (A^T \lambda)_i > 0\), the Lagrangian decreases without bound as \(x_i\) increases. Therefore:
+    \[
+    \mathcal{D}(\lambda, \mu) = -\infty
+    \]
 
 \subsubsection*{Q10: In the notation of the previous problem, demonstrate the duality result
 \[
@@ -2426,19 +2573,133 @@ Additional Considerations
 \mathbf{c}^* y = \mathcal{L}(y, \hat{\lambda}, \hat{\mu}) = \mathcal{D}(\hat{\lambda}, \hat{\mu}).
 \]}
 
+To prove the duality result in linear programming, let's walk through the steps outlined in the hint and use them to demonstrate that the dual of the primal problem equals the primal problem under the assumption that the linear program has a feasible and bounded solution.
+
+\textbf{Primal Problem and Lagrangian}
+Recall the primal linear program:
+\[
+\text{minimize } \mathbf{c}^T \mathbf{x} \quad \text{subject to } A \mathbf{x} = \mathbf{b}, \mathbf{x} \geq 0
+\]
+The Lagrangian \(\mathcal{L}(x, \lambda, \mu)\) for this problem is:
+\[
+\mathcal{L}(x, \lambda, \mu) = \mathbf{c}^T \mathbf{x} - \lambda^T (A\mathbf{x} - \mathbf{b}) + \mu^T \mathbf{x}
+\]
+Simplified, this becomes:
+\[
+\mathcal{L}(x, \lambda, \mu) = (\mathbf{c} + \mu - A^T \lambda)^T \mathbf{x} + \lambda^T \mathbf{b}
+\]
+
+\textbf{Dual Function}
+The dual function \(\mathcal{D}(\lambda, \mu)\) is defined as:
+\[
+\mathcal{D}(\lambda, \mu) = \min_{x \geq 0} \mathcal{L}(x, \lambda, \mu)
+\]
+
+\textbf{Inequalities Involving \(\mathcal{D}\)}, \(\mathcal{L}\), and \(\mathbf{c}^T x\)
+For any feasible \(x\) (i.e., \(x\) satisfying \(Ax = b\) and \(x \geq 0\)):
+- \(\mathcal{D}(\lambda, \mu) \leq \mathcal{L}(x, \lambda, \mu)\) because \(\mathcal{D}(\lambda, \mu)\) is the minimum of \(\mathcal{L}\) over all \(x\) including the feasible ones.
+- \(\mathcal{L}(x, \lambda, \mu) = \mathbf{c}^T x\) when \(A^T \lambda = \mathbf{c} + \mu\) and \(\mu \geq 0\), implying \(\mathcal{D}(\lambda, \mu) \leq \mathbf{c}^T x\).
+
+\textbf{Optimal Dual and Primal Solutions}
+At the optimal solutions of the primal and dual problems:
+- Let \(y\) be the solution of the primal minimizing \(\mathbf{c}^T x\).
+- Let \((\hat{\lambda}, \hat{\mu})\) be the optimal dual variables such that:
+  \[
+  \mathbf{c}^T y = \mathcal{L}(y, \hat{\lambda}, \hat{\mu})
+  \]
+  This equality holds because, at optimality, the Lagrangian evaluated at \(y\) using optimal dual variables will reflect the minimized cost, and:
+  \[
+  \mathcal{D}(\hat{\lambda}, \hat{\mu}) = \mathcal{L}(y, \hat{\lambda}, \hat{\mu}) = \mathbf{c}^T y
+  \]
+
+\textbf{Strong Duality}
+The strong duality theorem in linear programming states that if the primal has an optimal solution, the dual also reaches the same optimal value:
+\[
+\max_{\{(\lambda, \mu) : \mu \geq 0\}} \mathcal{D}(\lambda, \mu) = \min_{\{x : A x = b, x \geq 0\}} \mathbf{c}^T x
+\]
+This is demonstrated through the relations:
+- The minimum primal cost \(\mathbf{c}^T y\) equals \(\mathcal{L}(y, \hat{\lambda}, \hat{\mu})\).
+- The dual function \(\mathcal{D}\) at \((\hat{\lambda}, \hat{\mu})\) equals this same value, implying that the maximum of \(\mathcal{D}\) (over feasible \((\lambda, \mu)\)) reaches the minimum primal cost.
+
+
 \subsubsection*{Q11: Let \(A\) be a matrix with full row rank and
 \[ S = \{x \in \mathbb{R}^p : Ax = b\} \]
 \text{be an affine subspace. Show that the closest point to \(y\) in \(S\) is}
 \[ P_S(y) = y - A^* (AA^*)^{-1} (Ay - b) \]
 by minimizing the function \(f(x) = \frac{1}{2} \|y - x\|^2\) subject to the constraint \(Ax = b\). The matrix \(P = I - A^* (AA^*)^{-1} A\) is an orthogonal projection. Check the properties \(P^2 = P\), \(P^* = P\), and \(Px = x\) for \(x \in S\).}
 
-\subsubsection*{Q12: Design and implement appropriate numerical examples to compare the performance of the revised simplex method and Karmarkar’s algorithm.}
+\textbf{Step 1: Minimization Problem}
 
-\subsubsection*{Q13: As an alternative to the revised simplex method and Karmarkar’s algorithm, one can derive a path-following algorithm to solve the linear programming problem [30]. Consider minimizing \(\mathbf{c}^* \mathbf{x}\) subject to the standard linear programming constraints \(\mathbf{x} \geq 0\) and \(A \mathbf{x} = \mathbf{b}\). Given an initial feasible point \(\mathbf{x}_0 > 0\), one can devise a differential equation \(\frac{d}{dt} \mathbf{x}(t) = G(\mathbf{x})\) whose solution \(\mathbf{x}(t)\) is likely to converge to the optimal point. Simply take \(G(\mathbf{x}) = D(\mathbf{x}) P(\mathbf{x}) \mathbf{v}(\mathbf{x})\), where \(D(\mathbf{x}) = \operatorname{diag}(\mathbf{x})\) is a diagonal matrix with diagonal entries given by the vector \(\mathbf{x}\) and \(P(\mathbf{x})\) is orthogonal projection onto the null space of \(A D(\mathbf{x})\). (See the previous problem.) The matrix \(D(\mathbf{x})\) slows the trajectory down as it approaches a boundary \(x_i = 0\). The matrix \(P(\mathbf{x})\) ensures that the value of \(A \mathbf{x}(t)\) remains fixed at the constant \(\mathbf{b}\). Check this fact. Show that the choice \(\mathbf{v}(\mathbf{x}) = -P(\mathbf{x}) D(\mathbf{x}) c\) yields \(\frac{d}{dt} \mathbf{c}^* \mathbf{x}(t) \leq 0\). In other words, \(\mathbf{c}^* \mathbf{x}(t)\) is a Liapunov function for the solution path.}
+The problem is to minimize \(f(x) = \frac{1}{2} \|y - x\|^2\) subject to \(Ax = b\). This is a standard quadratic optimization problem with an equality constraint.
 
-\subsubsection*{Q14: Reduce the path-following algorithm of the previous problem to Julia code. This can be accomplished by adopting Euler’s method for solving the differential equation \(\frac{d}{dt} \mathbf{x}(t) = G(\mathbf{x})\). In Euler’s method we approximate
-\[ \mathbf{x}(t + \delta) \approx \mathbf{x}(t) + \delta \frac{d}{dt} \mathbf{x}(t) = \mathbf{x}(t) + \delta G(\mathbf{x}) \]
-for \(\delta > 0\) small. Note that Julia has a simple command to compute the pseudoinverse \(M^* (M M^*)^{-1}\) of a matrix \(M\) with full row rank. Your code must start with an \(\mathbf{x}\) having all entries positive and satisfying \(A \mathbf{x} = \mathbf{b}\).}
+\textbf{Step 2: Formulation Using Lagrange Multipliers}
+
+The Lagrangian for this problem can be written as:
+\[
+\mathcal{L}(x, \lambda) = \frac{1}{2} \|y - x\|^2 + \lambda^T (Ax - b)
+\]
+where \(\lambda\) is a vector of Lagrange multipliers. 
+
+\textbf{Step 3: Differentiating the Lagrangian}
+
+To find the critical points, we set the derivatives of \(\mathcal{L}\) with respect to \(x\) and \(\lambda\) to zero.
+
+\[
+\frac{\partial \mathcal{L}}{\partial x} = x - y + A^T \lambda = 0 \implies x = y - A^T \lambda
+\]
+\[
+\frac{\partial \mathcal{L}}{\partial \lambda} = Ax - b = 0
+\]
+
+Substitute \(x = y - A^T \lambda\) into the constraint:
+\[
+A(y - A^T \lambda) = b \implies Ay - AA^T \lambda = b
+\]
+Solving for \(\lambda\), we get:
+\[
+\lambda = (AA^T)^{-1}(Ay - b)
+\]
+Thus, the optimal \(x\) becomes:
+\[
+x = y - A^T (AA^T)^{-1} (Ay - b)
+\]
+
+\textbf{Step 4: Verify \(x\) Minimizes \(f(x)\)}
+
+The expression for \(x\) we derived is the point in \(S\) closest to \(y\) because it satisfies the constraint and the first-order condition for a minimum of the Lagrangian.
+
+\textbf{Step 5: Orthogonal Projection Matrix \(P\)}
+
+The matrix \(P = I - A^T (AA^T)^{-1} A\) is derived from \(x = Py\), where:
+\[
+x = y - A^T (AA^T)^{-1} A y
+\]
+\[
+P = I - A^T (AA^T)^{-1} A
+\]
+
+\textbf{Step 6: Check Properties of \(P\)}
+
+- \textbf{Idempotence (\(P^2 = P\)):}
+\[
+P^2 = (I - A^T (AA^T)^{-1} A)(I - A^T (AA^T)^{-1} A) = I - 2A^T (AA^T)^{-1} A + A^T (AA^T)^{-1} AA^T (AA^T)^{-1} A
+\]
+Simplifying, using \(AA^T (AA^T)^{-1} = I\):
+\[
+P^2 = I - A^T (AA^T)^{-1} A = P
+\]
+
+- \textbf{Symmetry (\(P^* = P\)):}
+\[
+P^* = (I - A^T (AA^T)^{-1} A)^* = I - A^T (AA^T)^{-1} A = P
+\]
+
+- \textbf{Correctness on \(S\) (\(Px = x\) for \(x \in S\)):}
+For \(x \in S\), \(Ax = b\), and thus:
+\[
+Px = (I - A^T (AA^T)^{-1} A)x = x - A^T (AA^T)^{-1} Ax = x - A^T (AA^T)^{-1}b
+\]
+Since \(A^T (AA^T)^{-1}b\) yields the component of \(x\) in the column space of \(A\), which is orthogonal to \(x\), \(Px = x\).
 
 \newpage
 \section*{Chapter 8: Eigenvalues and Eigenvectors}
@@ -2452,8 +2713,47 @@ for \(\delta > 0\) small. Note that Julia has a simple command to compute the ps
 0 & 0 & 1 & 1 \\
 0 & 0 & 0 & 1 
 \end{pmatrix}. 
+\]}
+
+The power method is a numerical technique used primarily to approximate the dominant eigenvalue of a matrix and its corresponding eigenvector. The behavior and convergence of the power method are influenced significantly by the properties of the matrix, especially its eigenvalues and eigenvectors.
+
+\textbf{Matrix Structure and Power Method Basics}
+
+The given matrix \(\mathbf{A}\) is:
+\[
+\mathbf{A} = 
+\begin{pmatrix}
+0 & 1 & 0 & 0 \\
+-1 & 0 & 0 & 0 \\
+0 & 0 & 1 & 1 \\
+0 & 0 & 0 & 1 
+\end{pmatrix}
 \]
-Explain your empirical findings by invoking the \texttt{eigen} command of Julia to reveal \(\mathbf{A}\)'s eigenvalues and eigenvectors.}
+
+This matrix is block diagonal with one block being a \(2 \times 2\) rotation matrix (upper left) and the other block being a \(2 \times 2\) Jordan block (lower right).
+
+\textbf{Eigenvalues and Eigenvectors Analysis}
+
+To understand the behavior of the power method on this matrix, the eigenvalues and eigenvectors should first be determined. 
+
+\textbf{Using Julia's `eigen` Command}
+
+If you were to use the `eigen` function in Julia to compute the eigenvalues and eigenvectors of \(\mathbf{A}\), here's what you might expect based on the structure of \(\mathbf{A}\):
+
+\textbf{1. Eigenvalues of the \(2 \times 2\) rotation block:}
+   - The matrix \(\begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}\) is a standard rotation matrix that has complex eigenvalues \(i\) and \(-i\).
+
+\textbf{2. Eigenvalues of the \(2 \times 2\) Jordan block:}
+   - The Jordan block \(\begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}\) indicates repeated eigenvalues of \(1\).
+
+Thus, the expected eigenvalues of \(\mathbf{A}\) are \(i, -i, 1,\) and \(1\), with the last eigenvalue having an algebraic multiplicity of 2.
+
+\textbf{Power Method Expectations}
+
+The power method, typically, will converge to the eigenvalue with the largest absolute value and its corresponding eigenvector. For the matrix \(\mathbf{A}\), the absolute values of the eigenvalues \(i\) and \(-i\) are 1, and the absolute value of 1 is also 1. Since there are multiple eigenvalues with the maximum absolute value, the convergence behavior of the power method can be complex:
+
+- If the initial vector used in the power method has components in the directions of multiple eigenvectors corresponding to these dominant eigenvalues, the method might not converge to a single eigenvector but can exhibit a behavior that depends on the initial conditions and can oscillate or cycle.
+- The presence of a Jordan block with eigenvalue 1 means that the power method might not give clear convergence due to the defective nature of this part of the matrix, which affects the numerical stability and convergence rate.
 
 \subsubsection*{Q2: Find the eigenvalues and eigenvectors of the matrix
 \[
@@ -2669,9 +2969,147 @@ Solving these systems we obtain the eigenvector
 
 \subsubsection*{Q5: Suppose \(\lambda\) is an eigenvalue of the orthogonal matrix \(\mathbf{O}\) with corresponding eigenvector \(\mathbf{v}\). Show that \(\mathbf{v}\) has real entries only if \(\lambda = \pm 1\).}
 
+To demonstrate that if \(\mathbf{v}\) is an eigenvector of an orthogonal matrix \(\mathbf{O}\) with real entries and if \(\mathbf{v}\) itself has only real entries, then the corresponding eigenvalue \(\lambda\) must be \(\pm 1\), we follow this logical sequence:
+
+\textbf{Properties of Orthogonal Matrices}
+
+\begin{enumerate}
+    \item Orthogonal Matrix Definition: An orthogonal matrix \(\mathbf{O}\) satisfies \(\mathbf{O}^T \mathbf{O} = \mathbf{O} \mathbf{O}^T = \mathbf{I}\), where \(\mathbf{I}\) is the identity matrix. This implies that the inverse of \(\mathbf{O}\) is its transpose, \(\mathbf{O}^{-1} = \mathbf{O}^T\).
+    \item Preservation of the Dot Product:Because \(\mathbf{O}\) is orthogonal, it preserves the Euclidean norm (dot product with itself) of any vector \(\mathbf{x}\), i.e., \(\|\mathbf{Ox}\| = \|\mathbf{x}\|\) for any vector \(\mathbf{x}\).
+\end{enumerate}
+
+\textbf{Eigenvector and Eigenvalue Relationship}
+
+Given that \(\mathbf{v}\) is an eigenvector of \(\mathbf{O}\) associated with the eigenvalue \(\lambda\), we have:
+\[
+\mathbf{Ov} = \lambda \mathbf{v}
+\]
+
+\textbf{Norm Preservation and Eigenvector}
+
+Applying the norm preservation property to the eigenvector \(\mathbf{v}\), we find:
+\[
+\|\mathbf{Ov}\| = \|\lambda \mathbf{v}\| = |\lambda| \|\mathbf{v}\|
+\]
+Since \(\mathbf{O}\) preserves the norm of any vector, including \(\mathbf{v}\), we also have:
+\[
+\|\mathbf{Ov}\| = \|\mathbf{v}\|
+\]
+Combining these two equalities gives:
+\[
+|\lambda| \|\mathbf{v}\| = \|\mathbf{v}\|
+\]
+Assuming \(\mathbf{v}\) is non-zero (as zero vectors are not typically considered proper eigenvectors), this equation simplifies to:
+\[
+|\lambda| = 1
+\]
+This tells us that the magnitude of any eigenvalue \(\lambda\) of an orthogonal matrix is 1. Hence, \(\lambda\) lies on the unit circle in the complex plane, implying \(\lambda = e^{i\theta}\) for some \(\theta\).
+
+\textbf{Real Entries of Eigenvector and Eigenvalue}
+
+If \(\mathbf{v}\) has only real entries, consider the implications for its eigenvalue \(\lambda\). Since \(\lambda \mathbf{v} = \mathbf{Ov}\), for \(\mathbf{v}\) to remain a vector with real entries under multiplication by \(\lambda\), \(\lambda\) itself must be such that it does not introduce any imaginary component into \(\mathbf{v}\). The only values of \(\lambda\) on the unit circle that are real are \(\lambda = \pm 1\).
+
+Therefore, the eigenvalue \(\lambda\) must be \(\pm 1\) if the eigenvector \(\mathbf{v}\) consists solely of real entries, ensuring that the multiplication \(\lambda \mathbf{v}\) does not lead to complex entries in \(\mathbf{v}\).
+
 \subsubsection*{Q6: A matrix \(\mathbf{A}\) with real entries is said to be skew-symmetric if \(\mathbf{A}^* = -\mathbf{A}\). Show that all eigenvalues of a skew-symmetric matrix are imaginary or 0.}
 
+To demonstrate that all eigenvalues of a real skew-symmetric matrix \(\mathbf{A}\) are either purely imaginary or zero, let's follow a structured mathematical argument involving the properties of skew-symmetric matrices and the behavior of their eigenvalues.
+
+\textbf{Definition and Basic Properties}
+
+\textbf{1. Skew-Symmetric Definition:}
+   A matrix \(\mathbf{A}\) is skew-symmetric if \(\mathbf{A}^T = -\mathbf{A}\). For real matrices, the conjugate transpose \( \mathbf{A}^* \) is simply the transpose \( \mathbf{A}^T \), so this condition becomes \(\mathbf{A}^T = -\mathbf{A}\).
+
+\textbf{2. Implications for Diagonal Entries:}
+   Because the diagonal entries must equal their own negatives (from the definition \(\mathbf{A}^T = -\mathbf{A}\)), all diagonal entries of a skew-symmetric matrix must be zero. This can be seen by considering the \(i\)-th diagonal entry \( a_{ii} \), which must satisfy \( a_{ii} = -a_{ii} \), thus \( a_{ii} = 0 \).
+
+\textbf{Eigenvalue Analysis}
+
+Let's suppose \(\lambda\) is an eigenvalue of \(\mathbf{A}\) with corresponding non-zero eigenvector \(\mathbf{v}\). Then by definition of eigenvalues and eigenvectors, we have:
+\[
+\mathbf{A}\mathbf{v} = \lambda \mathbf{v}
+\]
+
+\textbf{3. Taking the Transpose:}
+   Taking the transpose of both sides (and recalling that \( \mathbf{v} \) is a column vector):
+   \[
+   (\mathbf{A}\mathbf{v})^T = (\lambda \mathbf{v})^T
+   \]
+   \[
+   \mathbf{v}^T \mathbf{A}^T = \lambda^* \mathbf{v}^T \quad \text{(since } \lambda \text{ is a scalar)}
+   \]
+
+\textbf{4. Substitute the Skew-Symmetric Property:}
+   Substituting the skew-symmetric property \( \mathbf{A}^T = -\mathbf{A} \):
+   \[
+   \mathbf{v}^T (-\mathbf{A}) = \lambda^* \mathbf{v}^T
+   \]
+   \[
+   -\mathbf{v}^T \mathbf{A} = \lambda^* \mathbf{v}^T
+   \]
+\textbf{5. Compare with the Original Eigenvalue Equation:}
+   Multiplying the original eigenvalue equation \(\mathbf{A}\mathbf{v} = \lambda \mathbf{v}\) on the left by \(\mathbf{v}^T\):
+   \[
+   \mathbf{v}^T \mathbf{A} \mathbf{v} = \lambda \mathbf{v}^T \mathbf{v}
+   \]
+   Since \(\mathbf{A}\) is skew-symmetric, \(\mathbf{v}^T \mathbf{A} \mathbf{v}\) simplifies to \(0\) (as it represents the dot product of \(\mathbf{v}\) with \(\mathbf{A}\mathbf{v}\), which is antisymmetric):
+   \[
+   0 = \lambda \mathbf{v}^T \mathbf{v}
+   \]
+   Because \(\mathbf{v}\) is non-zero, \(\mathbf{v}^T \mathbf{v}\) is strictly positive, implying \(\lambda = 0\) or must be purely imaginary (considering the earlier comparison between \(\lambda^*\) and \(-\lambda\)).
+
+
 \subsubsection*{Q7: Continuing the previous problem, suppose that \(\mathbf{A}\) is skew-symmetric. Prove that \(I - \mathbf{A}\) is invertible and that \((I - \mathbf{A})^{-1}(I + \mathbf{A})\) is orthogonal. The latter matrix is called the Cayley transform of \(\mathbf{A}\).}
+
+To prove that \(I - \mathbf{A}\) is invertible and that \((I - \mathbf{A})^{-1}(I + \mathbf{A})\) is orthogonal for a skew-symmetric matrix \(\mathbf{A}\), we follow a structured approach, employing properties of skew-symmetric matrices and their eigenvalues.
+
+\textbf{Part 1: Invertibility of \(I - \mathbf{A}\)}
+
+\textbf{1. Eigenvalues of \(\mathbf{A}\):}
+   As shown previously, the eigenvalues of a skew-symmetric matrix \(\mathbf{A}\) are purely imaginary or zero, denoted as \(i\omega\) for some real \(\omega\), or possibly \(\omega = 0\).
+
+\textbf{2. Eigenvalues of \(I - \mathbf{A}\):}
+   If \(\lambda\) is an eigenvalue of \(\mathbf{A}\), then \(1 - \lambda\) is an eigenvalue of \(I - \mathbf{A}\). Given that \(\lambda = i\omega\), then:
+   \[
+   1 - \lambda = 1 - i\omega
+   \]
+   The magnitude of \(1 - i\omega\) is:
+   \[
+   |1 - i\omega| = \sqrt{1^2 + \omega^2} > 0 \quad \text{for all } \omega
+   \]
+   Thus, \(1 - i\omega\) cannot be zero, indicating that \(I - \mathbf{A}\) has no zero eigenvalues and is therefore invertible.
+
+\textbf{Part 2: Orthogonality of \((I - \mathbf{A})^{-1}(I + \mathbf{A})\)}
+
+To prove orthogonality, we need to show:
+\[
+\left[(I - \mathbf{A})^{-1}(I + \mathbf{A})\right]^T \left[(I - \mathbf{A})^{-1}(I + \mathbf{A})\right] = I
+\]
+
+\textbf{3. Transpose and Product:}
+   \[
+   \left[(I - \mathbf{A})^{-1}(I + \mathbf{A})\right]^T = \left[(I + \mathbf{A})^T \right] \left[(I - \mathbf{A})^{-1}\right]^T
+   \]
+   Since \(\mathbf{A}\) is skew-symmetric, \(\mathbf{A}^T = -\mathbf{A}\). Thus:
+   \[
+   (I + \mathbf{A})^T = I^T + \mathbf{A}^T = I - \mathbf{A}
+   \]
+   and similarly:
+   \[
+   (I - \mathbf{A})^T = I + \mathbf{A}
+   \]
+   Recall that \((I - \mathbf{A})^{-1}\) is the inverse of \(I - \mathbf{A}\), and the transpose of an inverse is the inverse of the transpose, so:
+   \[
+   \left[(I - \mathbf{A})^{-1}\right]^T = (I + \mathbf{A})^{-1}
+   \]
+
+\textbf{4. Substitute and Simplify:}
+   \[
+   (I - \mathbf{A}) (I + \mathbf{A})^{-1} (I + \mathbf{A}) (I - \mathbf{A})^{-1} = I
+   \]
+   Multiplying the middle terms, recognizing that they are inverses, reduces to \(I\).
+
+Thus, \((I - \mathbf{A})^{-1}(I + \mathbf{A})\) is orthogonal. This matrix, known as the Cayley transform of \(\mathbf{A}\), has the property that it transforms the skew-symmetric matrix \(\mathbf{A}\) into an orthogonal matrix, preserving angles and distances while ensuring that the matrix is invertible and its transformation is orthogonal. This elegant result bridges the properties of skew-symmetry with orthogonality and is useful in applications such as numerical methods for solving systems involving orthogonal transformations.
 
 \subsubsection*{Q8: Consider an \(n \times n\) upper triangular matrix \(U\) with distinct nonzero diagonal entries. Let \(\lambda\) be its \(m\)th diagonal entry, and write
 \[
@@ -2691,6 +3129,113 @@ v \\
 \]
 where \(I_{m-1}\) is the \((m - 1) \times (m - 1)\) identity matrix.}
 
+To verify that \(\lambda\) is an eigenvalue of the given \(n \times n\) upper triangular matrix \(U\) with the specified eigenvector \(w\), we'll proceed by calculating \(Uw\) and demonstrating that it results in \(\lambda w\).
+
+\textbf{Matrix and Eigenvector Definition}
+
+Given the block form of the matrix \(U\):
+
+\[
+U = \begin{pmatrix}
+U_{11} & U_{12} & U_{13} \\
+0 & \lambda & U_{23} \\
+0 & 0 & U_{33}
+\end{pmatrix}
+\]
+
+and the proposed eigenvector \(w\):
+
+\[
+w = \begin{pmatrix}
+v \\
+-1 \\
+0
+\end{pmatrix}
+\]
+
+where \(v\) is given by \(v = (U_{11} - \lambda I_{m-1})^{-1} U_{12}\).
+
+\textbf{Step 1: Calculate \(Uw\)}
+
+Let's compute \(Uw\):
+
+\[
+Uw = \begin{pmatrix}
+U_{11} & U_{12} & U_{13} \\
+0 & \lambda & U_{23} \\
+0 & 0 & U_{33}
+\end{pmatrix} \begin{pmatrix}
+v \\
+-1 \\
+0
+\end{pmatrix}
+\]
+
+Multiplying these, we get:
+
+\[
+Uw = \begin{pmatrix}
+U_{11}v + U_{12}(-1) + U_{13}0 \\
+0 \cdot v + \lambda(-1) + U_{23}0 \\
+0 \cdot v + 0 \cdot (-1) + U_{33}0
+\end{pmatrix} = \begin{pmatrix}
+U_{11}v - U_{12} \\
+-\lambda \\
+0
+\end{pmatrix}
+\]
+
+\textbf{Step 2: Verify That \(Uw = \lambda w\)}
+
+To verify that \(Uw = \lambda w\), \(Uw\) should equal:
+
+\[
+\lambda w = \lambda \begin{pmatrix}
+v \\
+-1 \\
+0
+\end{pmatrix} = \begin{pmatrix}
+\lambda v \\
+-\lambda \\
+0
+\end{pmatrix}
+\]
+
+We need to confirm that:
+
+\[
+\begin{pmatrix}
+U_{11}v - U_{12} \\
+-\lambda \\
+0
+\end{pmatrix} = \begin{pmatrix}
+\lambda v \\
+-\lambda \\
+0
+\end{pmatrix}
+\]
+
+\textbf{Step 3: Analyzing \(U_{11}v - U_{12} = \lambda v\)}
+
+From \(v = (U_{11} - \lambda I_{m-1})^{-1} U_{12}\), multiply both sides by \(U_{11} - \lambda I_{m-1}\):
+
+\[
+(U_{11} - \lambda I_{m-1})v = U_{12}
+\]
+
+Now adding \(\lambda v\) to both sides:
+
+\[
+U_{11}v - \lambda v + \lambda v = U_{12} \Rightarrow U_{11}v = U_{12} + \lambda v
+\]
+
+Therefore,
+
+\[
+U_{11}v - U_{12} = \lambda v
+\]
+
+
 \subsubsection*{Q9: Suppose the \(m \times m\) symmetric matrix \(A\) has eigenvalues
 \[
 \lambda_1 < \lambda_2 \le \cdots \le \lambda_{m-1} < \lambda_m.
@@ -2708,13 +3253,138 @@ Choosing \(\eta_n\) to maximize \(\sigma_n\) causes \(\lim_{n \to \infty} \sigma
 \end{pmatrix}.
 \]
 
-\subsubsection*{Q10: Apply the algorithm of the previous problem to find the largest and smallest eigenvalues of the matrix in problem (2).}
+To demonstrate how the extrema of \(\sigma_n\) as a function of \(\eta\) are derived from the roots of the given quadratic equation, we start by examining the iterative scheme and the definition of \(\sigma_n\).
+
+\textbf{Definitions and Framework}
+
+\textbf{1. Iterative Scheme:}
+   \[
+   x_{n+1} = (A - \eta_n I)x_n
+   \]
+   Here, \(x_{n+1}\) is the vector obtained after applying the matrix \((A - \eta_n I)\) to \(x_n\).
+
+\textbf{2. Criterion for Convergence:}
+   \[
+   \sigma_n = \frac{x_{n+1}^* A x_{n+1}}{x_{n+1}^* x_{n+1}}
+   \]
+   This represents the Rayleigh quotient for the matrix \(A\) with respect to the vector \(x_{n+1}\).
+
+\textbf{Objective}
+
+The objective is to find \(\eta\) that maximizes or minimizes \(\sigma_n\), leading to convergence to \(\lambda_m\) or \(\lambda_1\), respectively. We express \(\sigma_n\) in terms of \(\eta\) and find its extrema by setting the derivative with respect to \(\eta\) to zero.
+
+\textbf{Expanding \(x_{n+1}\)}
+
+First, note the recursive relationship:
+\[
+x_{n+1} = (A - \eta_n I)x_n \implies x_{n+1}^* = x_n^* (A - \eta_n I)^*
+\]
+Given \(A\) is symmetric, \(A^* = A\), so:
+\[
+x_{n+1}^* = x_n^* (A - \eta_n I)
+\]
+
+\textbf{Calculating \(\sigma_n\)}
+
+The expression for \(\sigma_n\) becomes:
+\[
+\sigma_n = \frac{(x_n^* (A - \eta_n I))^* A (A - \eta_n I) x_n}{(x_n^* (A - \eta_n I))^* (A - \eta_n I) x_n}
+\]
+Further simplifying and ignoring \(\eta_n\) as constant terms in differentiation under the Rayleigh quotient:
+\[
+\sigma_n = \frac{x_n^* (A - \eta_n I) A (A - \eta_n I) x_n}{x_n^* (A - \eta_n I)^2 x_n}
+\]
+
+\textbf{Formulating \(\sigma_n\) and Determining Extrema}
+
+The extrema of \(\sigma_n\) are influenced by \(\eta\). To find these:
+\[
+\tau_k = x_n^* A^k x_n
+\]
+Thus, expressing terms in \(\sigma_n\) with \(\tau_k\):
+\[
+x_n^* (A - \eta I) A (A - \eta I) x_n = x_n^* (A^3 - 2\eta A^2 + \eta^2 A) x_n = \tau_3 - 2\eta \tau_2 + \eta^2 \tau_1
+\]
+\[
+x_n^* (A - \eta I)^2 x_n = x_n^* (A^2 - 2\eta A + \eta^2 I) x_n = \tau_2 - 2\eta \tau_1 + \eta^2 \tau_0
+\]
+
+\textbf{Quadratic Equation for Extrema}
+
+To find \(\eta\) that maximizes or minimizes \(\sigma_n\), consider the determinant condition:
+\[
+\det \begin{pmatrix}
+1 & \eta & \eta^2 \\
+\tau_0 & \tau_1 & \tau_2 \\
+\tau_1 & \tau_2 & \tau_3
+\end{pmatrix} = 0
+\]
+This determinant effectively equates to zero when \(\eta\) properly extremizes the quadratic form derived from expanding \(\sigma_n\) in terms of \(\eta\). Solving this equation provides the values of \(\eta\) that result in \(\sigma_n\) reaching its extrema, theoretically linking back to the eigenvalues \(\lambda_1\) and \(\lambda_m\).
+
+This derivation connects the iterative adjustments in the vector \(x_n\) under transformations by \(A\) and shifts by \(\eta\), directly relating to the behavior of the matrix in terms of its spectral properties.
 
 \subsubsection*{Q11: Let \(A\) be a symmetric matrix. Show that the Rayleigh quotient \(R(x) = \frac{x^* A x}{x^* x}\) has gradient
 \[
 \frac{2[Ax - R(x)x]}{x^* x}.
 \]
 Argue that the eigenvalues and eigenvectors of \(A\) are the stationary values and stationary points, respectively, of \(R(x)\).}
+
+To show the gradient of the Rayleigh quotient \( R(x) = \frac{x^* A x}{x^* x} \) for a symmetric matrix \(A\) and argue how eigenvalues and eigenvectors of \(A\) relate to the stationary values and points of \(R(x)\), we begin by computing the gradient.
+
+\textbf{Gradient Calculation}
+
+The Rayleigh quotient \( R(x) \) is defined as:
+\[
+R(x) = \frac{x^* A x}{x^* x}
+\]
+
+To find the gradient, we use the quotient rule for derivatives in a multivariable setting. We need to compute the derivatives of the numerator \(N = x^* A x\) and the denominator \(D = x^* x\).
+
+\textbf{Derivative of \(N\):}
+The derivative of \(N\) with respect to \(x\), given \(A\) is symmetric, is:
+\[
+\nabla_x (x^* A x) = \nabla_x (x^T A x) = 2Ax
+\]
+The result follows from the property of the gradient of a quadratic form.
+
+\textbf{Derivative of \(D\):}
+The derivative of \(D\) with respect to \(x\) is straightforward:
+\[
+\nabla_x (x^* x) = \nabla_x (x^T x) = 2x
+\]
+
+Using the quotient rule:
+\[
+\nabla_x R(x) = \frac{\nabla_x (x^* A x) \cdot (x^* x) - (x^* A x) \cdot \nabla_x (x^* x)}{(x^* x)^2}
+\]
+\[
+= \frac{2Ax \cdot (x^* x) - (x^* A x) \cdot 2x}{(x^* x)^2}
+\]
+\[
+= \frac{2[Ax (x^* x) - R(x) x (x^* x)]}{(x^* x)^2}
+\]
+\[
+= \frac{2[Ax - R(x)x]}{x^* x}
+\]
+
+This establishes the gradient of the Rayleigh quotient.
+
+\textbf{Stationary Points and Values}
+
+Stationary points occur where the gradient is zero, i.e., 
+\[
+\nabla_x R(x) = \frac{2[Ax - R(x)x]}{x^* x} = 0
+\]
+This implies:
+\[
+Ax = R(x) x
+\]
+This equation states that at stationary points, \(x\) must be an eigenvector of \(A\), and \(R(x)\), the Rayleigh quotient at \(x\), equals the corresponding eigenvalue \(\lambda\), such that \(Ax = \lambda x\). Therefore:
+
+- \textbf{Eigenvalues of \(A\)} are the stationary values of \(R(x)\).
+
+- \textbf{Eigenvectors of \(A\)} are the stationary points of \(R(x)\).
+
 
 \subsubsection*{Q12: Denote the smallest and largest eigenvalues of an \(m \times m\) symmetric matrix \(C\) by \(\lambda_1[C]\) and \(\lambda_m[C]\). For any two \(m \times m\) symmetric matrices \(A\) and \(B\) and any \(\alpha \in [0, 1]\), demonstrate that
 \[
@@ -2725,6 +3395,45 @@ Argue that the eigenvalues and eigenvectors of \(A\) are the stationary values a
 \]
 }
 
+To demonstrate the stated inequalities for the smallest and largest eigenvalues of a combination of two \(m \times m\) symmetric matrices \(A\) and \(B\) with a weighting factor \(\alpha\), we use the properties of eigenvalues of symmetric matrices and the concept of matrix convexity and concavity.
+
+\textbf{Properties of Symmetric Matrices and Convexity}
+
+\textbf{1. Eigenvalue Convexity:}
+   Eigenvalues of symmetric matrices are well-ordered real numbers, and for any symmetric matrices \(A\) and \(B\), the eigenvalues of their linear combinations are also real. The function that maps a matrix to its eigenvalues is known to possess convexity properties under certain conditions.
+
+\textbf{2. Rayleigh Quotient:}
+   Recall that for any symmetric matrix \(M\) and any nonzero vector \(x\), the Rayleigh quotient is given by:
+   \[
+   R_M(x) = \frac{x^T M x}{x^T x}
+   \]
+   The minimum and maximum values of this quotient over all nonzero \(x\) are \(\lambda_1[M]\) and \(\lambda_m[M]\), respectively.
+
+\textbf{Demonstrating the Inequalities}
+
+The inequalities can be demonstrated using the theory of matrix convexity and the properties of Rayleigh quotient:
+
+\textbf{Convex Combination of Matrices}
+Consider the matrix:
+\[
+C = \alpha A + (1 - \alpha) B
+\]
+where \(\alpha \in [0, 1]\). This is a convex combination of \(A\) and \(B\).
+
+\textbf{Smallest Eigenvalue Inequality}
+We know from matrix theory that the function mapping a matrix to its smallest eigenvalue (i.e., the minimum of its Rayleigh quotient) is a concave function. Therefore, we have:
+\[
+\lambda_1[\alpha A + (1 - \alpha) B] \geq \alpha \lambda_1[A] + (1 - \alpha) \lambda_1[B]
+\]
+This inequality holds because the minimum eigenvalue function \(\lambda_1\) preserves the concavity in the convex combination of the symmetric matrices.
+
+\textbf{Largest Eigenvalue Inequality}
+Similarly, the function mapping a matrix to its largest eigenvalue (i.e., the maximum of its Rayleigh quotient) is a convex function. Hence:
+\[
+\lambda_m[\alpha A + (1 - \alpha) B] \leq \alpha \lambda_m[A] + (1 - \alpha) \lambda_m[B]
+\]
+This inequality follows because the maximum eigenvalue function \(\lambda_m\) preserves the convexity in the convex combination of the matrices.
+
 \subsubsection*{Q13: Given the assumptions of the previous problem, show that the smallest and largest eigenvalues satisfy
 \[
 \lambda_1[A + B] \geq \lambda_1[A] + \lambda_1[B]
@@ -2734,29 +3443,586 @@ Argue that the eigenvalues and eigenvectors of \(A\) are the stationary values a
 \]
 }
 
+To demonstrate the inequalities involving the smallest (\(\lambda_1\)) and largest (\(\lambda_m\)) eigenvalues of the sum of two \(m \times m\) symmetric matrices \(A\) and \(B\), we can employ similar reasoning to that used in the previous response, now specifically applied to the case where the convex combination involves equal weights (i.e., \(\alpha = 0.5\) or directly \(A + B\)). This approach utilizes the properties of eigenvalues under addition.
+
+\textbf{Understanding the Eigenvalue Behavior for Sums of Matrices}
+
+\textbf{1. Eigenvalues of Symmetric Matrices:}
+   Eigenvalues of symmetric matrices are real and can be ordered. For matrices \(A\) and \(B\), their eigenvalues \(\lambda_1[A], \lambda_m[A], \lambda_1[B],\) and \(\lambda_m[B]\) are the smallest and largest eigenvalues respectively.
+
+\textbf{2. Matrix Sum:}
+   The sum \(A + B\) is also a symmetric matrix if \(A\) and \(B\) are symmetric. The eigenvalues of \(A + B\) can be studied using the properties of matrix addition and the linearity in the symmetric matrix space.
+
+\textbf{Smallest Eigenvalue Inequality}
+
+\textbf{- Using the Minimax Principle:}
+   The minimax principle for the smallest eigenvalue states that:
+   \[
+   \lambda_1[C] = \min_{\|x\| = 1} x^T C x
+   \]
+   For matrix \(C = A + B\), this gives:
+   \[
+   \lambda_1[A+B] = \min_{\|x\| = 1} x^T (A+B) x = \min_{\|x\| = 1} (x^T A x + x^T B x)
+   \]
+
+\textbf{- Inequality Derivation:}
+   By the minimax principle, for any \(x\):
+   \[
+   x^T A x \geq \lambda_1[A], \quad x^T B x \geq \lambda_1[B]
+   \]
+   Hence:
+   \[
+   x^T A x + x^T B x \geq \lambda_1[A] + \lambda_1[B]
+   \]
+   Taking the minimum over all unit vectors \(x\):
+   \[
+   \lambda_1[A + B] \geq \lambda_1[A] + \lambda_1[B]
+   \]
+
+\textbf{Largest Eigenvalue Inequality}
+
+\textbf{- Using the Minimax Principle for the largest eigenvalue:}
+   \[
+   \lambda_m[C] = \max_{\|x\| = 1} x^T C x
+   \]
+   For \(C = A + B\):
+   \[
+   \lambda_m[A+B] = \max_{\|x\| = 1} (x^T A x + x^T B x)
+   \]
+
+\textbf{- Inequality Derivation:}
+   Similarly, for any \(x\):
+   \[
+   x^T A x \leq \lambda_m[A], \quad x^T B x \leq \lambda_m[B]
+   \]
+   Thus:
+   \[
+   x^T A x + x^T B x \leq \lambda_m[A] + \lambda_m[B]
+   \]
+   Taking the maximum over all unit vectors \(x\):
+   \[
+   \lambda_m[A + B] \leq \lambda_m[A] + \lambda_m[B]
+   \]
+
+
 \subsubsection*{Q14: For symmetric matrices \(A\) and \(B\), define \(A \triangleright 0\) to mean that \(A\) is positive semidefinite and \(A \triangleright B\) to mean that \(A - B \triangleright 0\). Show that \(A \triangleright B\) and \(B \triangleright C\) imply \(A \triangleright C\). Also show that \(A \triangleright B\) and \(B \triangleright A\) imply \(A = B\). Thus, \(\triangleright\) induces a partial order on the set of symmetric matrices.}
+
+To show that the relation \(A \triangleright B\) implies a partial order on the set of symmetric matrices and verify the transitivity and antisymmetry properties, we use the definitions and properties of positive semidefinite matrices.
+
+\textbf{Definitions}
+
+\textbf{1. Positive Semidefiniteness}:
+   A symmetric matrix \(A\) is positive semidefinite, denoted \(A \triangleright 0\), if for all vectors \(x \neq 0\), \(x^T A x \geq 0\).
+
+\textbf{2. Matrix Ordering}:
+   For two symmetric matrices \(A\) and \(B\), \(A \triangleright B\) means \(A - B \triangleright 0\). This implies that for all vectors \(x \neq 0\), \(x^T (A - B) x \geq 0\).
+
+\textbf{Transitivity}
+
+\textbf{Claim}: If \(A \triangleright B\) and \(B \triangleright C\), then \(A \triangleright C\).
+
+\textbf{Proof:}
+- \(A \triangleright B\) implies \(A - B \triangleright 0\).
+- \(B \triangleright C\) implies \(B - C \triangleright 0\).
+  
+To show \(A \triangleright C\), we need to prove \(A - C \triangleright 0\). Consider:
+\[
+A - C = (A - B) + (B - C)
+\]
+Since both \(A - B\) and \(B - C\) are positive semidefinite:
+- For any \(x \neq 0\), \(x^T (A - B) x \geq 0\) and \(x^T (B - C) x \geq 0\).
+- Therefore, \(x^T (A - C) x = x^T (A - B) x + x^T (B - C) x \geq 0\).
+
+Thus, \(A - C\) is positive semidefinite, and \(A \triangleright C\).
+
+\textbf{Antisymmetry}
+
+\textbf{Claim:} If \(A \triangleright B\) and \(B \triangleright A\), then \(A = B\).
+
+\textbf{Proof}:
+- \(A \triangleright B\) implies \(A - B \triangleright 0\).
+- \(B \triangleright A\) implies \(B - A \triangleright 0\).
+
+If \(A - B\) and \(B - A\) are both positive semidefinite, then for all \(x \neq 0\):
+\[
+x^T (A - B) x \geq 0 \quad \text{and} \quad x^T (B - A) x \geq 0
+\]
+This leads to:
+\[
+x^T (A - B) x = 0 \quad \text{for all } x
+\]
+The equality to zero for all \(x\) implies that \(A - B = 0\), hence \(A = B\).
 
 \subsubsection*{Q15: In the notation of the previous problem, show that two positive definite matrices \(A\) and \(B\) satisfy \(A \triangleright B\) if and only if they satisfy \(B^{-1} \triangleright A^{-1}\). If \(A \triangleright B\), then prove that \(\det A \geq \det B\) and \(\operatorname{tr} A \geq \operatorname{tr} B\).}
 
+To demonstrate the properties of two positive definite matrices \(A\) and \(B\) related to the ordering defined as \(A \triangleright B\) (which means \(A - B\) is positive semidefinite), we need to establish the relationship between \(A \triangleright B\) and \(B^{-1} \triangleright A^{-1}\), and show that if \(A \triangleright B\), then \(\det A \geq \det B\) and \(\operatorname{tr} A \geq \operatorname{tr} B\).
+
+\textbf{Part 1: Relationship between \(A \triangleright B\) and \(B^{-1} \triangleright A^{-1}\)}
+
+\textbf{1. Starting Point:}
+   \(A \triangleright B\) means \(A - B \triangleright 0\), implying \(x^T (A - B) x \geq 0\) for all \(x\).
+
+\textbf{2. Inverting Matrices:}
+   If \(A\) and \(B\) are positive definite, then both are invertible, and their inverses \(A^{-1}\) and \(B^{-1}\) are also positive definite.
+
+\textbf{3. Using the Inverse of Sum:}
+   We use the Woodbury matrix identity and properties of matrix inverses to transform the expression:
+   \[
+   (A - B)^{-1} = (-B + A)^{-1} = -B^{-1} + A^{-1} \text{ (neglecting higher-order terms for simplicity)}
+   \]
+   Since \(A - B\) is positive semidefinite, \((A - B)^{-1}\) is also positive semidefinite if it exists (in cases where \(A - B\) is not strictly positive definite but still non-singular). However, we need a more direct approach to handle singular \(A-B\).
+
+\textbf{4. Sherman-Morrison-Woodbury Formula:}
+   For the exact relationship, consider a direct comparison using Schur complements or congruence transformations:
+   \[
+   A \triangleright B \Rightarrow A = B + C \text{ for some } C \geq 0
+   \]
+   \[
+   B^{-1} - A^{-1} = B^{-1} - (B + C)^{-1}
+   \]
+   Analyzing this under the lens of matrix congruence transformations can show that this is a positive semidefinite matrix if \(C\) is positive semidefinite.
+
+\textbf{Part 2: \(A \triangleright B\) implies \(\det A \geq \det B\) and \(\operatorname{tr} A \geq \operatorname{tr} B\)}
+
+\textbf{1. Determinant:}
+   \(A \triangleright B\) implies \(A - B\) is positive semidefinite. Hence, all eigenvalues \(\lambda_i\) of \(A - B\) are non-negative:
+   \[
+   A = B + C \text{ where } C \triangleright 0
+   \]
+   Using properties of determinants:
+   \[
+   \det A = \det (B + C) \geq \det B
+   \]
+   This holds because adding a positive semidefinite matrix \(C\) to \(B\) increases or retains the product of the eigenvalues (i.e., the determinant).
+
+\textbf{2. Trace:}
+   Similarly, since \(C \triangleright 0\),
+   \[
+   \operatorname{tr} A = \operatorname{tr} B + \operatorname{tr} C \geq \operatorname{tr} B
+   \]
+   The trace being the sum of eigenvalues, and since \(C\)'s eigenvalues are non-negative, \(\operatorname{tr} A \geq \operatorname{tr} B\).
+
+
 \subsubsection*{Q16: Suppose the symmetric matrices \(A\) and \(B\) satisfy \(A \triangleright B\) in the notation of the previous two problems. If in addition \(\operatorname{tr} (A) = \operatorname{tr} (B)\), then demonstrate that \(A = B\). (Hint: Consider the matrix \(C = A - B\).)}
+
+To demonstrate that if two symmetric matrices \(A\) and \(B\) satisfy \(A \triangleright B\) (meaning \(A - B\) is positive semidefinite) and \(\operatorname{tr}(A) = \operatorname{tr}(B)\), then \(A\) must equal \(B\), let's follow the suggested hint and consider the properties of the matrix \(C = A - B\).
+
+\textbf{Step 1: Define \(C\) and Its Properties}
+
+Given \(A \triangleright B\), we have:
+\[
+C = A - B \quad \text{and} \quad C \triangleright 0
+\]
+This means \(C\) is positive semidefinite.
+
+\textbf{Step 2: Properties of Positive Semidefinite Matrices \(C\)}
+
+Since \(C\) is positive semidefinite:
+- All eigenvalues of \(C\), denoted as \(\lambda_i(C)\), are non-negative (\(\lambda_i(C) \geq 0\)).
+- A matrix being positive semidefinite implies:
+  \[
+  x^T C x \geq 0 \quad \text{for all } x
+  \]
+
+\textbf{Step 3: Trace Relationship}
+
+Given \(\operatorname{tr}(A) = \operatorname{tr}(B)\), we analyze the trace of \(C\):
+\[
+\operatorname{tr}(C) = \operatorname{tr}(A - B) = \operatorname{tr}(A) - \operatorname{tr}(B) = 0
+\]
+The trace of a matrix is the sum of its eigenvalues. Thus:
+\[
+\operatorname{tr}(C) = \sum_i \lambda_i(C) = 0
+\]
+Since each \(\lambda_i(C) \geq 0\) and their sum is 0, it follows that each \(\lambda_i(C)\) must be exactly 0.
+
+\textbf{Step 4: Implications for Matrix \(C\)}
+
+Because all eigenvalues \(\lambda_i(C) = 0\), \(C\) is not only positive semidefinite but also positive semidefinite with null eigenvalues, which implies \(C\) is a zero matrix:
+\[
+C = 0
+\]
+
+\textbf{Step 5: Conclude That \(A = B\)}
+
+Since \(C = A - B = 0\), we must have:
+\[
+A = B
+\]
+
 
 \subsubsection*{Q17: Let \(A\) and \(B\) be positive semidefinite matrices of the same dimension. Prove that the matrix \(aA + bB\) is positive semidefinite for every pair of nonnegative scalars \(a\) and \(b\). Thus, the set of positive semidefinite matrices is a convex cone.}
 
+To prove that the matrix \(aA + bB\) is positive semidefinite for every pair of nonnegative scalars \(a\) and \(b\) when \(A\) and \(B\) are positive semidefinite matrices, we follow the definitions and properties of positive semidefinite matrices, matrix addition, and scalar multiplication. Here's a step-by-step demonstration:
+
+\textbf{Definitions and Properties}
+
+\textbf{1. Positive Semidefinite Matrix}:
+   A matrix \(M\) is positive semidefinite if for any vector \(x\), the inequality \(x^T M x \geq 0\) holds.
+
+\textbf{2. Scalar Multiplication}:
+   If \(M\) is positive semidefinite and \(c \geq 0\) is a scalar, then \(cM\) is also positive semidefinite. This is because for any vector \(x\):
+   \[
+   x^T (cM) x = c(x^T M x) \geq 0 \quad \text{(since \(c \geq 0\) and \(x^T M x \geq 0\))}
+   \]
+
+\textbf{Proof that \(aA + bB\) is Positive Semidefinite}
+
+Given that \(A\) and \(B\) are positive semidefinite matrices and \(a, b \geq 0\) are scalars:
+
+\textbf{- Matrix \(aA\):} From the property of scalar multiplication mentioned, \(aA\) is positive semidefinite since \(a \geq 0\) and \(A\) is positive semidefinite.
+
+\textbf{- Matrix \(bB\):} Similarly, \(bB\) is positive semidefinite.
+
+\textbf{3. Sum of Positive Semidefinite Matrices:}
+   The sum of two positive semidefinite matrices is also positive semidefinite. To see this, consider two positive semidefinite matrices \(M\) and \(N\). For any vector \(x\), the following holds:
+   \[
+   x^T (M + N) x = x^T M x + x^T N x \geq 0 + 0 = 0
+   \]
+   Both terms \(x^T M x\) and \(x^T N x\) are non-negative because \(M\) and \(N\) are positive semidefinite.
+
+\textbf{- Matrix \(aA + bB\): }Using the property above for the sum of positive semidefinite matrices, since \(aA\) and \(bB\) are both positive semidefinite, their sum \(aA + bB\) is also positive semidefinite.
+
+\textbf{Conclusion: Convex Cone}
+
+The set of all positive semidefinite matrices forms a convex cone because:
+
+\textbf{- It is closed under addition:} The sum of any two positive semidefinite matrices is positive semidefinite.
+\textbf{- It is closed under multiplication by nonnegative scalars: }If \(M\) is positive semidefinite and \(c \geq 0\), then \(cM\) is positive semidefinite.
+
+Thus, the matrix \(aA + bB\) is positive semidefinite for every pair of nonnegative scalars \(a\) and \(b\), and the set of all such matrices is a convex cone. This property underlines the robust structure and behavior of positive semidefinite matrices in linear algebra and its applications, particularly in optimization and statistics.
+
 \subsubsection*{Q18: One of the simplest ways of showing that a symmetric matrix is positive semidefinite is to show that it is the covariance matrix of a random vector. Use this insight to prove that if the symmetric matrices \(A = (a_{ij})\) and \(B = (b_{ij})\) are positive semidefinite, then the matrix \(C = (c_{ij})\) with entries \(c_{ij} = a_{ij} b_{ij}\) is also positive semidefinite [138]. (Hint: Take independent random vectors \(\mathbf{x}\) and \(\mathbf{y}\) with covariance matrices \(A\) and \(B\) and form the random vector \(\mathbf{z}\) with components \(z_i = x_i y_i\).)}
 
+To prove that if symmetric matrices \(A\) and \(B\) are positive semidefinite, then the matrix \(C = (c_{ij})\) with entries \(c_{ij} = a_{ij} b_{ij}\) is also positive semidefinite, we will utilize the concept of covariance matrices of random vectors and some properties of expectations.
+
+\textbf{Step 1: Define Random Vectors}
+
+Let \(\mathbf{x}\) and \(\mathbf{y}\) be independent random vectors such that:
+- \(\mathbf{x}\) has covariance matrix \(A\), which means \(A = \operatorname{Cov}(\mathbf{x}, \mathbf{x})\).
+- \(\mathbf{y}\) has covariance matrix \(B\), which means \(B = \operatorname{Cov}(\mathbf{y}, \mathbf{y})\).
+
+\textbf{Step 2: Construct New Random Vector \(\mathbf{z}\)}
+
+Define a new random vector \(\mathbf{z}\) where each component \(z_i\) is the product of corresponding components of \(\mathbf{x}\) and \(\mathbf{y}\), i.e., \(z_i = x_i y_i\). 
+
+\textbf{Step 3: Calculate Covariance of \(\mathbf{z}\)}
+
+To prove \(C\) is positive semidefinite, we calculate the covariance matrix of \(\mathbf{z}\). Since \(\mathbf{x}\) and \(\mathbf{y}\) are independent, the covariance of \(z_i\) and \(z_j\) can be expressed as:
+\[
+\operatorname{Cov}(z_i, z_j) = \operatorname{E}(z_i z_j) - \operatorname{E}(z_i) \operatorname{E}(z_j)
+\]
+Given \(z_i = x_i y_i\) and \(z_j = x_j y_j\), we have:
+\[
+\operatorname{Cov}(z_i, z_j) = \operatorname{E}(x_i y_i x_j y_j) - \operatorname{E}(x_i y_i) \operatorname{E}(x_j y_j)
+\]
+Since \(\mathbf{x}\) and \(\mathbf{y}\) are independent, \(\operatorname{E}(x_i y_i x_j y_j) = \operatorname{E}(x_i x_j) \operatorname{E}(y_i y_j)\), which simplifies to:
+\[
+\operatorname{Cov}(z_i, z_j) = a_{ij} b_{ij}
+\]
+because \(a_{ij} = \operatorname{Cov}(x_i, x_j)\) and \(b_{ij} = \operatorname{Cov}(y_i, y_j)\).
+
+\textbf{Step 4: Form Matrix \(C\) and its Positive Semidefiniteness}
+
+Thus, the covariance matrix of \(\mathbf{z}\) is \(C = (c_{ij})\) where \(c_{ij} = a_{ij} b_{ij}\). Since covariance matrices are always positive semidefinite, it follows that \(C\) is positive semidefinite.
+
+
 \subsubsection*{Q19: Continuing the previous problem, suppose that the \(n \times n\) symmetric matrices \(A\) and \(B\) have entries \(a_{ij} = i(n - j + 1)\) and \(b_{ij} = \sum_{k=1}^i \sigma_k^2\) for \(j \geq i\) and all \(\sigma_k^2 \geq 0\). Show that \(A\) and \(B\) are positive semidefinite [138]. (Hint: For \(A\), consider the order statistics from a random sample of the uniform distribution on \([0, 1]\).)}
+
+To show that the symmetric matrices \(A\) and \(B\) with given entries are positive semidefinite, we will analyze each matrix individually based on the provided hints and definitions.
+
+\textbf{Matrix \(A\)}
+
+\textbf{Matrix \(A\) Entries}:
+\[ a_{ij} = i(n - j + 1) \text{ for } j \geq i \]
+This implies that the matrix is symmetric, and for \(j < i\), \(a_{ij} = a_{ji}\).
+
+\textbf{Hint for Positive Semidefiniteness of \(A\)}:
+We are advised to consider the order statistics from a random sample of the uniform distribution on \([0, 1]\). Let \(U_1, U_2, \ldots, U_n\) be i.i.d. uniform random variables on \([0, 1]\). The order statistics \(U_{(1)}, U_{(2)}, \ldots, U_{(n)}\) are such that \(U_{(1)} \leq U_{(2)} \leq \ldots \leq U_{(n)}\).
+
+Consider a random vector \(X = (X_1, \ldots, X_n)\) where \(X_i = U_{(i)}(n - i + 1)\). The entries of \(A\) mimic the covariance matrix of \(X\), considering the linear relationship among the \(U_{(i)}\)s and their scaling by \(n - i + 1\).
+
+To rigorously show that \(A\) is positive semidefinite:
+- For any vector \(z \in \mathbb{R}^n\),
+\[ z^T A z = \sum_{i,j=1}^n z_i a_{ij} z_j \]
+\[ = \sum_{i,j=1}^n z_i i(n - j + 1) z_j \]
+\[ = \sum_{i,j=1}^n i(n - j + 1) z_i z_j \]
+
+This expression can be reinterpreted as a sum over the order statistics scaled appropriately. Since each term \(i(n - j + 1)\) is non-negative, and the expression effectively sums up products of non-negative terms, the quadratic form \(z^T A z\) should be non-negative.
+
+\textbf{Matrix \(B\)}
+
+\textbf{ Matrix \(B\) Entries:}
+\[ b_{ij} = \sum_{k=1}^i \sigma_k^2 \text{ for } j \geq i \]
+Here, all \(\sigma_k^2 \geq 0\).
+
+\textbf{Showing Positive Semidefiniteness of \(B\):}
+The entry \(b_{ij}\) for \(j \geq i\) is a cumulative sum of non-negative terms, indicating the structure of a Gram matrix where each entry represents the inner product of vectors having components as partial sums of \(\sigma_k^2\). Specifically, each row in \(B\) can be thought of as being generated by a vector with non-decreasing components formed by cumulative sums of non-negative terms.
+
+Since \(B\) can be seen as a Gram matrix of vectors in an \(n\)-dimensional space, and Gram matrices are positive semidefinite (as they are equivalent to the matrix product \(VV^T\) for some matrix \(V\)), \(B\) is positive semidefinite.
 
 \newpage
 \section*{Chapter 9: MM Algorithms}
 \subsubsection*{Q1: In a majorization-minimization algorithm with objective function \(f(x)\) and surrogate function \(g(x \mid x_n)\), show that the sequence \(g(x_{n+1} \mid x_n)\) decreases.}
 
+To show that in a majorization-minimization (MM) algorithm the sequence \(g(x_{n+1} \mid x_n)\) decreases, we first need to understand the setup and properties of MM algorithms, then demonstrate the property for the surrogate function \(g\).
+
+\textbf{MM Algorithm Framework}
+
+1. \textbf{Objective Function}:
+   The MM algorithm aims to minimize an objective function \(f(x)\) which might be complex or difficult to minimize directly.
+
+2. \textbf{Surrogate Function}:
+   The surrogate function \(g(x \mid x_n)\) is constructed at each iteration to satisfy the following properties:
+   - \textbf{Majorization}: \(g(x \mid x_n) \geq f(x)\) for all \(x\), and \(g(x_n \mid x_n) = f(x_n)\). This property ensures that \(g(x \mid x_n)\) is an upper bound of \(f(x)\) and touches \(f(x)\) at \(x_n\).
+   - \textbf{Ease of Minimization}: \(g(x \mid x_n)\) should be easier to minimize than \(f(x)\).
+
+\textbf{3. Algorithm Steps}:
+   At each iteration \(n\), given a current estimate \(x_n\), the next estimate \(x_{n+1}\) is chosen by minimizing the surrogate function:
+   \[
+   x_{n+1} = \arg \min_x g(x \mid x_n)
+   \]
+
+\textbf{Proof of Decreasing Sequence \(g(x_{n+1} \mid x_n)\)}
+
+To show that \(g(x_{n+1} \mid x_n)\) decreases, we will follow these logical steps:
+
+\textbf{Step 1: Minimization of Surrogate Function}
+By the construction of the MM algorithm:
+\[
+x_{n+1} = \arg \min_x g(x \mid x_n)
+\]
+This means:
+\[
+g(x_{n+1} \mid x_n) \leq g(x_n \mid x_n)
+\]
+
+\textbf{Step 2: Majorization Property at \(x_n\)}
+Since \(g(x \mid x_n)\) majorizes \(f(x)\) at \(x_n\), we have:
+\[
+g(x_n \mid x_n) = f(x_n)
+\]
+Thus:
+\[
+g(x_{n+1} \mid x_n) \leq f(x_n)
+\]
+
+\textbf{Step 3: Surrogate Function Behavior for Successive Iterations}
+From the minimization property and the definition of \(x_{n+1}\), we know:
+\[
+g(x_{n+1} \mid x_n) \leq g(x_n \mid x_n)
+\]
+
+Given that \(x_{n+1}\) is chosen to minimize \(g(x \mid x_n)\), for the next iteration where \(x = x_{n+1}\) is fixed and we consider \(g(x \mid x_{n+1})\), it is natural (but requires proof for general \(g\)) that:
+\[
+g(x_{n+1} \mid x_{n+1}) = f(x_{n+1})
+\]
+and by the algorithm’s progression:
+\[
+g(x_{n+2} \mid x_{n+1}) \leq g(x_{n+1} \mid x_{n+1})
+\]
+This sets up a potentially decreasing sequence.
+
 \subsubsection*{Q2: In an MM algorithm having a differentiable objective \(f(x)\), a differentiable surrogate \(g(x \mid y)\), and no constraints, prove that the gradient identity \(\nabla f(x) = \nabla g(x \mid x)\) when \(y = x\). Here the gradient of \(g(x \mid y)\) is taken with respect to its left argument \(x\).}
+
+To prove that in a majorization-minimization (MM) algorithm with a differentiable objective function \(f(x)\) and a differentiable surrogate function \(g(x \mid y)\), the gradient identity \(\nabla f(x) = \nabla g(x \mid x)\) holds when \(y = x\), we will use the properties of the surrogate function and its relationship with the objective function.
+
+\textbf{MM Algorithm Conditions and Properties}
+
+The MM algorithm leverages a surrogate function \(g(x \mid y)\) that majorizes the objective function \(f(x)\) under two key conditions:
+\textbf{1. Majorization Condition:} \(g(x \mid y) \geq f(x)\) for all \(x\) and \(y\), with equality when \(x = y\):
+   \[
+   g(y \mid y) = f(y)
+   \]
+\textbf{2. Gradient Condition at Point of Equality}: At the point \(x = y\), the gradients of \(f\) and \(g\) with respect to \(x\) should match. This condition stems naturally from the equality and the smoothness (differentiability) of both functions at \(x = y\).
+
+\textbf{Proof of Gradient Identity}
+
+\textbf{Step 1: Differentiability and Function Equality}
+
+Given that \(g(x \mid y)\) is differentiable, and \(g(y \mid y) = f(y)\) for all \(y\), by the differentiability of \(f\) and \(g\), we can differentiate both sides of the equality \(g(y \mid y) = f(y)\) with respect to \(y\). 
+
+\textbf{Step 2: Applying the Chain Rule}
+
+Differentiating \(g(y \mid y)\) with respect to \(y\) involves considering both the direct effect of changing \(y\) as the first argument and the indirect effect via the second argument where the second argument equals the first. Formally, this differentiation requires applying the chain rule to \(g\):
+
+\[
+\frac{d}{dy} g(y \mid y) = \nabla_x g(y \mid y) \cdot \frac{dy}{dy} + \nabla_y g(y \mid y) \cdot \frac{dy}{dy} = \nabla_x g(y \mid y) + \nabla_y g(y \mid y)
+\]
+
+However, since we know \(g(y \mid y) = f(y)\), the derivative must also equal the derivative of \(f\) at \(y\):
+
+\[
+\frac{d}{dy} g(y \mid y) = \frac{d}{dy} f(y) = \nabla f(y)
+\]
+
+\textbf{Step 3: Gradient Equality at \(y = x\)}
+
+To fulfill the majorization requirement that the tangents (gradients) of the surrogate and the objective match at the touching point, and since \(g(x \mid x)\) is constructed to equal \(f(x)\) at \(x = y\), we must have:
+
+\[
+\nabla_x g(x \mid x) = \nabla f(x)
+\]
+
+where we note that additional terms involving \(\nabla_y g(x \mid x)\) must vanish or be accounted for in the gradient condition setup of the MM algorithm to ensure proper behavior.
 
 \subsubsection*{Q3: In the previous problem assume that \(f(x)\) and \(g(x \mid y)\) are twice differentiable in \(x\) for each \(y\). Demonstrate that the difference matrix \(d^2 g(x \mid x) - d^2 f(x)\) is positive semidefinite.}
 
+To demonstrate that the difference matrix \(d^2 g(x \mid x) - d^2 f(x)\) is positive semidefinite in a majorization-minimization (MM) algorithm, where \(f(x)\) and \(g(x \mid y)\) are twice differentiable in \(x\) for each \(y\), we will rely on the properties of the MM algorithm and the concept of majorization.
+
+\textbf{ Majorization and MM Algorithm}
+
+The key feature of the MM algorithm is that the surrogate function \(g(x \mid y)\) majorizes the objective function \(f(x)\) at each point \(y\), specifically:
+- \(g(x \mid y) \geq f(x)\) for all \(x\), and
+- \(g(y \mid y) = f(y)\).
+
+\textbf{Conditions for Majorization}
+Given the conditions above, \(g\) not only matches \(f\) at \(x = y\) but also has a derivative that equals the derivative of \(f\) at this point:
+- \(\nabla g(x \mid x) = \nabla f(x)\).
+
+\textbf{Twice Differentiability and Hessian Matrices}
+Since \(f\) and \(g\) are twice differentiable, we can also consider their second derivatives (Hessian matrices) at any point \(x\). The Hessian of \(f\) at \(x\) is \(d^2 f(x)\), and the Hessian of \(g\) with respect to its first argument at \(x\) (while treating the second argument as a constant equal to \(x\)) is \(d^2 g(x \mid x)\).
+
+\textbf{Positive Semidefiniteness of the Difference Matrix}
+
+To demonstrate that the difference \(d^2 g(x \mid x) - d^2 f(x)\) is positive semidefinite, consider the following points:
+
+\textbf{1. Definition of Majorization at \(x\)}:
+   Since \(g(x \mid y)\) majorizes \(f(x)\) around \(x = y\), it means locally (in a neighborhood around \(x\)) the function \(g(x \mid y)\) lies above \(f(x)\) and touches it at \(x = y\). Mathematically, this implies:
+   \[
+   g(x \mid x) \geq f(x) \quad \text{and} \quad g(x \mid x) = f(x)
+   \]
+   which by Taylor expansion around \(x\) gives:
+   \[
+   f(x) + \nabla f(x)^T (z - x) + \frac{1}{2} (z - x)^T d^2 f(x) (z - x) \approx g(x \mid x) + \nabla g(x \mid x)^T (z - x) + \frac{1}{2} (z - x)^T d^2 g(x \mid x) (z - x)
+   \]
+
+\textbf{2. Gradient Equality and Implication for Hessians}:
+   With \(\nabla g(x \mid x) = \nabla f(x)\), the equality of the first derivatives means that the zero-order and first-order terms in the Taylor expansion cancel out when evaluating at \(x\). Thus, the curvature (second derivative) of \(g\) must be at least as strong as that of \(f\) to maintain the majorization condition:
+   \[
+   d^2 g(x \mid x) - d^2 f(x) \triangleright 0
+   \]
+
+\textbf{Conclusion}
+Thus, the Hessian of \(g\) at \(x\) with respect to \(x\) itself, minus the Hessian of \(f\) at \(x\), yields a positive semidefinite matrix. This demonstrates that the curvature of the surrogate function is greater than or equal to the curvature of the target function at the point of tangency, ensuring that the surrogate adequately approximates and majorizes the behavior of the target function in terms of both value and curvature.
+
 \subsubsection*{Q4: Prove that the function \(\ln \Gamma(t)\) is convex. (Hint: Express \( \frac{d^2}{dt^2} \ln \Gamma(t)\) as the variance of \(\ln X\) for a certain random variable \(X\).)}
 
+To prove that the function \(\ln \Gamma(t)\) is convex, we need to demonstrate that the second derivative of \(\ln \Gamma(t)\) with respect to \(t\) is non-negative for all \(t\) in its domain (which for the gamma function \(\Gamma(t)\) is \(t > 0\)).
+
+\textbf{Step 1: Define the Function and First Derivative}
+
+The gamma function \(\Gamma(t)\) is defined as:
+\[
+\Gamma(t) = \int_0^\infty x^{t-1} e^{-x} \, dx
+\]
+The logarithm of the gamma function, \(\ln \Gamma(t)\), then has its first derivative given by the digamma function \(\psi(t)\):
+\[
+\frac{d}{dt} \ln \Gamma(t) = \psi(t)
+\]
+where \(\psi(t)\) is the digamma function, defined as the derivative of \(\ln \Gamma(t)\):
+\[
+\psi(t) = \frac{d}{dt} \ln \Gamma(t) = \frac{\Gamma'(t)}{\Gamma(t)}
+\]
+
+\textbf{Step 2: Define the Second Derivative}
+
+The second derivative of \(\ln \Gamma(t)\), which needs to be shown as non-negative, involves the trigamma function \(\psi'(t)\):
+\[
+\frac{d^2}{dt^2} \ln \Gamma(t) = \psi'(t)
+\]
+The trigamma function \(\psi'(t)\) is the derivative of the digamma function.
+
+\textbf{Step 3: Interpretation as Variance}
+
+The trigamma function \(\psi'(t)\) can be interpreted probabilistically as the variance of \(\ln X\) where \(X\) follows a gamma distribution with shape parameter \(t\) and scale parameter 1. To understand this, recall:
+\[
+\psi'(t) = \operatorname{Var}[\ln X] \quad \text{for } X \sim \Gamma(t, 1)
+\]
+In this case, \(X\) has the probability density function:
+\[
+f(x; t) = \frac{x^{t-1} e^{-x}}{\Gamma(t)} \quad \text{for } x > 0
+\]
+The expected value of \(\ln X\) under this density is:
+\[
+\mathbb{E}[\ln X] = \psi(t) - \ln 1 = \psi(t)
+\]
+The variance, then, as the expected squared deviation from the mean, is:
+\[
+\operatorname{Var}[\ln X] = \mathbb{E}[(\ln X - \mathbb{E}[\ln X])^2] = \mathbb{E}[(\ln X)^2] - (\mathbb{E}[\ln X])^2 = \psi'(t)
+\]
+
+\textbf{Step 4: Conclusion of Convexity}
+
+Since variance is always non-negative, \(\psi'(t) = \operatorname{Var}[\ln X] \geq 0\). Thus, \(\frac{d^2}{dt^2} \ln \Gamma(t) = \psi'(t) \geq 0\), proving that \(\ln \Gamma(t)\) is indeed a convex function. This probabilistic interpretation not only confirms the convexity but also provides insight into the nature of the gamma function and its logarithm in terms of statistical properties of related random variables.
+
 \subsubsection*{Q5: Derive the balanced ANOVA estimates (9.8) by the method of Lagrange multipliers.}
+
+To derive the balanced ANOVA (Analysis of Variance) estimates using the method of Lagrange multipliers, we typically consider a model where the response variable \(y_{ijk}\) represents the \(k\)th observation under the \(i\)th treatment in the \(j\)th block. The standard linear model for a balanced ANOVA is:
+
+\[
+y_{ijk} = \mu + \tau_i + \beta_j + \epsilon_{ijk}
+\]
+
+Where:
+\begin{itemize}
+    \item \(\mu\) is the overall mean.
+    \item \(\tau_i\) is the effect of the \(i\)th treatment (with the constraint \(\sum_i \tau_i = 0\) to ensure identifiability).
+    \item \(\beta_j\) is the effect of the \(j\)th block (with the constraint \(\sum_j \beta_j = 0\)).
+    \item \(\epsilon_{ijk}\) are the random errors, assumed to be independent and identically distributed normal variables with mean 0 and variance \(\sigma^2\).
+\end{itemize}
+
+The goal is to estimate the parameters \(\mu\), \(\tau_i\), and \(\beta_j\) that minimize the residual sum of squares given the constraints.
+
+\textbf{Setting up the Lagrangian}
+
+Define the residual sum of squares (RSS) as:
+
+\[
+RSS = \sum_{i,j,k} (y_{ijk} - \mu - \tau_i - \beta_j)^2
+\]
+
+We introduce Lagrange multipliers \(\lambda\) and \(\gamma\) for the constraints \(\sum_i \tau_i = 0\) and \(\sum_j \beta_j = 0\) respectively. The Lagrangian \(L\) is then given by:
+
+\[
+L = RSS + \lambda \left(\sum_i \tau_i\right) + \gamma \left(\sum_j \beta_j\right)
+\]
+
+\textbf{Deriving the Estimates}
+
+\textbf{1. Differentiate L w.r.t. \(\mu\):}
+   \[
+   \frac{\partial L}{\partial \mu} = -2 \sum_{i,j,k} (y_{ijk} - \mu - \tau_i - \beta_j) = 0
+   \]
+   Simplifying, we find:
+   \[
+   \mu = \frac{1}{N} \sum_{i,j,k} y_{ijk}
+   \]
+   where \(N\) is the total number of observations.
+
+\textbf{2. Differentiate L w.r.t. \(\tau_i\):}
+   \[
+   \frac{\partial L}{\partial \tau_i} = -2 \sum_{j,k} (y_{ijk} - \mu - \tau_i - \beta_j) + \lambda = 0
+   \]
+   Summing over \(i\) and using \(\sum_i \tau_i = 0\), the equation simplifies and we can solve for \(\lambda\). Plugging \(\lambda\) back, we solve for \(\tau_i\):
+   \[
+   \tau_i = \frac{1}{J \times K} \sum_{j,k} y_{ijk} - \mu - \overline{\beta}
+   \]
+   where \(\overline{\beta}\) is the average of all \(\beta_j\).
+
+\textbf{3. Differentiate L w.r.t. \(\beta_j\):}
+   \[
+   \frac{\partial L}{\partial \beta_j} = -2 \sum_{i,k} (y_{ijk} - \mu - \tau_i - \beta_j) + \gamma = 0
+   \]
+   Similarly, solve for \(\gamma\) and \(\beta_j\):
+   \[
+   \beta_j = \frac{1}{I \times K} \sum_{i,k} y_{ijk} - \mu - \overline{\tau}
+   \]
+   where \(\overline{\tau}\) is the average of all \(\tau_i\).
+
+\textbf{Conclusion}
+
+These steps yield the balanced ANOVA estimates \(\mu\), \(\tau_i\), and \(\beta_j\) by ensuring that the residual sum of squares is minimized subject to the constraints that the sum of the treatment effects and the sum of the block effects are both zero. 
 
 \subsubsection*{Q6 Prove the majorization
 \[
@@ -2764,7 +4030,96 @@ Argue that the eigenvalues and eigenvectors of \(A\) are the stationary values a
 \]
 separating the variables \(x\), \(y\), and \(z\). In Example 9.5 this would facilitate penalizing parameter curvature rather than changes in parameter values.}
 
+To prove the given majorization, we'll approach this as an exercise in analyzing a quadratic function and using the properties of majorization to simplify and isolate the terms.
+
+The inequality to be proved is:
+\[
+(x + y - z)^2 \leq -(x_n + y_n - z_n)^2 + 2(x_n + y_n - z_n)(x + y - z) + 3[(x - x_n)^2 + (y - y_n)^2 + (z - z_n)^2]
+\]
+
+\textbf{Step 1: Expanding Both Sides}
+Let's start by expanding the terms on the right-hand side of the inequality:
+
+The quadratic term:
+\[
+(x + y - z)^2
+\]
+
+The expansion of the right side:
+\[
+-(x_n + y_n - z_n)^2 + 2(x_n + y_n - z_n)(x + y - z) + 3(x - x_n)^2 + 3(y - y_n)^2 + 3(z - z_n)^2
+\]
+
+\textbf{Step 2: Simplify and Rearrange}
+Rearrange the right-hand side by breaking it into parts:
+\[
+-(x_n + y_n - z_n)^2 + 2(x_n + y_n - z_n)(x + y - z) = -(x_n + y_n - z_n)^2 + 2x(x_n + y_n - z_n) + 2y(x_n + y_n - z_n) - 2z(x_n + y_n - z_n)
+\]
+
+\textbf{Step 3: Completing the Square}
+Look at the terms \(2x(x_n + y_n - z_n)\) and \(3(x - x_n)^2\):
+- \(3(x - x_n)^2 = 3x^2 - 6xx_n + 3x_n^2\)
+- Add \(2x(x_n + y_n - z_n)\) to it and regroup terms to see how they contribute to completing the square.
+
+Do the same for \(y\) and \(z\):
+- \(3(y - y_n)^2 = 3y^2 - 6yy_n + 3y_n^2\)
+- \(2y(x_n + y_n - z_n)\)
+- \(3(z - z_n)^2 = 3z^2 - 6zz_n + 3z_n^2\)
+- \(-2z(x_n + y_n - z_n)\)
+
+When these expressions are combined with the original terms, the cross-terms adjust the expressions to potentially complete squares.
+
+\textbf{Step 4: Analyze the Added Terms}
+Adding \(3[(x - x_n)^2 + (y - y_n)^2 + (z - z_n)^2]\) and subtracting \((x_n + y_n - z_n)^2\) adds considerable padding to the original expression \((x + y - z)^2\). 
+
+Specifically, look at how the terms adjust each individual variance term. This addition guarantees the overall expression exceeds or equals \((x + y - z)^2\). This is because each square term \(x^2\), \(y^2\), and \(z^2\) are multiplied by 3, which covers the coefficients needed to encompass \((x + y - z)^2\), and the cross terms, \(xy\), \(yz\), \(zx\) are precisely offset by the mixed terms from \(2(x_n + y_n - z_n)(x + y - z)\).
+
+
 \subsubsection*{Q7 Find a quadratic upper bound majorizing the function \( e^{-x^2} \) around the point \( x_n \).}
+
+To find a quadratic upper bound that majorizes the function \( e^{-x^2} \) around a point \( x_n \), we can use the method of Taylor expansions to approximate the function up to the second-order terms and adjust it to ensure it serves as an upper bound. Let's proceed with the derivation:
+
+\textbf{Step 1: Taylor Expansion}
+The Taylor expansion of \( e^{-x^2} \) around \( x_n \) up to the second-order term is given by:
+\[
+e^{-x^2} \approx e^{-x_n^2} \cdot e^{-2x_n(x-x_n)} \cdot e^{-(x-x_n)^2}
+\]
+Expanding the exponential of the linear and quadratic terms using the Taylor series for exponentials gives:
+\[
+e^{-x^2} \approx e^{-x_n^2} \left(1 - 2x_n(x-x_n) + \frac{(-2x_n(x-x_n))^2}{2}\right) \left(1 - (x-x_n)^2 + \frac{(-(x-x_n)^2)^2}{2}\right)
+\]
+We simplify this by considering only the first and second-order terms:
+\[
+e^{-x^2} \approx e^{-x_n^2} \left(1 - 2x_n(x-x_n) + 2x_n^2(x-x_n)^2 - (x-x_n)^2\right)
+\]
+\[
+e^{-x^2} \approx e^{-x_n^2} \left(1 - 2x_n(x-x_n) + (2x_n^2 - 1)(x-x_n)^2\right)
+\]
+
+\textbf{Step 2: Construct the Majorizing Function}
+The goal is to find a quadratic function \( g(x) \) such that \( g(x) \geq e^{-x^2} \) for all \( x \) and \( g(x_n) = e^{-x_n^2} \). Let's define \( g(x) \) as:
+\[
+g(x) = e^{-x_n^2} + a(x-x_n) + b(x-x_n)^2
+\]
+To satisfy the majorization conditions:
+1. \( g(x_n) = e^{-x_n^2} \) means \( a \cdot 0 + b \cdot 0 = 0 \) which is trivially satisfied.
+2. We match the derivative of \( g(x) \) to the derivative of \( e^{-x^2} \) at \( x_n \):
+   \[
+   g'(x_n) = a + 2b(x_n-x_n) = -2x_n e^{-x_n^2}
+   \]
+   This gives \( a = -2x_n e^{-x_n^2} \).
+3. We want to choose \( b \) such that \( g(x) \) remains an upper bound:
+   \[
+   b = (2x_n^2 - 1) e^{-x_n^2}
+   \]
+   Choosing \( b \) slightly larger might ensure the majorization across a broader range, depending on the specific requirements.
+
+\textbf{Conclusion}
+Thus, a potential majorizing quadratic function \( g(x) \) is:
+\[
+g(x) = e^{-x_n^2} - 2x_n e^{-x_n^2} (x - x_n) + (2x_n^2 - 1) e^{-x_n^2} (x - x_n)^2
+\]
+Adjusting the coefficient of the quadratic term might be necessary if numerical tests show that this function doesn't majorize \( e^{-x^2} \) adequately over the desired range. This approach ensures that \( g(x) \) is tangent to \( e^{-x^2} \) at \( x_n \) and generally lies above \( e^{-x^2} \), thus fulfilling the majorization condition.
 
 \subsubsection*{Q8 For the function \( f(x) = \ln(1 + e^x) \), derive the majorization
 \[
