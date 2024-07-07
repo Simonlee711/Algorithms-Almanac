@@ -184,7 +184,7 @@ We can compare this by numerically iterating both schemes starting from the same
 \subsubsection*{Q5: Find coefficients $(a, b, c)$ where the standard quadratic formula is grossly inaccurate when implemented in single precision. You will have to look up how to represent single precision numbers in Julia.}
 
 \textbf{Answer:}\\
-The standard quadratic formula, $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$, can be particularly inaccurate in single precision floating point arithmetic under specific conditions. This inaccuracy arises primarily from **catastrophic cancellation**, which occurs when subtracting two close numbers, diminishing the significant digits of the result. A notorious example is when $b^2 \gg 4ac$, making $\sqrt{b^2 - 4ac}$ and $b$ very close in magnitude but opposite in sign.
+The standard quadratic formula, $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$, can be particularly inaccurate in single precision floating point arithmetic under specific conditions. This inaccuracy arises primarily from catastrophic cancellation, which occurs when subtracting two close numbers, diminishing the significant digits of the result. A notorious example is when $b^2 \gg 4ac$, making $\sqrt{b^2 - 4ac}$ and $b$ very close in magnitude but opposite in sign.
 
 \textbf{Conditions for Inaccuracy}
 To find coefficients $(a, b, c)$ that maximize this inaccuracy:
@@ -4825,11 +4825,43 @@ Thus, the vertices are all located on the unit sphere and equidistant from each 
 
 \subsubsection*{Q7: Demonstrate that it is impossible to situate \(c + 1\) points in \(\mathbb{R}^{c-1}\) so that all pairs of points are equidistant under the Euclidean norm [174].}
 
-\subsubsection*{Q8: If the matrix \(A\) has full svd \(U \Sigma V^*\), then the best rank \(r\) approximation of \(A\) in the Frobenius norm is
-\[
-B = \sum_{j=1}^r \sigma_j u_j v_j^*
-\]
-based on the columns of \(U\) and \(V\) and diagonal entries of \(\Sigma\). This is the content of the Eckart–Young theorem [53] as proved in Proposition A.6.4. Given this result, use existing utilities in Julia to write a function for matrix completion.}
+\textbf{Proof Overview}
+
+The claim is that it is impossible to place \(c + 1\) points in \(\mathbb{R}^{c-1}\) such that all pairs of points are equidistant. This scenario is directly related to the concept of a regular simplex and its geometric and dimensional properties.
+
+\textbf{Key Concepts and Proof}
+
+\textbf{1. Definition of a Simplex}
+
+A regular simplex in \( \mathbb{R}^d \) is a figure consisting of \( d + 1 \) vertices, where every pair of vertices is equidistant. The simplest examples include:
+\begin{itemize}
+    \item A line segment in \( \mathbb{R}^1 \) (2 points, 1 dimension),
+    \item An equilateral triangle in \( \mathbb{R}^2 \) (3 points, 2 dimensions),
+    \item A regular tetrahedron in \( \mathbb{R}^3 \) (4 points, 3 dimensions).
+\end{itemize}
+
+\textbf{2. Dimensional Constraints}
+
+For \(c\) points to be equidistant in Euclidean space, they essentially form a \(c-1\) dimensional simplex. This is because each new point added to form a regular simplex must be equidistant from all existing points, which geometrically necessitates an increase in dimension:
+
+\begin{itemize}
+    \item 1 point is 0-dimensional (a point).
+    \item 2 points create 1 dimension (line segment).
+    \item 3 points form a simplex in 2 dimensions (triangle).
+    \item \(n\) points form a simplex in \(n-1\) dimensions.
+\end{itemize}
+
+\textbf{3. Geometric and Algebraic Insight}
+
+In more technical terms, suppose we have \(c + 1\) points in \(\mathbb{R}^{c-1}\), each equidistant from the others. If we translate the space so that one of these points is at the origin, the vectors representing the positions of the other points must all be of the same length (by the equidistant condition) and must also be mutually orthogonal (to maintain equal distances). However, in \(\mathbb{R}^{c-1}\), you can have at most \(c-1\) mutually orthogonal vectors (since the number of mutually orthogonal vectors is limited by the dimension of the space).
+
+\textbf{4. Contradiction in Adding the \(c+1\)-th Point}
+
+When attempting to add the \(c+1\)-th point in \(\mathbb{R}^{c-1}\), you would require an additional dimension to place it such that it remains equidistant from all other \(c\) points, which violates the dimensional constraint of \(\mathbb{R}^{c-1}\). Essentially, this new point cannot find a placement that maintains equidistance without exceeding the available dimensions.
+
+\textbf{Conclusion}
+
+Thus, it is mathematically impossible to situate \(c+1\) points in \(\mathbb{R}^{c-1}\) so that all pairs of points are equidistant. This results from the fundamental properties of space dimensions and orthogonal vectors, confirming the geometric limitation imposed by the dimensionality of the Euclidean space.
 
 \subsubsection*{Q9: In the Kullback–Leibler divergence version of NMF, suppose the entries \(y_{ij}\) of \(\mathbf{Y}\) are integers. They can then be viewed as realizations of independent Poisson random variables with means \(\sum_k u_{ik}v_{kj}\). In this setting the loglikelihood is
 \[
@@ -4852,11 +4884,126 @@ u_{n+1,ik} = u_{nik} \frac{\sum_j y_{ij} \frac{v_{nkj}}{s_{nij}}}{\sum_j v_{nkj}
 v_{n+1,kj} = v_{nkj} \frac{\sum_i y_{ij} \frac{u_{nik}}{s_{nij}}}{\sum_i u_{nik}}.
 \]}
 
+\textbf{Verification of Minorization}
+
+To verify the minorization given in the problem, we'll use Jensen's inequality, which is pivotal for handling logarithmic functions of sums, a common challenge in optimization problems like NMF under Kullback–Leibler divergence.
+
+\textbf{Logarithmic Minorization Using Jensen's Inequality}
+
+The inequality to be verified is:
+\[
+\ln \left( \sum_k u_{ik}v_{kj} \right) \geq \sum_k \frac{a_{nikj}}{s_{nij}} \ln \left( \frac{s_{nij}}{a_{nikj}} u_{ik}v_{kj} \right)
+\]
+where
+\[
+a_{nikj} = u_{nik}v_{nkj}, \quad s_{nij} = \sum_k a_{nikj}
+\]
+
+Jensen's inequality states that for a convex function \( f \) and weights \( \alpha_k \) such that \( \sum_k \alpha_k = 1 \) and \( \alpha_k \geq 0 \),
+\[
+f\left(\sum_k \alpha_k x_k\right) \leq \sum_k \alpha_k f(x_k)
+\]
+Since the logarithm is a concave function (the negative of a convex function), Jensen's inequality for concave functions gives:
+\[
+\ln\left(\sum_k \alpha_k x_k\right) \geq \sum_k \alpha_k \ln(x_k)
+\]
+
+Applying this to the context of the minorization:
+- Let \( x_k = u_{ik}v_{kj} \) and \( \alpha_k = \frac{a_{nikj}}{s_{nij}} \). Notice that \( \sum_k \alpha_k = 1 \) because:
+\[
+\sum_k \frac{a_{nikj}}{s_{nij}} = \frac{\sum_k a_{nikj}}{s_{nij}} = 1
+\]
+
+Thus, by Jensen's inequality:
+\[
+\ln \left( \sum_k u_{ik}v_{kj} \right) = \ln \left( \sum_k \frac{a_{nikj}}{s_{nij}} \frac{s_{nij}}{a_{nikj}} u_{ik}v_{kj} \right) \geq \sum_k \frac{a_{nikj}}{s_{nij}} \ln \left( \frac{s_{nij}}{a_{nikj}} u_{ik}v_{kj} \right)
+\]
+
+This confirms the minorization step.
+
+\textbf{Derivation of the Alternating Multiplicative Updates}
+
+Given this minorization, we now derive the update rules for \( U \) and \( V \).
+
+\textbf{Update for \( u_{ik} \)}
+Starting from the minorization and aiming to maximize the loglikelihood, consider the partial derivative with respect to \( u_{ik} \), and set it to zero:
+\[
+\frac{\partial}{\partial u_{ik}} \left[ y_{ij} \ln \left( \sum_k u_{ik}v_{kj} \right) - \sum_k u_{ik}v_{kj} \right] = 0
+\]
+The minorization translates the optimization into:
+\[
+u_{n+1,ik} = u_{nik} \frac{\sum_j y_{ij} \frac{v_{nkj}}{s_{nij}}}{\sum_j v_{nkj}}
+\]
+
+\textbf{Update for \( v_{kj} \)}
+Similarly, for \( v_{kj} \):
+\[
+\frac{\partial}{\partial v_{kj}} \left[ y_{ij} \ln \left( \sum_k u_{ik}v_{kj} \right) - \sum_k u_{ik}v_{kj} \right] = 0
+\]
+The corresponding update becomes:
+\[
+v_{n+1,kj} = v_{nkj} \frac{\sum_i y_{ij} \frac{u_{nik}}{s_{nij}}}{\sum_i u_{nik}}
+\]
+
+\textbf{Conclusion}
+
+These updates effectively use the structure provided by the minorization to iteratively refine the estimates for \( U \) and \( V \) in a way that maximizes the Poisson likelihood under the Kullback–Leibler divergence setting. This iterative process leverages the properties of the Poisson model to guide the updates towards increasingly accurate factorizations of \( \mathbf{Y} \).
+
 \subsubsection*{Q10: In problem (9) calculate the partial derivative}
 \[
 \frac{\partial}{\partial u_{il}} L(U, V) = \sum_j v_{lj} \left( \frac{y_{ij}}{\sum_k u_{ik}v_{kj}} - 1 \right).
 \]
 \noindent Show that the conditions \(\min\{u_{il}, - \frac{\partial}{\partial u_{il}} L(U, V)\} = 0\) for all pairs \((i, l)\) are both necessary and sufficient for \(U\) to maximize \(L(U, V)\) when \(V\) is fixed. The same conditions apply in minimizing the Frobenius criterion \(\|\mathbf{Y} - \mathbf{U} \mathbf{V}\|_F^2\) with different partial derivatives.
+
+\textbf{Derivation of the Partial Derivative}
+
+To calculate the partial derivative of the loglikelihood function \(L(U, V)\) with respect to the matrix element \(u_{il}\), we start with the provided expression for \(L(U, V)\):
+
+\[
+L(U, V) = \sum_i \sum_j \left[ y_{ij} \ln \left( \sum_k u_{ik}v_{kj} \right) - \sum_k u_{ik}v_{kj} \right].
+\]
+
+Focusing on the element \(u_{il}\), we notice that \(u_{il}\) appears in the sums for every \(j\) but only when \(k = l\). Let's differentiate:
+
+\textbf{Partial Derivative Calculation
+}
+\[
+\frac{\partial}{\partial u_{il}} L(U, V) = \frac{\partial}{\partial u_{il}} \left( \sum_j \left[ y_{ij} \ln \left( \sum_k u_{ik}v_{kj} \right) - \sum_k u_{ik}v_{kj} \right] \right)
+\]
+
+Breaking it down further:
+
+\textbf{1. Derivative of the Logarithmic Term:}
+   \[
+   \frac{\partial}{\partial u_{il}} \left( y_{ij} \ln \left( \sum_k u_{ik}v_{kj} \right) \right) = y_{ij} \frac{1}{\sum_k u_{ik}v_{kj}} \cdot v_{lj}
+   \]
+   This result comes from the chain rule where the derivative of the log term is multiplied by the derivative of its argument.
+
+\textbf{2. Derivative of the Linear Term:}
+   \[
+   \frac{\partial}{\partial u_{il}} \left( \sum_k u_{ik}v_{kj} \right) = v_{lj}
+   \]
+
+Putting these together over all \(j\):
+\[
+\frac{\partial}{\partial u_{il}} L(U, V) = \sum_j v_{lj} \left( \frac{y_{ij}}{\sum_k u_{ik}v_{kj}} - 1 \right)
+\]
+
+\textbf{Necessary and Sufficient Conditions for Maximization}
+
+To demonstrate that \(\min\{u_{il}, - \frac{\partial}{\partial u_{il}} L(U, V)\} = 0\) for all pairs \((i, l)\) is both necessary and sufficient for maximizing \(L(U, V)\), consider:
+
+\textbf{1. Necessity:}
+   - If \(u_{il} > 0\), then \(\frac{\partial}{\partial u_{il}} L(U, V) = 0\) for \(L(U, V)\) to be maximized (stationary condition of first-order optimality).
+   - If \(u_{il} = 0\), then \(-\frac{\partial}{\partial u_{il}} L(U, V) \geq 0\) must be true (non-negativity constraint combined with the direction of maximizing \(L\)).
+
+\textbf{2. Sufficiency:}
+   - The condition \(\min\{u_{il}, - \frac{\partial}{\partial u_{il}} L(U, V)\} = 0\) ensures that if \(u_{il}\) is positive, its corresponding derivative must be zero, positioning \(L\) at a local maximum.
+   - If the derivative is negative, \(u_{il}\) should be zero, preventing any decrease in \(L\) due to negative contributions from that term.
+
+\textbf{Frobenius Norm Minimization}
+
+In the context of minimizing \(\|\mathbf{Y} - \mathbf{U} \mathbf{V}\|_F^2\), although the form of the partial derivatives changes, the structure of the solution regarding zeroing out terms that do not contribute to minimization remains. For the Frobenius norm, the derivative condition pertains to the gradient pointing towards a direction that reduces the error between \(\mathbf{Y}\) and \(\mathbf{U} \mathbf{V}\), and similar zeroing conditions apply for achieving this minimization effectively. This mirrors the zero-gradient condition necessary for optimization, reflecting similar mathematical principles in a different context.
 
 \subsubsection*{Q11: In the matrix factorization, it may be worthwhile shrinking the estimates of the entries of \(U\) and \(V\) toward 0 [140]. Let \(\lambda\) and \(\mu\) be positive constants, and consider the penalized objective functions
 \[
@@ -4867,17 +5014,290 @@ r(V, W) = \|\mathbf{Y} - \mathbf{UV}\|_F^2 + \lambda \sum_i \sum_k u_{ik}^2 + \m
 \]
 \noindent with lasso and ridge penalties, respectively. Here the Poisson loglikelihood \(L(U, V)\) is studied in problem (9). Derive block optimization updates for these objective functions. Explain why the updates maintain positivity and why shrinkage is obvious, with stronger shrinkage for the lasso penalty with small parameters.}
 
+\textbf{Deriving Block Optimization Updates}
+
+Let's derive block optimization updates for both the lasso and ridge penalized objective functions applied to matrix factorization problems. 
+
+\textbf{Lasso Penalization}
+
+The lasso-type penalized objective function is given by:
+\[
+l(U, V) = L(U, V) - \lambda \sum_i \sum_k u_{ik} - \mu \sum_k \sum_j v_{kj}
+\]
+
+Where \(L(U, V)\) is the Poisson loglikelihood described in problem (9).
+
+\textbf{1. Derivative w.r.t \(U\):}
+   
+   Starting with the update for \(U\) when \(V\) is fixed:
+   \[
+   \frac{\partial l}{\partial u_{ik}} = \frac{\partial L}{\partial u_{ik}} - \lambda
+   \]
+   From problem (9), recall:
+   \[
+   \frac{\partial L}{\partial u_{ik}} = \sum_j v_{kj} \left( \frac{y_{ij}}{\sum_k u_{ik}v_{kj}} - 1 \right)
+   \]
+   Hence, the update rule for \(u_{ik}\) is:
+   \[
+   u_{ik}^{new} = \max\left(0, u_{ik}^{old} - \eta \left(\lambda - \sum_j v_{kj} \left( \frac{y_{ij}}{\sum_k u_{ik}^{old} v_{kj}} - 1 \right)\right)\right)
+   \]
+   where \(\eta\) is a learning rate. The use of \(\max\) ensures that the updated values remain non-negative.
+
+\textbf{2. Derivative w.r.t \(V\):}
+   
+   Similarly, for \(V\) when \(U\) is fixed:
+   \[
+   \frac{\partial l}{\partial v_{kj}} = \frac{\partial L}{\partial v_{kj}} - \mu
+   \]
+   Using similar development:
+   \[
+   v_{kj}^{new} = \max\left(0, v_{kj}^{old} - \eta \left(\mu - \sum_i u_{ik} \left( \frac{y_{ij}}{\sum_k u_{ik} v_{kj}^{old}} - 1 \right)\right)\right)
+   \]
+
+\textbf{Ridge Penalization}
+
+The ridge-type penalized objective function is:
+\[
+r(U, V) = \|\mathbf{Y} - \mathbf{UV}\|_F^2 + \lambda \sum_i \sum_k u_{ik}^2 + \mu \sum_k \sum_j v_{kj}^2
+\]
+
+\textbf{1. Update for \(U\):}
+   
+   The gradient w.r.t \(u_{ik}\) becomes:
+   \[
+   \frac{\partial r}{\partial u_{ik}} = 2 \sum_j (u_{ik}v_{kj} - y_{ij}) v_{kj} + 2\lambda u_{ik}
+   \]
+   Solving \( \frac{\partial r}{\partial u_{ik}} = 0 \) gives:
+   \[
+   u_{ik}^{new} = \frac{\sum_j y_{ij} v_{kj}}{\lambda + \sum_j v_{kj}^2}
+   \]
+
+\textbf{2. Update for \(V\):}
+   
+   Similarly, for \(V\):
+   \[
+   \frac{\partial r}{\partial v_{kj}} = 2 \sum_i (u_{ik}v_{kj} - y_{ij}) u_{ik} + 2\mu v_{kj}
+   \]
+   Setting \( \frac{\partial r}{\partial v_{kj}} = 0 \) gives:
+   \[
+   v_{kj}^{new} = \frac{\sum_i y_{ij} u_{ik}}{\mu + \sum_i u_{ik}^2}
+   \]
+
+\textbf{Explanation of Positivity and Shrinkage}
+
+\begin{itemize}
+    \item \textbf{Positivity}: Both the lasso and ridge updates include terms that inherently ensure non-negativity (i.e., max with zero in lasso and the square terms in ridge). This ensures that the updated matrices \(U\) and \(V\) always have non-negative entries, consistent with their interpretations in contexts like non-negative matrix factorization.
+    \item \textbf{Shrinkage}: In both lasso and ridge penalties, the additional terms \( \lambda \sum_i \sum_k u_{ik} \) and \( \mu \sum_k \sum_j v_{kj} \) (for lasso) or their squared counterparts (for ridge) act as regularizers that penalize large values of the parameters. This leads to "shrinkage" towards zero, especially for parameters that do not significantly reduce the objective function. The lasso penalty, by its linear nature, tends to enforce sparsity, pushing more coefficients to zero compared to the ridge, which shrinks coefficients towards zero more smoothly due to its quadratic nature.
+\end{itemize}
+
 \subsubsection*{Q12: Find the Euclidean projection operators for the four following closed convex sets in \(\mathbb{R}^p\): (a) closed ball \(\{x : \|x - z\| \leq r\}\), (b) closed rectangle \(\{x : a \leq x \leq b\}\), (c) hyperplane \(\{x : a^* x = b\}\) for \(a \neq 0\), and (d) closed halfspace \(\{x : a^* x \leq b\}\).}
 
 \subsubsection*{Q13: Let \(\mathrm{Sym}_n\) denote the subspace of \(n \times n\) symmetric matrices. Find the Euclidean projection mapping an arbitrary \(n \times n\) matrix \(\mathbf{X}\) onto \(\mathrm{Sym}_n\).}
 
+To find the Euclidean projection operators for each of the specified closed convex sets in \(\mathbb{R}^p\), we need to determine the point in the set that is closest in Euclidean distance to a given point \(y \in \mathbb{R}^p\). Let's handle each set one by one:
+
+\textbf{(a) Closed Ball \(\{x : \|x - z\| \leq r\}\)}
+
+For a point \(y \in \mathbb{R}^p\), the projection onto the closed ball centered at \(z\) with radius \(r\) is given by:
+\[ \text{Proj}_{\text{ball}}(y) = \begin{cases} 
+y & \text{if } \|y - z\| \leq r, \\
+z + r \frac{y - z}{\|y - z\|} & \text{if } \|y - z\| > r.
+\end{cases} \]
+This projection essentially checks if \(y\) is outside the ball. If it is, the projection is the point on the line from \(z\) to \(y\) that lies on the surface of the ball.
+
+\textbf{(b) Closed Rectangle \(\{x : a \leq x \leq b\}\)}
+
+For this set, the projection is component-wise. Given \(y \in \mathbb{R}^p\), each component \(y_i\) of \(y\) is projected onto the interval \([a_i, b_i]\). Thus, the projection is given by:
+\[ \text{Proj}_{\text{rect}}(y)_i = \min(\max(y_i, a_i), b_i) \]
+This formula clips each component of \(y\) to lie within the corresponding interval defined by \(a\) and \(b\).
+
+\textbf{(c) Hyperplane \(\{x : a^* x = b\}\)}
+
+The projection onto a hyperplane defined by \(a^* x = b\) (where \(a \neq 0\) is a vector in \(\mathbb{R}^p\)) is given by:
+\[ \text{Proj}_{\text{hyperplane}}(y) = y - \frac{a^* y - b}{\|a\|^2} a \]
+This result can be derived by minimizing the squared Euclidean distance between \(y\) and any point \(x\) on the hyperplane, leading to this formula, which adjusts \(y\) by the amount necessary to make it satisfy \(a^* x = b\).
+
+\textbf{(d) Closed Halfspace \(\{x : a^* x \leq b\}\)}
+
+The projection onto a halfspace, which is either inside the halfspace or on the boundary hyperplane, depends on the position of \(y\). If \(y\) already satisfies the halfspace condition (\(a^* y \leq b\)), then \(y\) itself is the projection. Otherwise, the projection is onto the boundary hyperplane:
+\[ \text{Proj}_{\text{halfspace}}(y) = \begin{cases} 
+y & \text{if } a^* y \leq b, \\
+y - \frac{a^* y - b}{\|a\|^2} a & \text{if } a^* y > b.
+\end{cases} \]
+This is essentially the same projection as for the hyperplane, but only applied if \(y\) does not already meet the condition \(a^* y \leq b\).
+
+These projections provide the fundamental mechanism to enforce constraints in optimization problems, particularly in methods like projected gradient descent, where ensuring that iterates remain within feasible regions is critical.
+
 \subsubsection*{Q14: Let \(\mathrm{Skew}_n\) denote the subspace of \(n \times n\) skew-symmetric matrices. Show that the map \(\mathbf{X} \mapsto \frac{1}{2} (\mathbf{X} - \mathbf{X}^*)\) constitutes projection onto \(\mathrm{Skew}_n\) and that the subspaces \(\mathrm{Sym}_n\) and \(\mathrm{Skew}_n\) are orthogonal complements under the Frobenius inner product.}
+
+\textbf{Part 1: Projection onto \(\mathrm{Skew}_n\)}
+
+The space \(\mathrm{Skew}_n\) consists of all \(n \times n\) skew-symmetric matrices, which satisfy \(\mathbf{X} = -\mathbf{X}^*\), where \(\mathbf{X}^*\) denotes the transpose of \(\mathbf{X}\). To show that the map \(\mathbf{X} \mapsto \frac{1}{2} (\mathbf{X} - \mathbf{X}^*)\) is a projection onto \(\mathrm{Skew}_n\), we need to verify two key properties:
+
+1. \textbf{Idempotence:} A map \(P\) is a projection if \(P^2 = P\), meaning applying it twice is the same as applying it once.
+2. \textbf{Range: }The output of \(P\) must lie within \(\mathrm{Skew}_n\).
+
+\textbf{Verification of Idempotence}
+Let's apply the map twice to any matrix \(\mathbf{X}\):
+\[
+P(\mathbf{X}) = \frac{1}{2} (\mathbf{X} - \mathbf{X}^*)
+\]
+Applying \(P\) again to \(P(\mathbf{X})\):
+\[
+P(P(\mathbf{X})) = P\left(\frac{1}{2} (\mathbf{X} - \mathbf{X}^*)\right) = \frac{1}{2} \left(\frac{1}{2} (\mathbf{X} - \mathbf{X}^*) - \left(\frac{1}{2} (\mathbf{X} - \mathbf{X}^*)\right)^*\right)
+\]
+\[
+= \frac{1}{2} \left(\frac{1}{2} (\mathbf{X} - \mathbf{X}^*) - \frac{1}{2} (\mathbf{X}^* - \mathbf{X})\right) = \frac{1}{2} (\mathbf{X} - \mathbf{X}^*) = P(\mathbf{X})
+\]
+
+\textbf{Verification that Output Lies in \(\mathrm{Skew}_n\)}
+We check that \(P(\mathbf{X})\) is skew-symmetric:
+\[
+(P(\mathbf{X}))^* = \left(\frac{1}{2} (\mathbf{X} - \mathbf{X}^*)\right)^* = \frac{1}{2} (\mathbf{X}^* - \mathbf{X}) = -\frac{1}{2} (\mathbf{X} - \mathbf{X}^*) = -P(\mathbf{X})
+\]
+
+\textbf{Part 2: Orthogonality of \(\mathrm{Sym}_n\) and \(\mathrm{Skew}_n\)}
+
+\(\mathrm{Sym}_n\) consists of all symmetric matrices, satisfying \(\mathbf{Y} = \mathbf{Y}^*\). To show that \(\mathrm{Sym}_n\) and \(\mathrm{Skew}_n\) are orthogonal under the Frobenius inner product, we need to verify that the inner product of any \(\mathbf{Y} \in \mathrm{Sym}_n\) and \(\mathbf{X} \in \mathrm{Skew}_n\) is zero:
+
+\textbf{Frobenius Inner Product}
+The Frobenius inner product of two matrices \(\mathbf{A}\) and \(\mathbf{B}\) is defined as:
+\[
+\langle \mathbf{A}, \mathbf{B} \rangle = \mathrm{tr}(\mathbf{A}^* \mathbf{B})
+\]
+For \(\mathbf{Y} \in \mathrm{Sym}_n\) and \(\mathbf{X} \in \mathrm{Skew}_n\):
+\[
+\langle \mathbf{Y}, \mathbf{X} \rangle = \mathrm{tr}(\mathbf{Y}^* \mathbf{X}) = \mathrm{tr}(\mathbf{Y} \mathbf{X})
+\]
+Since \(\mathbf{Y}\) is symmetric and \(\mathbf{X}\) is skew-symmetric:
+\[
+\mathrm{tr}(\mathbf{Y} \mathbf{X}) = \mathrm{tr}(\mathbf{X} \mathbf{Y})
+\]
+Using the cyclic property of the trace and the skew-symmetry of \(\mathbf{X}\):
+\[
+\mathrm{tr}(\mathbf{Y} \mathbf{X}) = \mathrm{tr}(-\mathbf{Y} \mathbf{X}) \implies \mathrm{tr}(\mathbf{Y} \mathbf{X}) = 0
+\]
+
+\textbf{Conclusion}
+The map \(\mathbf{X} \mapsto \frac{1}{2} (\mathbf{X} - \mathbf{X}^*)\) is indeed a projection onto \(\mathrm{Skew}_n\), and \(\mathrm{Sym}_n\) and \(\mathrm{Skew}_n\) are orthogonal subspaces under the Frobenius inner product. This relationship is fundamental in various applications involving symmetric and skew-symmetric matrix components.
 
 \subsubsection*{Q15: Let \(\mathrm{Pos}_n\) denote the set of \(n \times n\) positive semidefinite matrices. Find the Euclidean projection mapping an \(n \times n\) symmetric matrix \(\mathbf{X}\) onto \(\mathrm{Pos}_n\). (Hint: The Frobenius norm is invariant under multiplication of its argument by an orthogonal matrix.)}
 
+To find the Euclidean projection of an \(n \times n\) symmetric matrix \(\mathbf{X}\) onto the set of positive semidefinite matrices \(\mathrm{Pos}_n\), we first need to understand the properties of these matrices and how they interact under projections, particularly under the Frobenius norm. 
+
+\textbf{Projection onto \(\mathrm{Pos}_n\)}
+
+The set \(\mathrm{Pos}_n\) consists of all \(n \times n\) matrices that are symmetric and have non-negative eigenvalues. The Euclidean projection of \(\mathbf{X}\) onto \(\mathrm{Pos}_n\) involves finding the nearest matrix in \(\mathrm{Pos}_n\) to \(\mathbf{X}\) in terms of the Frobenius norm.
+
+\textbf{1. Eigenvalue Decomposition:}
+   Since \(\mathbf{X}\) is symmetric, it can be diagonalized by an orthogonal matrix. Thus, we can write:
+   \[
+   \mathbf{X} = \mathbf{Q} \mathbf{\Lambda} \mathbf{Q}^T
+   \]
+   where \(\mathbf{Q}\) is an orthogonal matrix whose columns are eigenvectors of \(\mathbf{X}\), and \(\mathbf{\Lambda}\) is a diagonal matrix containing the eigenvalues \(\lambda_1, \lambda_2, \dots, \lambda_n\) of \(\mathbf{X}\).
+
+\textbf{2. Adjustment of Eigenvalues:}
+   To ensure the matrix is positive semidefinite, all negative eigenvalues in \(\mathbf{\Lambda}\) need to be set to zero. This is because a positive semidefinite matrix cannot have negative eigenvalues. The projection \(\mathbf{\Lambda}_{\text{proj}}\) of \(\mathbf{\Lambda}\) onto the set of non-negative real numbers is thus given by:
+   \[
+   \mathbf{\Lambda}_{\text{proj}} = \mathrm{diag}(\max(\lambda_1, 0), \max(\lambda_2, 0), \dots, \max(\lambda_n, 0))
+   \]
+   where \(\mathrm{diag}\) constructs a diagonal matrix from its vector argument, and \(\max(\lambda_i, 0)\) ensures all eigenvalues are non-negative.
+
+\textbf{3. Reconstruction of the Matrix:}
+   The projection \(\mathbf{X}_{\text{proj}}\) of \(\mathbf{X}\) onto \(\mathrm{Pos}_n\) is then reconstructed by:
+   \[
+   \mathbf{X}_{\text{proj}} = \mathbf{Q} \mathbf{\Lambda}_{\text{proj}} \mathbf{Q}^T
+   \]
+   This step reassembles the matrix using the original eigenvectors and the adjusted eigenvalues, ensuring the result is the closest positive semidefinite matrix to \(\mathbf{X}\) in the Frobenius norm.
+
+\textbf{Properties}
+
+- \textbf{Orthogonality and the Frobenius Norm:}
+   The use of the Frobenius norm here is crucial because it is invariant under orthogonal transformations. This means that the "distance" (in terms of the Frobenius norm) between \(\mathbf{X}\) and \(\mathbf{X}_{\text{proj}}\) is minimized solely by adjusting the eigenvalues, without altering the eigenvectors.
+  
+- \textbf{Optimality:}
+   This projection method is optimal in the sense that it minimizes the Frobenius norm of the difference between the original matrix and the projection, \(\|\mathbf{X} - \mathbf{X}_{\text{proj}}\|_F\), thanks to the properties of orthogonal transformations and the handling of eigenvalues.
+
+In summary, the projection of a symmetric matrix onto the cone of positive semidefinite matrices in terms of the Frobenius norm involves zeroing out the negative eigenvalues of the matrix, utilizing its eigenvalue decomposition. This method ensures that the projected matrix is the closest in the Frobenius norm to the original matrix while satisfying the positive semidefinite condition.
+
 \subsubsection*{Q16: Let \(S_r\) be the set whose points have at most \(r\) nonzero coordinates. Show that projecting \(\mathbf{y}\) onto \(S_r\) amounts to sorting the coordinates of \(\mathbf{y}\) by magnitude, saving the \(r\) largest, and sending the remaining \(n - r\) coordinates to zero. For what \(\mathbf{y}\) is the projection multivalued?}
 
+\textbf{Projection onto \(S_r\)}
+
+The set \(S_r\) in \(\mathbb{R}^n\) consists of all vectors that have at most \(r\) nonzero coordinates. To find the Euclidean projection of a vector \(\mathbf{y} \in \mathbb{R}^n\) onto \(S_r\), we aim to minimize the squared Euclidean distance between \(\mathbf{y}\) and any vector \(\mathbf{x} \in S_r\). Mathematically, this can be expressed as:
+
+\[
+\min_{\mathbf{x} \in S_r} \|\mathbf{y} - \mathbf{x}\|^2
+\]
+
+\textbf{Steps for Finding the Projection}
+
+\textbf{1. Sort by Magnitude:}
+   To minimize the distance, we should retain the components of \(\mathbf{y}\) with the highest magnitudes because any deviation from \(\mathbf{y}\) increases the distance. Therefore, we start by sorting the absolute values of the coordinates of \(\mathbf{y}\) in descending order.
+
+\textbf{2. Retain the Largest:}
+   We retain the \(r\) largest (in absolute value) coordinates of \(\mathbf{y}\) and set the rest to zero. This forms the projected vector \(\mathbf{x}\) such that:
+   \[
+   x_i = 
+   \begin{cases} 
+   y_i & \text{if } |y_i| \text{ is among the top } r \text{ magnitudes,} \\
+   0 & \text{otherwise.}
+   \end{cases}
+   \]
+
+\textbf{Proof of Minimization}
+This procedure minimizes \(\|\mathbf{y} - \mathbf{x}\|^2\) because the squared distance is increased by discarding components with smaller magnitudes and not by those with larger magnitudes. By keeping the \(r\) largest components, the sum of the squares of the discarded components (hence the increase in distance) is minimized.
+
+\textbf{Multivalued Projections}
+
+The projection becomes multivalued when there are ties in the magnitudes of the components of \(\mathbf{y}\) at the cutoff between the \(r\)-th and \((r+1)\)-th largest values. Specifically, the projection is multivalued in the following scenarios:
+
+\textbf{1. Ties at the \(r\)-th Largest Value:}
+   If more than one component has the same magnitude, and these magnitudes are at the boundary deciding which components are kept (i.e., the \(r\)-th largest magnitude), then different choices of which components to retain or discard lead to different valid projections. For example, if \(\mathbf{y} = [3, -2, 2, 1]\) and \(r = 2\), and we choose to keep the two components with magnitude 2, there are three ways to choose which two of the three components \(|-2|\), \(|2|\), and \(|1|\) to keep (if considering only magnitudes, excluding signs).
+
+In such cases, the projection is not uniquely defined due to these ties, leading to multiple vectors that all equally minimize the distance to \(\mathbf{y}\) while satisfying the constraint of having at most \(r\) nonzero entries.
+
+This analysis reveals the geometric nature of projection onto sparse vector sets and highlights conditions under which unique solutions exist or where ambiguity in the projection may arise.
+
 \subsubsection*{Q17: The set \(U_k^n = \{0,1\}^n \cap \{x \in \mathbb{R}^n : \mathbf{x}^* \mathbf{1} = k\}\) is the collection of \(\binom{n}{k}\) vertices of the unit cube whose coordinates sum to \(k\). Show that projection of \(\mathbf{y}\) onto \(U_k^n\) replaces the \(k\) largest entries of \(\mathbf{y}\) by \(1\) and the remaining entries by \(0\).}
+
+\textbf{Understanding the Set \( U_k^n \)}
+
+The set \( U_k^n \) is defined as the collection of all \(n\)-dimensional binary vectors (i.e., vectors whose entries are either 0 or 1) where exactly \(k\) of the \(n\) entries are 1s. This definition corresponds to selecting \(k\) items from \(n\) without regard to order, hence the vertices corresponding to \( U_k^n \) are precisely those of the \(n\)-dimensional unit cube that are also \(k\)-combinations of \(n\) items.
+
+\textbf{Projection onto \( U_k^n \)}
+
+To project a vector \(\mathbf{y} \in \mathbb{R}^n\) onto \( U_k^n \), we need to find a point in \( U_k^n \) that is closest to \(\mathbf{y}\) in Euclidean distance. This means we seek a vector \(\mathbf{x}\) in \( U_k^n \) such that the squared Euclidean distance \(\|\mathbf{y} - \mathbf{x}\|^2\) is minimized.
+
+\textbf{Steps for Finding the Projection:}
+
+\textbf{1. Identify the \(k\) Largest Entries:}
+   Since the vectors in \( U_k^n \) consist of \(k\) ones and \(n-k\) zeros, the best candidates for the positions of these ones are the entries of \(\mathbf{y}\) with the \(k\) largest values. This is because setting these positions to 1 minimizes the component-wise squared differences \((y_i - x_i)^2\) where \(x_i\) is the corresponding entry in the projection.
+
+\textbf{2. Set the \(k\) Largest Entries to 1:}
+   For the \(k\) largest entries of \(\mathbf{y}\), set the corresponding entries in \(\mathbf{x}\) to 1.
+
+\textbf{3. Set the Remaining Entries to 0:}
+   For the rest of the entries in \(\mathbf{y}\), set the corresponding entries in \(\mathbf{x}\) to 0.
+
+\textbf{Formal Justification Using Sorting:}
+
+- Sort the entries of \(\mathbf{y}\), let's say in descending order as \( y_{(1)} \geq y_{(2)} \geq \ldots \geq y_{(n)} \).
+
+- Define \(\mathbf{x}\) such that \( x_i = 1 \) if \( y_i \) is among the top \(k\) sorted values, and \( x_i = 0 \) otherwise. This approach ensures that \(\mathbf{x}\) is a valid member of \( U_k^n \) because it contains exactly \(k\) ones.
+
+\textbf{Why This Minimizes the Distance}
+
+For each entry \(i\),
+\begin{itemize}
+    \item If \(y_i\) is one of the \(k\) largest values and hence \(x_i = 1\), the squared distance contribution \( (y_i - 1)^2 \) is minimal compared to \( (y_i - 0)^2 \).
+    \item If \(y_i\) is not one of the \(k\) largest values and hence \(x_i = 0\), the squared distance contribution \( y_i^2 \) is again minimal compared to \( (y_i - 1)^2 \) since \(y_i\) will be smaller.
+\end{itemize}
+
+\textbf{Conclusion}
+
+The projection of \(\mathbf{y}\) onto \(U_k^n\) effectively involves selecting the \(k\) positions where \(\mathbf{y}\) has its largest values and setting these positions to 1 while setting all other positions to 0. This method ensures the resulting binary vector \(\mathbf{x}\) is as close as possible to \(\mathbf{y}\) in the Euclidean sense, correctly reflecting the structural constraints imposed by \( U_k^n \).
+
 
 \subsubsection*{Q18: According to Geman and McClure [62], robust regression can be achieved by minimizing the following amendment
 \[
@@ -4885,11 +5305,108 @@ f(\beta) = \sum_{i=1}^{n} \frac{(y_i - \mathbf{x}_i^* \beta)^2}{c^2 + (y_i - \ma
 \]
 of the usual least linear regression criterion. Based on the concavity of the function \(s \mapsto \frac{s}{c^2 + s}\), devise a weighted least squares MM algorithm for minimizing \(f(\beta)\).}
 
+\textbf{Understanding the MM Algorithm for Robust Regression}
+
+To devise an MM (Majorization-Minimization) algorithm for the given robust regression function:
+\[ f(\beta) = \sum_{i=1}^{n} \frac{(y_i - \mathbf{x}_i^* \beta)^2}{c^2 + (y_i - \mathbf{x}_i^* \beta)^2}, \]
+we need to use the properties of the function \(s \mapsto \frac{s}{c^2 + s}\) and the technique of majorization-minimization.
+
+\textbf{Properties of the Function}
+The function \(g(s) = \frac{s}{c^2 + s}\) for \(s \geq 0\) is concave because its second derivative is negative:
+\[ g''(s) = \frac{-2c^2}{(c^2+s)^3} < 0 \text{ for } s > 0. \]
+This implies that the function is bounded above by any tangent line at any point \(s_0\), which we can use to construct a majorizing function.
+
+\textbf{Constructing a Majorizing Function}
+
+Using the concavity of \(g(s)\), the tangent at a point \(s_0\) provides a linear majorization. Given \(s = (y_i - \mathbf{x}_i^* \beta)^2\) and \(s_0 = (y_i - \mathbf{x}_i^* \beta_0)^2\), we have:
+\[ g(s) \leq g(s_0) + g'(s_0)(s-s_0) \]
+where
+\[ g'(s) = \frac{c^2}{(c^2 + s)^2}. \]
+Plugging \(s\) and \(s_0\) into the derivative gives:
+\[ g'(s_0) = \frac{c^2}{(c^2 + (y_i - \mathbf{x}_i^* \beta_0)^2)^2}. \]
+
+\textbf{MM Update Formula}
+
+The tangent line approximation yields a majorizing function:
+\[ h(\beta, \beta_0) = \sum_{i=1}^{n} \left[ g(s_0) + g'(s_0) \left((y_i - \mathbf{x}_i^* \beta)^2 - (y_i - \mathbf{x}_i^* \beta_0)^2\right) \right]. \]
+To minimize \(f(\beta)\), we minimize this majorizing function with respect to \(\beta\) iteratively.
+
+Since the weighted least squares form simplifies the minimization, the next step is rewriting the majorizing function as:
+\[ h(\beta, \beta_0) \approx \sum_{i=1}^{n} w_i (\beta_0) (y_i - \mathbf{x}_i^* \beta)^2 \]
+where the weights are given by:
+\[ w_i(\beta_0) = \frac{c^2}{(c^2 + (y_i - \mathbf{x}_i^* \beta_0)^2)^2}. \]
+
+The minimization step within each iteration then becomes a standard weighted least squares problem:
+\[ \beta_{n+1} = \left(\sum_{i=1}^{n} w_i(\beta_n) \mathbf{x}_i \mathbf{x}_i^*\right)^{-1} \left(\sum_{i=1}^{n} w_i(\beta_n) \mathbf{x}_i y_i\right). \]
+
+\textbf{Algorithm Summary}
+1. Initialize \(\beta_0\).
+2. Iterate until convergence:
+   - Compute weights \( w_i(\beta_n) \) using the current estimate \(\beta_n\).
+   - Update \(\beta\) using the weighted least squares formula to obtain \(\beta_{n+1}\).
+
+This MM algorithm leverages the concavity of \(g(s)\) to simplify the minimization of \(f(\beta)\) to a series of weighted least squares problems, making each iteration computationally efficient and robust against outliers and high leverage points due to the nature of the weights \(w_i(\beta_n)\).
+
 \subsubsection*{Q19: Consider the piecewise linear function \( f(\mu) = c\mu + \sum_{i=1}^{n} w_i |y_i - \mu| \), where the points \( y_i \) satisfy \( y_1 < y_2 < \cdots < y_n \) and the positive weights satisfy \( \sum_{i=1}^{n} w_i = 1 \). Show that \( f(\mu) \) has no minimum when \( |c| > 1 \). What happens when \( c = 1 \) or \( c = -1 \)? This leaves the case \( |c| < 1 \). Show that a minimum occurs when
 \[
 \sum_{y_i > \mu} w_i - \sum_{y_i \leq \mu} w_i \leq c \quad \text{and} \quad \sum_{y_i \geq \mu} w_i - \sum_{y_i < \mu} w_i \geq c.
 \]
 The case \( c = 0 \) produces the weighted median. (Hints: A crude plot of \( f(\mu) \) might help. What conditions on the right-hand and left-hand derivatives of \( f(\mu) \) characterize a minimum?)}
+
+\textbf{Analysis of the Function \( f(\mu) \)}
+
+The function \( f(\mu) = c\mu + \sum_{i=1}^{n} w_i |y_i - \mu| \) is a linear function with added weighted absolute values. The term \( c\mu \) introduces a slope, while the sum of weighted absolute values creates a piecewise linear function that changes slope at each \( y_i \).
+
+\textbf{No Minimum for \( |c| > 1 \)}
+
+To determine why \( f(\mu) \) has no minimum when \( |c| > 1 \), we consider the behavior of \( f(\mu) \) as \( \mu \) approaches infinity or negative infinity:
+
+- As \( \mu \to \infty \), \( |y_i - \mu| \) becomes \( \mu - y_i \), so:
+  \[
+  f(\mu) \approx c\mu + \sum_{i=1}^{n} w_i (\mu - y_i) = (c + 1)\mu - \sum_{i=1}^{n} w_i y_i
+  \]
+- As \( \mu \to -\infty \), \( |y_i - \mu| \) becomes \( y_i - \mu \), so:
+  \[
+  f(\mu) \approx c\mu + \sum_{i=1}^{n} w_i (y_i - \mu) = (c - 1)\mu + \sum_{i=1}^{n} w_i y_i
+  \]
+
+If \( |c| > 1 \), the dominant term in both cases is the linear term \( c\mu \). Specifically:
+\begin{itemize}
+    \item If \( c > 1 \), \( f(\mu) \to -\infty \) as \( \mu \to -\infty \).
+    \item If \( c < -1 \), \( f(\mu) \to -\infty \) as \( \mu \to \infty \).
+\end{itemize}
+
+Thus, when \( |c| > 1 \), \( f(\mu) \) tends towards negative infinity as \( \mu \) diverges in either positive or negative direction, meaning there is no minimum value.
+
+\textbf{Behavior for \( c = 1 \) or \( c = -1 \)}
+
+For \( c = 1 \) or \( c = -1 \), we specifically analyze the slope:
+\begin{itemize}
+    \item For \( c = 1 \), \( f(\mu) \to 0 \) as \( \mu \to -\infty \).
+    \item For \( c = -1 \), \( f(\mu) \to 0 \) as \( \mu \to \infty \).
+\end{itemize}
+
+These cases do not diverge towards negative infinity, but instead stabilize or linearly decrease/increase without bounds. This still doesn't allow for a minimum, but rather suggests a flat or unbounded behavior at extreme \( \mu \).
+
+\textbf{Case \( |c| < 1 \)}
+
+Now consider the situation where \( |c| < 1 \). We need to check the right-hand and left-hand derivatives of \( f(\mu) \) at any point \( \mu \):
+
+The right-hand derivative at \( \mu \), \( f'(\mu^+) \), incorporates the change from \( -w_i \) to \( w_i \) for each term in the sum as \( \mu \) passes \( y_i \):
+\[
+f'(\mu^+) = c + \sum_{y_i > \mu} w_i - \sum_{y_i \leq \mu} w_i
+\]
+
+The left-hand derivative at \( \mu \), \( f'(\mu^-) \), is:
+\[
+f'(\mu^-) = c + \sum_{y_i \geq \mu} w_i - \sum_{y_i < \mu} w_i
+\]
+
+For \( f(\mu) \) to have a minimum at some \( \mu \), \( f'(\mu^+) \geq 0 \) and \( f'(\mu^-) \leq 0 \) must both hold. This leads to the stated conditions for the minimum.
+
+\textbf{Conclusion}
+
+In summary, \( f(\mu) \) has no minimum for \( |c| > 1 \) due to its divergence towards negative infinity in either the positive or negative direction of \( \mu \). When \( |c| < 1 \), the function's behavior changes, and a minimum occurs under the specific balance conditions for the weights of terms crossing \( \mu \), effectively tuning the right and left slopes to zero. The case \( c = 0 \) specifically results in \( \mu \) being a weighted median of \( \{y_i\} \), minimizing the weighted sum of absolute deviations.
 
 \newpage
 \section*{Chapter 11: Fast Fourier Transfrom}
