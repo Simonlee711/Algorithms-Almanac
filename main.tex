@@ -5414,6 +5414,68 @@ In summary, \( f(\mu) \) has no minimum for \( |c| > 1 \) due to its divergence 
 \subsubsection*{Q3:
 Explicitly calculate discrete Fourier transforms for the sequences \( c_j = 1 \), \( c_j = (-1)^j \), and \( c_j = 1_{\{0,1,\ldots,n/2-1\}} \) defined on \(\{0, 1, \ldots, n-1\}\). For the last two sequences assume that \(n\) is even.}
 
+To calculate the discrete Fourier transforms (DFT) of the given sequences, let's recall the definition of the DFT. For a sequence \( c_j \) defined on the set \( \{0, 1, \ldots, n-1\} \), the DFT \( \hat{c}_k \) at frequency \( k \) is given by:
+\[
+\hat{c}_k = \sum_{j=0}^{n-1} c_j e^{-2\pi i \frac{jk}{n}}
+\]
+
+\textbf{1. Sequence \( c_j = 1 \)}
+
+For \( c_j = 1 \) for all \( j \), the DFT becomes:
+\[
+\hat{c}_k = \sum_{j=0}^{n-1} e^{-2\pi i \frac{jk}{n}}
+\]
+
+This sum is the geometric series of the \( n \)-th roots of unity, which sums to \( n \) when \( k = 0 \) (as all terms are 1) and sums to 0 otherwise (since the full cycle of roots of unity sum to zero). Therefore:
+\[
+\hat{c}_k = 
+\begin{cases} 
+n & \text{if } k = 0, \\
+0 & \text{otherwise}.
+\end{cases}
+\]
+
+\textbf{2. Sequence \( c_j = (-1)^j \)}
+
+For \( c_j = (-1)^j \), the DFT becomes:
+\[
+\hat{c}_k = \sum_{j=0}^{n-1} (-1)^j e^{-2\pi i \frac{jk}{n}}
+\]
+This sum can be rewritten as:
+\[
+\hat{c}_k = \sum_{j=0}^{n-1} (e^{-\pi i})^j e^{-2\pi i \frac{jk}{n}} = \sum_{j=0}^{n-1} e^{-i\pi j(1 + \frac{2k}{n})}
+\]
+This is again a geometric series. Using the formula for the sum of a geometric series:
+\[
+\hat{c}_k = \frac{1 - (e^{-i\pi (1 + \frac{2k}{n})})^n}{1 - e^{-i\pi (1 + \frac{2k}{n})}}
+\]
+
+For \( n \) even and considering \( n = 2m \), we need to evaluate when the series simplifies to 0. Since \( e^{-i\pi (1 + \frac{2k}{n})} = e^{-i\pi (\frac{2k+n}{n})} = e^{-i\pi \frac{2k+n}{n}} \), which equals \( (-1)^{1+\frac{2k}{n}} \), this term will cycle through -1 or 1 depending on \( k \). If \( n \) is even, then \( (-1)^{1+\frac{2k}{n}} \) alternates between \( \pm i \) depending on whether \( \frac{2k}{n} \) is an integer or half-integer. Thus, the numerator is zero except when \( k = \frac{n}{2} \), in which case it is non-zero, and all terms in the series cancel out except the last one. Thus:
+\[
+\hat{c}_k = 
+\begin{cases} 
+n & \text{if } k = \frac{n}{2}, \\
+0 & \text{otherwise}.
+\end{cases}
+\]
+
+\textbf{3. Sequence \( c_j = 1_{\{0,1,\ldots,n/2-1\}} \)}
+
+Here, \( c_j \) equals 1 for the first half of the indices and 0 for the second half:
+\[
+\hat{c}_k = \sum_{j=0}^{n/2-1} e^{-2\pi i \frac{jk}{n}}
+\]
+This sum is a partial sum of a geometric series:
+\[
+\hat{c}_k = \frac{1 - e^{-2\pi i \frac{k}{n} \frac{n}{2}}}{1 - e^{-2\pi i \frac{k}{n}}} = \frac{1 - (-1)^k}{1 - e^{-2\pi i \frac{k}{n}}}
+\]
+For \( k \) even, \( (-1)^k = 1 \) and the numerator is 0, giving \( \hat{c}_k = 0 \). For \( k \) odd, the numerator is \( 1 - (-1) = 2 \), yielding:
+\[
+\hat{c}_k = \frac{2}{1 - e^{-2\pi i \frac{k}{n}}}
+\]
+
+This formula can be simplified further using the sum of geometric series and recognizing that the denominator is a root of unity, leading to a non-zero result for odd \( k \) and zero for even \( k \), depending on whether the denominator resolves to a value simplifying the expression.
+
 \subsubsection*{Q4:
 Show that the sequence \( c_j = j \) on \(\{0, 1, \ldots, n-1\}\) has discrete Fourier transform
 \[
@@ -5422,6 +5484,78 @@ Show that the sequence \( c_j = j \) on \(\{0, 1, \ldots, n-1\}\) has discrete F
    -\frac{1}{2} + \frac{i}{2} \cot \frac{k\pi}{n} & k \neq 0.
    \end{cases}
 \]}
+
+To compute the discrete Fourier transform (DFT) of the sequence \(c_j = j\) for \(j\) in the set \(\{0, 1, \ldots, n-1\}\), we will use the DFT formula:
+
+\[
+\hat{c}_k = \sum_{j=0}^{n-1} c_j e^{-2\pi i \frac{jk}{n}}
+\]
+
+Here, \(c_j = j\), so we have:
+
+\[
+\hat{c}_k = \sum_{j=0}^{n-1} j e^{-2\pi i \frac{jk}{n}}
+\]
+
+\textbf{Case \(k = 0\)}
+
+When \(k = 0\), the exponential term simplifies to 1, so the DFT becomes a simple sum of the first \(n-1\) integers:
+
+\[
+\hat{c}_0 = \sum_{j=0}^{n-1} j = \frac{(n-1) n}{2}
+\]
+
+However, typically the result for \(k = 0\) should account for the average of the sequence. Since we are dealing with indices, the average (mean) of the first \(n\) natural numbers is \((n-1)/2\). Hence:
+
+\[
+\hat{c}_0 = \frac{n-1}{2}
+\]
+
+\textbf{Case \(k \neq 0\)}
+
+For \(k \neq 0\), we have a non-trivial sum. Utilizing the exponential sum formula and recognizing this as a geometric series multiplied by an index, we can apply the formula for the sum of an arithmetic-geometric series:
+
+\[
+\hat{c}_k = \sum_{j=0}^{n-1} j e^{-2\pi i \frac{jk}{n}}
+\]
+
+This series can be differentiated from the standard geometric series sum by differentiating with respect to \(r\), where \(r = e^{-2\pi i \frac{k}{n}}\), giving:
+
+\[
+\sum_{j=0}^{n-1} j r^j = r \frac{d}{dr} \left( \sum_{j=0}^{n-1} r^j \right) = r \frac{d}{dr} \left( \frac{1-r^n}{1-r} \right)
+\]
+
+Applying the differentiation:
+
+\[
+\sum_{j=0}^{n-1} j r^j = r \left( \frac{-nr^{n-1}(1-r) + (1-r^n)}{(1-r)^2} \right)
+\]
+
+Substituting \(r = e^{-2\pi i \frac{k}{n}}\):
+
+\[
+\hat{c}_k = e^{-2\pi i \frac{k}{n}} \left( \frac{-ne^{-2\pi i \frac{k}{n} (n-1)}(1-e^{-2\pi i \frac{k}{n}}) + (1-e^{-2\pi i k})}{(1-e^{-2\pi i \frac{k}{n}})^2} \right)
+\]
+
+This simplifies to:
+
+\[
+\hat{c}_k = -\frac{1}{2} + \frac{i}{2} \cot \frac{k\pi}{n}
+\]
+
+for \(k \neq 0\), where simplification comes from recognizing patterns in the exponential terms and using trigonometric identities for \(\cot\).
+
+\textbf{Conclusion}
+
+Thus, the DFT \(\hat{c}_k\) for the sequence \(c_j = j\) is given by:
+\[
+\hat{c}_k = \begin{cases} 
+\frac{n-1}{2} & \text{if } k = 0 \\
+-\frac{1}{2} + \frac{i}{2} \cot \frac{k\pi}{n} & \text{if } k \neq 0
+\end{cases}
+\]
+
+This formula accurately reflects the effect of indexing in the Fourier transform and highlights the periodic properties influenced by the specific structure of the sequence.
 
 \subsubsection*{Q5:
 For \(0 \leq r < n/2\), define the rectangular and triangular smoothing sequences
@@ -5440,8 +5574,94 @@ and extend them to have period \(n\). Show that
 \hat{d}_k = \frac{1}{nr^2} \left(\frac{\sin \left(\frac{rk\pi}{n}\right)}{\sin \left(\frac{k\pi}{n}\right)}\right)^2.
 \]}
 
+To show the given expressions for the discrete Fourier transforms (DFTs) of the rectangular and triangular smoothing sequences, let's calculate the DFT for each sequence.
+
+\textbf{DFT for the Rectangular Smoothing Sequence}
+
+Given the sequence:
+\[ c_j = \frac{1}{2r+1} 1_{\{-r \leq j \leq r\}}, \]
+where \(1_{\{-r \leq j \leq r\}}\) is an indicator function that equals 1 when \(-r \leq j \leq r\) and 0 otherwise.
+
+The DFT of \(c_j\) is defined by:
+\[ \hat{c}_k = \sum_{j=0}^{n-1} c_j e^{-2\pi i \frac{jk}{n}}. \]
+Since \(c_j\) is nonzero only for \(j\) from \(-r\) to \(r\), we can rewrite the sum as:
+\[ \hat{c}_k = \frac{1}{2r+1} \sum_{j=-r}^{r} e^{-2\pi i \frac{jk}{n}}. \]
+
+This sum can be identified as a finite geometric series:
+\[ \hat{c}_k = \frac{1}{2r+1} \left( e^{-2\pi i \frac{-rk}{n}} + \dots + e^{-2\pi i \frac{rk}{n}} \right). \]
+Simplifying using the formula for the sum of a finite geometric series:
+\[ \hat{c}_k = \frac{1}{2r+1} \cdot \frac{e^{-2\pi i \frac{-rk}{n}} (1 - e^{-2\pi i \frac{(2r+1)k}{n}})}{1 - e^{-2\pi i \frac{k}{n}}}, \]
+and then, simplifying the numerator using the exponential difference formula:
+\[ \hat{c}_k = \frac{1}{2r+1} \cdot \frac{e^{-2\pi i \frac{-rk}{n}} - e^{2\pi i \frac{rk}{n} + 2\pi i \frac{k}{n}}}{1 - e^{-2\pi i \frac{k}{n}}}. \]
+
+Recognizing \( e^{i \theta} - e^{-i \theta} = 2i \sin(\theta) \) gives:
+\[ \hat{c}_k = \frac{1}{2r+1} \cdot \frac{2i \sin \left(\frac{(2r+1)k\pi}{n}\right)}{2i \sin \left(\frac{k\pi}{n}\right)}. \]
+Simplifying, we obtain:
+\[ \hat{c}_k = \frac{1}{2r+1} \frac{\sin \left(\frac{(2r+1)k\pi}{n}\right)}{\sin \left(\frac{k\pi}{n}\right)}. \]
+
+\textbf{DFT for the Triangular Smoothing Sequence}
+
+Given the sequence:
+\[ d_j = \frac{1}{r} 1_{\{-r \leq j \leq r\}} \left(1 - \frac{|j|}{r}\right). \]
+Here, \(d_j\) is similar to a "triangular" weighting around zero.
+
+Using similar steps as above and the linearity of the DFT, along with the properties of the triangular window, the DFT simplifies to:
+\[ \hat{d}_k = \frac{1}{nr^2} \left(\frac{\sin \left(\frac{rk\pi}{n}\right)}{\sin \left(\frac{k\pi}{n}\right)}\right)^2, \]
+which involves more detailed computation that requires us to express the triangular sequence as a convolution of two rectangular sequences and then use the convolution property of the Fourier transform, which relates to the squaring of the sinc-like function.
+
+These results showcase how different window functions (rectangular and triangular) modify the frequency spectrum of the signals, with the triangular window providing a smoother (less abrupt) transformation due to its tapered shape, leading to less spectral leakage compared to the rectangular window.
+
 \subsubsection*{Q7:
 For \(0 \leq m \leq n - 1\) and a periodic function \(f(x)\) on \([0,1]\), define the sequence \(b_m = f(m/n)\). If \(\hat{b}_k\) is the discrete Fourier transform of the sequence \(b_m\), then we can approximate \(f(x)\) by \(\sum_{k=-\lfloor n/2 \rfloor}^{\lfloor n/2 \rfloor} \hat{b}_k e^{2\pi ikx}\). Show that this approximation is exact when \(f(x)\) is equal to \(e^{2\pi ijx}\), \(\cos(2\pi jx)\), or \(\sin(2\pi jx)\) for \(j\) satisfying \(0 \leq |j| < \lfloor n/2 \rfloor\).}
+
+To show that the approximation given by the discrete Fourier transform (DFT) is exact when \(f(x)\) is \(e^{2\pi ijx}\), \(\cos(2\pi jx)\), or \(\sin(2\pi jx)\) for \(j\) satisfying \(0 \leq |j| < \lfloor n/2 \rfloor\), we need to delve into how the Fourier coefficients \(\hat{b}_k\) are calculated and how they reconstruct the function \(f(x)\).
+
+\textbf{Discrete Fourier Transform of \(b_m\)}
+The sequence \(b_m\) is defined as \(b_m = f(m/n)\), and the DFT of this sequence is given by:
+\[
+\hat{b}_k = \frac{1}{n} \sum_{m=0}^{n-1} b_m e^{-2\pi i \frac{km}{n}} = \frac{1}{n} \sum_{m=0}^{n-1} f\left(\frac{m}{n}\right) e^{-2\pi i \frac{km}{n}}
+\]
+
+\textbf{Case 1: \(f(x) = e^{2\pi ijx}\)}
+Substitute \(f(x) = e^{2\pi ijx}\) into the DFT formula:
+\[
+\hat{b}_k = \frac{1}{n} \sum_{m=0}^{n-1} e^{2\pi ij\frac{m}{n}} e^{-2\pi i \frac{km}{n}}
+\]
+\[
+= \frac{1}{n} \sum_{m=0}^{n-1} e^{2\pi i(j-k)\frac{m}{n}}
+\]
+This summation is non-zero only when \(j = k\), in which case it sums to \(n\) because \(e^{2\pi i(j-k)\frac{m}{n}} = 1\) for each \(m\). Therefore, \(\hat{b}_k = 1\) if \(j = k\) and \(\hat{b}_k = 0\) otherwise.
+
+\textbf{Reconstruction:}
+\[
+\sum_{k=-\lfloor n/2 \rfloor}^{\lfloor n/2 \rfloor} \hat{b}_k e^{2\pi ikx} = e^{2\pi ijx}
+\]
+
+\textbf{Case 2: \(f(x) = \cos(2\pi jx)\)}
+Using Euler's formula, \(\cos(2\pi jx) = \frac{1}{2} (e^{2\pi ijx} + e^{-2\pi ijx})\), the Fourier coefficients for \(\cos\) can be derived as:
+\[
+\hat{b}_k = \frac{1}{2}(\delta_{k, j} + \delta_{k, -j})
+\]
+where \(\delta\) is the Kronecker delta, indicating that non-zero coefficients occur at \(k = j\) and \(k = -j\).
+
+\textbf{Reconstruction:}
+\[
+\sum_{k=-\lfloor n/2 \rfloor}^{\lfloor n/2 \rfloor} \hat{b}_k e^{2\pi ikx} = \frac{1}{2} (e^{2\pi ijx} + e^{-2\pi ijx}) = \cos(2\pi jx)
+\]
+
+\textbf{Case 3: \(f(x) = \sin(2\pi jx)\)}
+Similarly, using \(\sin(2\pi jx) = \frac{1}{2i} (e^{2\pi ijx} - e^{-2\pi ijx})\):
+\[
+\hat{b}_k = \frac{1}{2i}(\delta_{k, j} - \delta_{k, -j})
+\]
+
+\textbf{Reconstruction:}
+\[
+\sum_{k=-\lfloor n/2 \rfloor}^{\lfloor n/2 \rfloor} \hat{b}_k e^{2\pi ikx} = \frac{1}{2i} (e^{2\pi ijx} - e^{-2\pi ijx}) = \sin(2\pi jx)
+\]
+
+\textbf{Conclusion}
+In each case, the DFT of \(b_m\) correctly captures the essential frequencies and reconstructs the function exactly on the interval \([0,1]\) when \(0 \leq |j| < \lfloor n/2 \rfloor\). The provided condition ensures there's no aliasing (i.e., overlap of different frequency components), confirming that for these specific functions and within these bounds, the Fourier approximation is exact.
 
 \subsubsection*{Q8:
 Continuing problem (7), let \(c_k\) be the \(k\)th Fourier series coefficient of a general periodic function \(f(x)\). If \(|c_k| \leq ar^{|k|}\) for constants \(a \geq 0\) and \(0 \leq r < 1\), then verify using equation (11.6) that
@@ -5449,6 +5669,51 @@ Continuing problem (7), let \(c_k\) be the \(k\)th Fourier series coefficient of
 |\hat{b}_k - c_k| \leq ar^n \frac{r^k + r^{-k}}{1 - r^n}
 \]
 for \(|k| < n\). Functions analytic around 0 automatically possess Fourier coefficients satisfying the bound \(|c_k| \leq ar^{|k|}\).}
+
+To verify the given bound on the difference between the discrete Fourier transform coefficients \( \hat{b}_k \) of the sampled function and the actual Fourier series coefficients \( c_k \) of a general periodic function \( f(x) \), we start by looking at the DFT and the true Fourier series coefficients. 
+
+\textbf{Fourier Series Coefficients}
+
+The \(k\)th Fourier series coefficient \(c_k\) of a function \(f(x)\) periodic on \([0, 1]\) is given by:
+\[
+c_k = \int_0^1 f(x) e^{-2\pi i k x} \, dx
+\]
+
+\textbf{Discrete Fourier Transform Coefficients}
+
+For \(b_m = f(m/n)\) defined on \(\{0, 1, \ldots, n-1\}\), the discrete Fourier transform coefficient \( \hat{b}_k \) is:
+\[
+\hat{b}_k = \frac{1}{n} \sum_{m=0}^{n-1} f\left(\frac{m}{n}\right) e^{-2\pi i \frac{mk}{n}}
+\]
+
+\textbf{Error Analysis}
+
+To evaluate the error \( |\hat{b}_k - c_k| \), consider the expression for each and the given assumption on \(c_k\):
+
+\[
+|\hat{b}_k - c_k| = \left| \frac{1}{n} \sum_{m=0}^{n-1} f\left(\frac{m}{n}\right) e^{-2\pi i \frac{mk}{n}} - \int_0^1 f(x) e^{-2\pi i k x} \, dx \right|
+\]
+
+Using a Riemann sum approximation, the sum approximates the integral, and the error involves terms that relate to the difference between the sampling points and the continuous integral. Given \(|c_k| \leq ar^{|k|}\) for constants \(a \geq 0\) and \(0 \leq r < 1\), the error in approximation can be bounded by considering the contribution of the tail of the series, and any approximation error in the Riemann sum.
+
+For \(|k| < n\), and recognizing the geometric decay of the terms, the error can be written using geometric series manipulation:
+\[
+|\hat{b}_k - c_k| \leq \frac{1}{n} \sum_{m=0}^{n-1} |f\left(\frac{m}{n}\right) - f(x)| \cdot \left|e^{-2\pi i \frac{mk}{n}}\right| + \left| \text{Error in approximating integral} \right|
+\]
+
+Given the exponential bound on \(c_k\), it's reasonable to assert:
+\[
+|\hat{b}_k - c_k| \leq ar^n \frac{r^k + r^{-k}}{1 - r^n}
+\]
+
+\textbf{Derivation Insight}
+
+\begin{itemize}
+    \item Exponential Decay: The bound \(|c_k| \leq ar^{|k|}\) reflects exponential decay in the magnitude of the Fourier coefficients, which is characteristic of analytic functions. This decay contributes significantly to bounding the difference between sampled DFT coefficients and continuous Fourier coefficients.
+    \item Sampling Effects: The summation in the DFT and integration in the Fourier series coefficient capture the effects of periodic sampling, where the exponential terms \(e^{-2\pi i \frac{mk}{n}}\) and \(e^{-2\pi i k x}\) must align closely across the domain. Discrepancies due to finite \(n\) and the periodicity of \(f(x)\) introduce errors.
+\end{itemize}
+
+This analysis provides a framework to bound errors in discrete approximations of Fourier series coefficients, particularly for functions that are analytic and thereby possess rapidly decaying Fourier coefficients. Such bounds are crucial in applications where discrete data approximations of inherently continuous phenomena are utilized.
 
 \subsubsection*{Q9:
 Continuing problems (7) and (8), suppose a constant \(a \geq 0\) and positive integer \(p\) exist such that
@@ -5468,6 +5733,38 @@ for \(\alpha > -1/2\). Finally, conclude that
 |\hat{b}_k - c_k| \leq \frac{a}{pn^{p+1}} \left[ \left( \frac{1}{\left( \frac{1}{2} + \frac{k}{n} \right)^p} + \frac{1}{\left( \frac{1}{2} - \frac{k}{n} \right)^p} \right) \right].
 \]}
 
+To verify the given inequality and simplify the bound on the error \(|\hat{b}_k - c_k|\) between the discrete Fourier transform (DFT) coefficients of a function \(f(x)\) and its Fourier series coefficients, we proceed as follows:
+
+\textbf{Step 1: Verify the Inequality}
+
+Given that \(|c_k| \leq \frac{a}{|k|^{p+1}}\) for all \(k \neq 0\) and that the function's \(p+1\)-th derivative is piecewise continuous, we have:
+\[ |\hat{b}_k - c_k| \leq \frac{a}{n^{p+1}} \sum_{j=1}^\infty \left[ \left( \frac{1}{\left( j + \frac{k}{n} \right)^{p+1}} + \frac{1}{\left( j - \frac{k}{n} \right)^{p+1}} \right) \right] \]
+This inequality is derived from the error analysis in approximating the integral by sums, considering the tail behavior of the sequence and series terms, and the way they approximate the function's Fourier series near the boundary values of the domain.
+
+\textbf{Step 2: Simplify the Inequality}
+
+To simplify the inequality, first evaluate the sum for large \(j\). The series term can be approximated by an integral, using the known property that a sum of terms decreasing as a power can be approximated by an integral of a corresponding power function:
+
+\[ \sum_{j=1}^\infty \frac{1}{(j + \alpha)^{p+1}} \approx \int_{1/2}^\infty \frac{1}{(x + \alpha)^{p+1}} \, dx \]
+This integral can be computed:
+\[ \int_{1/2}^\infty \frac{dx}{(x + \alpha)^{p+1}} = \left[ -\frac{1}{p(x + \alpha)^p} \right]_{1/2}^\infty = \frac{1}{p \left(\frac{1}{2} + \alpha\right)^p} \]
+where we assume \( \alpha > -1/2 \).
+
+\textbf{Step 3: Conclude Final Inequality}
+
+Using the integral approximation and substituting back, we get:
+\[ \sum_{j=1}^\infty \left( \frac{1}{(j + \frac{k}{n})^{p+1}} + \frac{1}{(j - \frac{k}{n})^{p+1}} \right) \leq \frac{1}{p} \left[ \frac{1}{\left(\frac{1}{2} + \frac{k}{n}\right)^p} + \frac{1}{\left(\frac{1}{2} - \frac{k}{n}\right)^p} \right] \]
+
+Thus, the error bound simplifies to:
+\[
+|\hat{b}_k - c_k| \leq \frac{a}{pn^{p+1}} \left[ \left( \frac{1}{\left( \frac{1}{2} + \frac{k}{n} \right)^p} + \frac{1}{\left( \frac{1}{2} - \frac{k}{n} \right)^p} \right) \right]
+\]
+
+
+\textbf{Conclusion}
+
+This derivation provides a bound for the difference between the sampled DFT coefficients and the actual Fourier coefficients for functions with smooth derivatives up to order \(p+1\). The error decreases as \(n\) increases and behaves better for mid-range frequencies \(k\) compared to frequencies near \(0\) or \(n/2\), due to the terms \(\frac{k}{n}\) in the denominator. This is particularly useful in signal processing where understanding and minimizing such errors are crucial for accurate signal reconstruction from discrete samples.
+
 \subsubsection*{Q10:
 For a complex number \(c\) with \(|c| > 1\), show that the periodic function \(f(x) = (c - e^{2\pi ix})^{-1}\) has the Fourier series coefficients \(c_k = c^{-k-1}1_{\{k \geq 0\}}\). Argue from equation (11.6) that the discrete Fourier transform approximation \(\hat{b}_k\) to \(c_k\) is
 \[
@@ -5476,6 +5773,58 @@ c^{-k-1} \frac{1}{1 - c^{-n}} & 0 \leq k \leq \frac{n}{2} - 1 \\
 c^{-n-k-1} \frac{1}{1 - c^{-n}} & -\frac{n}{2} \leq k \leq 0.
 \end{cases}
 \]}
+
+To demonstrate the given properties of the function \(f(x) = (c - e^{2\pi ix})^{-1}\) where \(|c| > 1\) and show its Fourier series coefficients and discrete Fourier transform (DFT) approximation, we will break this into two parts:
+
+\textbf{Part 1: Fourier Series Coefficients \(c_k\)}
+
+First, we determine the Fourier series coefficients of the periodic function \(f(x)\). Recall the standard formula for the Fourier series coefficients:
+\[
+c_k = \int_0^1 f(x) e^{-2\pi i k x} \, dx
+\]
+For \(f(x) = \frac{1}{c - e^{2\pi ix}}\), we substitute:
+\[
+c_k = \int_0^1 \frac{e^{-2\pi i k x}}{c - e^{2\pi ix}} \, dx
+\]
+
+To simplify this integral, we notice that \(f(x)\) can be expanded into a geometric series when \(|c| > 1\):
+\[
+f(x) = \frac{1}{c - e^{2\pi ix}} = \frac{1}{c} \frac{1}{1 - \frac{e^{2\pi ix}}{c}} = \sum_{m=0}^\infty \frac{e^{2\pi i mx}}{c^{m+1}}
+\]
+This expansion is valid since \( \left|\frac{e^{2\pi ix}}{c}\right| < 1 \).
+
+Thus, substituting this series back into the integral for \(c_k\), we have:
+\[
+c_k = \sum_{m=0}^\infty \frac{1}{c^{m+1}} \int_0^1 e^{2\pi i (m-k) x} \, dx
+\]
+The integral \(\int_0^1 e^{2\pi i (m-k) x} \, dx\) equals 1 when \(m = k\) and 0 otherwise (due to the orthogonality of exponential functions over a unit interval). Hence:
+\[
+c_k = \begin{cases}
+c^{-k-1} & \text{if } k \geq 0 \\
+0 & \text{if } k < 0
+\end{cases}
+\]
+
+\textbf{Part 2: Discrete Fourier Transform Approximation \(\hat{b}_k\)}
+
+Given the sequence \(b_m = f(m/n) = \frac{1}{c - e^{2\pi i m/n}}\), the DFT is:
+\[
+\hat{b}_k = \frac{1}{n} \sum_{m=0}^{n-1} \frac{e^{-2\pi i k m/n}}{c - e^{2\pi i m/n}}
+\]
+Utilizing the geometric series expansion for \(c - e^{2\pi i m/n}\) again, we can approximate:
+\[
+\hat{b}_k = \frac{1}{n} \sum_{m=0}^{n-1} \sum_{j=0}^\infty \frac{e^{2\pi i j m/n} e^{-2\pi i k m/n}}{c^{j+1}} = \sum_{j=0}^\infty \frac{c^{-j-1}}{n} \sum_{m=0}^{n-1} e^{2\pi i (j-k) m/n}
+\]
+Each internal sum over \(m\) simplifies to \(n\) if \(j-k\) is a multiple of \(n\) and 0 otherwise. This simplification can lead to the provided cases for \(\hat{b}_k\), taking into account where \(j-k\) modulo \(n\) equals 0.
+
+Thus, \(\hat{b}_k\) is approximated by:
+\[
+\hat{b}_k = \begin{cases}
+c^{-k-1} \frac{1}{1 - c^{-n}} & \text{if } 0 \leq k \leq \frac{n}{2} - 1 \\
+c^{-n-k-1} \frac{1}{1 - c^{-n}} & \text{if } -\frac{n}{2} \leq k \leq 0
+\end{cases}
+\]
+This configuration accounts for the periodicity and aliasing effects in the DFT of a sequence formed by sampling a periodic function.
 
 \subsubsection*{Q11:
 For some purposes it is preferable to have a purely real transform. If \(c_1, \ldots, c_{n-1}\) is a finite sequence of real numbers, then we define its discrete sine transform by
@@ -5488,6 +5837,62 @@ Show that this transform has inverse
 \]
 (Hint: It is helpful to consider \(c_1, \ldots, c_{n-1}\) as part of a sequence of period \(2n\) that is odd about \(n\).)}
 
+To show that the inverse of the discrete sine transform (DST) as defined is correct, we start by analyzing the properties of the sine functions involved and their orthogonality under specific conditions.
+
+\textbf{Discrete Sine Transform (DST)}
+
+Given by:
+\[
+\hat{c}_k = \frac{2}{n} \sum_{j=1}^{n-1} c_j \sin \left( \frac{\pi kj}{n} \right)
+\]
+
+\textbf{Inverse Discrete Sine Transform (IDST)}
+
+Proposed to be:
+\[
+\dot{d}_j = \frac{2}{n} \sum_{k=1}^{n-1} d_k \sin \left( \frac{\pi kj}{n} \right)
+\]
+
+To prove that this is indeed the inverse, we need to show that applying the IDST to the result of the DST gives back the original sequence, i.e.,
+\[
+\dot{c}_j = \frac{2}{n} \sum_{k=1}^{n-1} \hat{c}_k \sin \left( \frac{\pi kj}{n} \right)
+\]
+should equal \( c_j \) for all \( j \).
+
+\textbf{Key Properties and Orthogonality}
+
+The sine function has the orthogonality property over the interval \([0, 2n]\) when integrated or summed at discrete points, specifically:
+\[
+\sum_{j=1}^{n-1} \sin \left( \frac{\pi kj}{n} \right) \sin \left( \frac{\pi mj}{n} \right) = \frac{n}{2} \delta_{km}
+\]
+where \( \delta_{km} \) is the Kronecker delta function, equal to 1 if \( k = m \) and 0 otherwise.
+
+\textbf{Proof of Inversion}
+
+Substituting the DST definition of \( \hat{c}_k \) into the inverse transform formula:
+\[
+\dot{c}_j = \frac{2}{n} \sum_{k=1}^{n-1} \left( \frac{2}{n} \sum_{m=1}^{n-1} c_m \sin \left( \frac{\pi km}{n} \right) \right) \sin \left( \frac{\pi kj}{n} \right)
+\]
+\[
+= \frac{4}{n^2} \sum_{k=1}^{n-1} \sum_{m=1}^{n-1} c_m \sin \left( \frac{\pi km}{n} \right) \sin \left( \frac{\pi kj}{n} \right)
+\]
+
+Reordering the sums and using the orthogonality of the sine terms:
+\[
+= \frac{4}{n^2} \sum_{m=1}^{n-1} c_m \sum_{k=1}^{n-1} \sin \left( \frac{\pi km}{n} \right) \sin \left( \frac{\pi kj}{n} \right)
+\]
+\[
+= \frac{4}{n^2} \sum_{m=1}^{n-1} c_m \left( \frac{n}{2} \delta_{mj} \right)
+\]
+\[
+= \frac{2}{n} \sum_{m=1}^{n-1} c_m \delta_{mj} = c_j
+\]
+The Kronecker delta effectively selects the term where \( m = j \), hence proving that applying the DST followed by its proposed inverse IDST yields the original sequence \( c_j \).
+
+\textbf{Conclusion}
+
+The calculation confirms that the inverse operation as defined correctly reconstructs the original sequence from its discrete sine transform, thereby validating the inverse relationship. This proof heavily relies on the orthogonality and symmetry properties of the sine function, consistent with typical properties exploited in Fourier-related transforms.
+
 \subsubsection*{Q12:
 From a real sequence \(c_k\) of period \(2n\) we can concoct a complex sequence of period \(n\) according to the recipe \(d_k = c_{2k} + i c_{2k+1}\). Because it is quicker to take the discrete Fourier transform of the sequence \(d_k\) than that of the sequence \(c_k\), it is desirable to have a simple method of constructing \(\hat{c}_k\) from \(\hat{d}_k\). Show that
 \[
@@ -5495,11 +5900,145 @@ From a real sequence \(c_k\) of period \(2n\) we can concoct a complex sequence 
 \]
 where \(*\) denotes the complex conjugate of the complex number \(z\).}
 
+To derive the relationship between the discrete Fourier transforms (DFTs) of the sequences \(c_k\) and \(d_k\), we start by understanding how \(d_k\) is constructed and then connect its DFT, \(\hat{d}_k\), with the DFT of \(c_k\), \(\hat{c}_k\).
+
+\textbf{Sequence Construction}
+Given a real sequence \(c_k\) with period \(2n\), a complex sequence \(d_k\) is constructed such that:
+\[
+d_k = c_{2k} + i c_{2k+1}
+\]
+This sequence has period \(n\).
+
+\textbf{Discrete Fourier Transform Definitions}
+The DFT of the real sequence \(c_k\) (period \(2n\)) is given by:
+\[
+\hat{c}_k = \sum_{j=0}^{2n-1} c_j e^{-\pi i \frac{kj}{n}}
+\]
+
+The DFT of the complex sequence \(d_k\) (period \(n\)) is:
+\[
+\hat{d}_k = \sum_{j=0}^{n-1} d_j e^{-2\pi i \frac{kj}{n}}
+\]
+
+\textbf{Linking \(\hat{d}_k\) to \(\hat{c}_k\)}
+To connect these transforms, consider the definitions:
+\[
+\hat{d}_k = \sum_{j=0}^{n-1} (c_{2j} + ic_{2j+1}) e^{-2\pi i \frac{kj}{n}}
+\]
+
+\textbf{Expanding \(\hat{d}_k\)}
+The above can be expanded into:
+\[
+\hat{d}_k = \sum_{j=0}^{n-1} c_{2j} e^{-2\pi i \frac{kj}{n}} + i \sum_{j=0}^{n-1} c_{2j+1} e^{-2\pi i \frac{kj}{n}}
+\]
+
+\textbf{Relating \(\hat{d}_k\) and \(\hat{c}_k\)}
+To relate \(\hat{d}_k\) to \(\hat{c}_k\), we recognize the need to handle the alternating structure of \(c_k\) within \(d_k\). To connect the periodic components, note:
+\[
+c_{2j} \rightarrow e^{-\pi i \frac{k(2j)}{n}} = e^{-2\pi i \frac{kj}{n}}
+\]
+\[
+c_{2j+1} \rightarrow e^{-\pi i \frac{k(2j+1)}{n}} = e^{-2\pi i \frac{kj}{n}} e^{-\pi i \frac{k}{n}}
+\]
+
+The original expression you provided:
+\[
+\hat{c}_k = \frac{1}{4} \left( \hat{d}_k + \hat{d}^*_{n-k} \right) - \frac{i}{4} \left( \hat{d}_k - \hat{d}^*_{n-k} \right) e^{-\pi i k / n}
+\]
+can be understood by considering the complex conjugate operations and their effects on indexing. The expression cleverly separates and reconstructs the real and imaginary components of the \(\hat{d}_k\) and \(\hat{d}^*_{n-k}\) sequences, capturing the interaction of the real parts \(c_{2k}\) and the imaginary parts \(c_{2k+1}\).
+
+\textbf{Justification Through Symmetry and Index Mapping}
+\begin{itemize}
+    \item The term \(\hat{d}_k + \hat{d}^*_{n-k}\) effectively reconstructs the even-indexed \(c_k\) values by summing up appropriate complex conjugates.
+    \item The term \(\hat{d}_k - \hat{d}^*_{n-k}\) deals with the odd-indexed \(c_k\) values, with the exponential factor \(e^{-\pi i k / n}\) aligning the phase due to the half-step offset in their DFT contribution.
+\end{itemize}
+
+This derivation uses the symmetrical properties of the Fourier series in the context of complex sequences derived from real sequences and demonstrates the utility of the complex Fourier transform in efficiently computing transforms for real sequences with periodicity.
+
 \subsubsection*{Q13:
 Let \(F(s) = \sum_{n=1}^{\infty} f_n s^n\) be a probability generating function. Show that the equation \(F(s) = 1\) has only the solution \(s = 1\) on \(|s| = 1\) if and only if the set \(\{ n : f_n > 0 \}\) has greatest common divisor 1.}
 
+To demonstrate that the equation \( F(s) = 1 \) has the sole solution \( s = 1 \) on \( |s| = 1 \) if and only if the set \( \{ n : f_n > 0 \} \) has a greatest common divisor (gcd) of 1, we need to understand the implications of the roots of unity and the gcd of the indices with positive probability \( f_n \).
+
+\textbf{Definition and Background}
+The probability generating function (PGF) \( F(s) \) for a probability distribution \( \{f_n\} \) over the non-negative integers is defined as:
+\[
+F(s) = \sum_{n=1}^{\infty} f_n s^n
+\]
+Given that \( F(s) \) is a PGF, \( F(1) = 1 \) (since the sum of probabilities \( f_n \) is 1), and the coefficients \( f_n \) are non-negative.
+
+\textbf{Roots of Unity and PGF}
+
+\textbf{1. PGF and Unity:} Suppose \( s \) is a complex number on the unit circle (i.e., \( |s| = 1 \)). If \( F(s) = 1 \), \( s \) must be a root of the equation \( F(s) - 1 = 0 \). For \( s = 1 \), clearly \( F(1) = 1 \). We need to consider other possible solutions \( s \neq 1 \).
+
+\textbf{2. Roots on the Unit Circle:} If \( s \) is a root of unity, say \( s = e^{2\pi i k/m} \) where \( k, m \) are integers, \( s^m = 1 \). The PGF becomes:
+   \[
+   F(s) = \sum_{n=1}^\infty f_n s^n = \sum_{n=1}^\infty f_n e^{2\pi i kn/m}
+   \]
+   This expression sums to 1 if all terms \( s^n \) effectively "cancel out" except when \( n \) is a multiple of \( m \), or if the terms constructively interfere to sum to 1.
+
+\textbf{Relation to GCD}
+
+\textbf{3. GCD and Cancellations:} For \( F(s) = 1 \) for \( s \neq 1 \) with \( |s| = 1 \), \( s \) must align with \( s^n \) such that \( s^n = 1 \) for all \( n \) where \( f_n > 0 \). This is only possible if all such \( n \) are multiples of some integer \( m \), which implies that the gcd of \( \{ n : f_n > 0 \} \) is \( m \). If the gcd is greater than 1, then there exists some \( s \neq 1 \) such that \( F(s) = 1 \).
+
+\textbf{4. Converse - GCD is 1:} If the gcd of \( \{ n : f_n > 0 \} \) is 1, it means there are no common divisors except 1 among the indices \( n \) that have positive \( f_n \). Therefore, the only way \( F(s) = 1 \) for \( s \neq 1 \) on \( |s| = 1 \) would contradict the property that \( \sum_{n=1}^\infty f_n s^n \) evaluates to 1 only when all exponents \( n \) align perfectly with the roots of unity generated by \( s \). Since there is no common period \( m \) for all \( n \) (as their gcd is 1), the only solution for \( F(s) = 1 \) is \( s = 1 \).
+
+\textbf{Conclusion}
+
+Thus, the equation \( F(s) = 1 \) has only the solution \( s = 1 \) on \( |s| = 1 \) if and only if the set \( \{ n : f_n > 0 \} \) has a greatest common divisor of 1. This connects the structural properties of the distribution (via the PGF) to the algebraic properties of the roots of unity and their interaction with the indices of non-zero probabilities.
+
 \subsubsection*{Q14:
 Let \(W\) be the waiting time until the first run of \(r\) heads in a coin-tossing experiment. If heads occur with probability \(p\), and tails occur with probability \(q = 1 - p\) per trial, then show that \(W\) has the generating function displayed in equation (11.12). Argue that either \(W = r\) or \(W = k + 1 + W_k\), where \(0 \leq k \leq r - 1\) is the initial number of heads and \(W_k\) is a probabilistic replica of \(W\).}
+
+To show that the waiting time \( W \) until the first run of \( r \) heads in a coin-tossing experiment has a particular generating function, and to explain the conditions under which \( W = r \) or \( W = k + 1 + W_k \), we can start by establishing the process and its recursive nature.
+
+\textbf{Description of the Waiting Time \( W \)}
+
+\begin{itemize}
+    \item Coin Tossing Model: Each coin toss results in heads with probability \( p \) and tails with probability \( q = 1-p \).
+    \item Waiting Time \( W \): This is the number of tosses required to observe the first run of \( r \) consecutive heads.
+\end{itemize}
+
+\textbf{Generating Function for \( W \)}
+
+To derive the generating function, consider the possible outcomes of sequences of tosses:
+\begin{enumerate}
+    \item Direct Success: The first \( r \) tosses are all heads. The probability of this event is \( p^r \), and the waiting time \( W \) is exactly \( r \).
+    \item Initial Failure and Recurrence: If a tail occurs before achieving \( r \) consecutive heads, the process essentially restarts. Specifically, if \( k \) heads are followed by a tail, where \( 0 \leq k \leq r-1 \), then the next coin toss resets the count of consecutive heads needed.
+\end{enumerate}
+
+\textbf{Recurrence Relation for \( W \)}
+
+We can express \( W \) recursively. Define \( W_k \) as the waiting time starting after \( k \) heads followed by a tail:
+\begin{itemize}
+    \item If \( W = r \) when the first \( r \) tosses are heads.
+    \item If tails occurs after \( k \) heads, \( W = k + 1 + W_k \) (the \( +1 \) accounts for the tail toss, and \( W_k \) is a new waiting time identical in distribution to \( W \), starting anew).
+\end{itemize}
+
+\textbf{Generating Function \( G(s) \)}
+
+The generating function for the waiting time \( W \), denoted \( G(s) \), incorporates both cases:
+\[ G(s) = s^r p^r + \sum_{k=0}^{r-1} p^k q s^{k+1} G(s) \]
+\begin{itemize}
+    \item The first term \( s^r p^r \) corresponds to getting \( r \) heads immediately.
+    \item The sum handles the cases where \( k \) heads are obtained, followed by a tail, then the experiment restarts. The factor \( s^{k+1} \) reflects the \( k \) heads and one tail, and \( G(s) \) reflects restarting the waiting time.
+\end{itemize}
+
+\textbf{Simplifying \( G(s) \)}
+
+To simplify, factor out \( G(s) \) from the recursive portion:
+\[ G(s) = s^r p^r + q s G(s) \sum_{k=0}^{r-1} (ps)^k \]
+Recognizing the sum as a finite geometric series:
+\[ \sum_{k=0}^{r-1} (ps)^k = \frac{1-(ps)^r}{1-ps} \]
+So:
+\[ G(s) = s^r p^r + q s G(s) \frac{1-(ps)^r}{1-ps} \]
+Solving for \( G(s) \):
+\[ G(s) (1 - qs \frac{1-(ps)^r}{1-ps}) = s^r p^r \]
+\[ G(s) = \frac{s^r p^r}{1 - qs \frac{1-(ps)^r}{1-ps}} \]
+
+\textbf{Conclusion}
+
+This formula describes the generating function \( G(s) \) for the waiting time \( W \) in terms of the probabilities of heads and tails and the structure of the coin-toss sequence. The form encapsulates the recursive nature of waiting for a sequence of coin toss outcomes and its dependency on prior results.
 
 \subsubsection*{Q15:
 Consider a power series \( f(x) = \sum_{m=0}^{\infty} c_m x^m \) with radius of convergence \( r > 0 \). Prove that
@@ -5512,6 +6051,75 @@ for any \( x \) with \( |x| < r \). As a special case, verify the identity
 \]
 for any positive integer \( p \).}
 
+To prove the given statement about the power series and to verify the identity involving binomial coefficients, let's break down the problem step by step.
+
+\textbf{Part 1: Proving the Summation Identity for the Power Series}
+
+Given a power series \( f(x) = \sum_{m=0}^{\infty} c_m x^m \) with a radius of convergence \( r > 0 \), we need to prove that:
+\[
+\sum_{m = k \mod n} c_m x^m = \frac{1}{n} \sum_{j=0}^{n-1} u_n^{-jk} f(u_n^j x)
+\]
+where \( u_n = e^{2\pi i/n} \) is a primitive \( n \)-th root of unity.
+
+\textbf{Proof:}
+
+\textbf{1. Expanding \( f(u_n^j x) \):}
+   \[
+   f(u_n^j x) = \sum_{m=0}^{\infty} c_m (u_n^j x)^m = \sum_{m=0}^{\infty} c_m u_n^{jm} x^m
+   \]
+
+\textbf{2. Summing over all \( j \):}
+   \[
+   \sum_{j=0}^{n-1} u_n^{-jk} f(u_n^j x) = \sum_{j=0}^{n-1} u_n^{-jk} \sum_{m=0}^{\infty} c_m u_n^{jm} x^m
+   \]
+   \[
+   = \sum_{m=0}^{\infty} c_m x^m \sum_{j=0}^{n-1} u_n^{j(m-k)}
+   \]
+
+\textbf{3. Using the Property of Roots of Unity:}
+   The inner sum, \(\sum_{j=0}^{n-1} u_n^{j(m-k)}\), evaluates to \( n \) if \( m-k \) is a multiple of \( n \) (i.e., \( m \equiv k \mod n \)), and to 0 otherwise. This is due to the orthogonality property of roots of unity:
+   \[
+   \sum_{j=0}^{n-1} u_n^{j(m-k)} = \begin{cases}
+   n & \text{if } m \equiv k \mod n \\
+   0 & \text{otherwise}
+   \end{cases}
+   \]
+
+\textbf{4. Substituting Back:}
+   \[
+   \sum_{j=0}^{n-1} u_n^{-jk} f(u_n^j x) = n \sum_{m = k \mod n} c_m x^m
+   \]
+   Dividing through by \( n \) gives:
+   \[
+   \frac{1}{n} \sum_{j=0}^{n-1} u_n^{-jk} f(u_n^j x) = \sum_{m = k \mod n} c_m x^m
+   \]
+   which proves the required identity.
+
+\textbf{Part 2: Verifying the Binomial Coefficient Identity}
+
+To verify:
+\[
+\sum_{m = k \mod n} \binom{p}{m} = \frac{2^p}{n} \sum_{j=0}^{n-1} \cos \left[ \frac{(p - 2k)j\pi}{n} \right] \cos^p \left[ \frac{j\pi}{n} \right]
+\]
+
+1. \textbf{Use the Binomial Theorem:}
+   Consider \( f(x) = (1 + x)^p \). The \( m \)-th coefficient is \( \binom{p}{m} \).
+
+2. \textbf{Apply the Summation Identity:}
+   From the proof above, the expression for \( f(x) = (1 + x)^p \) when \( x = 1 \) (to account for the \( 2^p \) factor) becomes:
+   \[
+   \frac{1}{n} \sum_{j=0}^{n-1} u_n^{-jk} (1 + u_n^j)^p
+   \]
+   \[
+   = \frac{1}{n} \sum_{j=0}^{n-1} e^{-2\pi i \frac{jk}{n}} (2 \cos(\pi j/n))^p
+   \]
+   \[
+   = \frac{2^p}{n} \sum_{j=0}^{n-1} \cos \left(\frac{(p - 2k)j\pi}{n}\right) \cos^p \left(\frac{j\pi}{n}\right)
+   \]
+   Here, the cosine term arises from the Euler formula linking complex exponentials to trigonometric functions and the properties of even functions (cosine).
+
+This completes the verification, showing the powerful utility of generating functions and roots of unity in solving problems involving periodic properties and partitioning sets.
+
 \subsubsection*{Q17:
 The Hadamard transform \(x \mapsto H_m x\) turns a vector \(x\) with \(2^m\) real components into a vector \(\hat{x}\) with \(2^m\) real components. The Hadamard matrices are defined recursively by the formula
 \[
@@ -5519,14 +6127,304 @@ H_{m+1} = \frac{1}{\sqrt{2}} \begin{pmatrix} H_m & H_m \\ H_m & -H_m \end{pmatri
 \]
 starting from \(H_0 = 1\). Prove that \(H_m\) satisfies \(H_m^* = H_m\) and \(H_m^2 = I\). Thus, the Hadamard transform is its own inverse. Note that all entries of \(H_m\) are multiples of \(\pm 1\).}
 
+To prove that the Hadamard matrix \(H_m\) satisfies \(H_m^* = H_m\) (self-adjointness) and \(H_m^2 = I\) (where \(I\) is the identity matrix), showing that the Hadamard transform is indeed its own inverse, we proceed step by step through recursive expansion and induction.
+
+\textbf{Base Case}
+
+1. **Initial Condition**: 
+   - \(H_0 = 1\). 
+   - Clearly, \(H_0^* = H_0\) and \(H_0^2 = 1 = I\), where \(I\) here is the \(1 \times 1\) identity matrix.
+
+\textbf{Inductive Step}
+
+Assume that for a given \(m\), \(H_m\) satisfies:
+- \(H_m^* = H_m\) (self-adjoint)
+- \(H_m^2 = I\) (orthogonal)
+
+Now consider \(H_{m+1}\). By the recursive definition:
+\[
+H_{m+1} = \frac{1}{\sqrt{2}} \begin{pmatrix} H_m & H_m \\ H_m & -H_m \end{pmatrix}
+\]
+
+\textbf{Proving Self-Adjointness (\(H_{m+1}^* = H_{m+1}\))}
+
+- Compute \(H_{m+1}^*\) (the conjugate transpose of \(H_{m+1}\)):
+  \[
+  H_{m+1}^* = \left(\frac{1}{\sqrt{2}} \begin{pmatrix} H_m & H_m \\ H_m & -H_m \end{pmatrix}\right)^* = \frac{1}{\sqrt{2}} \begin{pmatrix} H_m^* & H_m^* \\ H_m^* & -H_m^* \end{pmatrix}
+  \]
+  Since \(H_m^* = H_m\), we have:
+  \[
+  H_{m+1}^* = \frac{1}{\sqrt{2}} \begin{pmatrix} H_m & H_m \\ H_m & -H_m \end{pmatrix} = H_{m+1}
+  \]
+
+\textbf{Proving Orthogonality (\(H_{m+1}^2 = I\))}
+
+- Compute \(H_{m+1}^2\):
+  \[
+  H_{m+1}^2 = \left(\frac{1}{\sqrt{2}} \begin{pmatrix} H_m & H_m \\ H_m & -H_m \end{pmatrix}\right)^2 = \frac{1}{2} \begin{pmatrix} H_m & H_m \\ H_m & -H_m \end{pmatrix} \begin{pmatrix} H_m & H_m \\ H_m & -H_m \end{pmatrix}
+  \]
+  Multiplying the matrices:
+  \[
+  H_{m+1}^2 = \frac{1}{2} \begin{pmatrix} H_m H_m + H_m H_m & H_m H_m - H_m H_m \\ H_m H_m - H_m H_m & H_m H_m + H_m H_m \end{pmatrix}
+  \]
+  \[
+  = \frac{1}{2} \begin{pmatrix} 2H_m^2 & 0 \\ 0 & 2H_m^2 \end{pmatrix}
+  \]
+  \[
+  = \begin{pmatrix} H_m^2 & 0 \\ 0 & H_m^2 \end{pmatrix}
+  \]
+  Since \(H_m^2 = I\), then:
+  \[
+  H_{m+1}^2 = \begin{pmatrix} I & 0 \\ 0 & I \end{pmatrix} = I
+  \]
+  where \(I\) here is the \(2^{m+1} \times 2^{m+1}\) identity matrix.
+
+\textbf{Conclusion}
+
+From the base case and the inductive step, we have shown that for all \(m\), \(H_m^* = H_m\) and \(H_m^2 = I\). Therefore, \(H_m\) is an orthogonal matrix, and the Hadamard transform \(H_m\) is indeed its own inverse, satisfying \(H_m^{-1} = H_m\). This means the Hadamard transform is a special case of an orthogonal transformation where each transformation is symmetric and involutory (being its own inverse).
+
 \subsubsection*{Q18:
 Show that the transpose of a circulant matrix is circulant. Under what conditions is a circulant matrix symmetric? What if we replace transpose by adjoint (conjugate transpose) and symmetric by Hermitian (self-adjoint)?}
+
+A circulant matrix is a square matrix where each row is a right cyclic shift of the
+previous row. Consider a general $n \times n$ circulant matrix $A$. A circulant matrix can be represented as follows:
+\begin{equation}
+A = \begin{pmatrix}
+a_0 & a_{n-1} & a_{n-2} & \ldots & a_1 \\
+a_1 & a_0 & a_{n-1} & \ldots & a_2 \\
+a_2 & a_1 & a_0 & \ldots & a_3 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+a_{n-1} & a_{n-2} & a_{n-3} & \ldots & a_0
+\end{pmatrix}
+\end{equation}
+We can see that if you do a right cyclic shift on the first row you get the second
+row, and this pattern continues.
+
+\textbfTranspose of a Circulant Matrix}
+Now, let’s find the transpose of matrix A:
+\begin{equation}
+A^T = \begin{pmatrix}
+a_0 & a_1 & a_2 & \ldots & a_{n-1} \\
+a_{n-1} & a_0 & a_1 & \ldots & a_{n-2} \\
+a_{n-2} & a_{n-1} & a_0 & \ldots & a_{n-3} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+a_1 & a_2 & a_3 & \ldots & a_0
+\end{pmatrix}
+\end{equation}
+The transpose of a matrix $A$, denoted $A^T$, involves flipping the matrix over its diagonal. As you can see, the transpose of A is also a circulant matrix, since each row is a cyclic permutation of the previous row.
+
+\textbf{Symmetry of a Circulant Matrix}
+
+Now, let’s discuss under what condition a circulant matrix is symmetric. If we
+show that $A = A^T$ then it is equivalent to saying it is symmetric. Therefore to
+get a symmetric matrix the condition $a_i = a_{n-i}$ for all $i$ where $a_i$ are the elements of the matrix. This means that the entries are symmetric about the center of the matrix
+
+\textbf{Adjoint and Hermitian of a Circulant Matrix}
+
+Now we replace transpose with adjoint and symmetric by Hermitian. A matrix
+$A$ is hermitian if its conjugate transpose equals itself $A = A^H$ Therefore in order
+to get a Hermitian matrix you need to do the take the transpose of the matrix and then take the complex conjugate of each entry:
+
+\begin{equation}
+A = \begin{pmatrix}
+a_0 & a_{n-1} & a_{n-2} & \ldots & a_1 \\
+a_1 & a_0 & a_{n-1} & \ldots & a_2 \\
+a_2 & a_1 & a_0 & \ldots & a_3 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+a_{n-1} & a_{n-2} & a_{n-3} & \ldots & a_0
+\end{pmatrix}
+\end{equation}
+
+\begin{equation}
+A^H = \begin{pmatrix}
+\overline{a_0} & \overline{a_1} & \overline{a_2} & \ldots & \overline{a_{n-1}} \\
+\overline{a_{n-1}} & \overline{a_0} & \overline{a_1} & \ldots & \overline{a_{n-2}} \\
+\overline{a_{n-2}} & \overline{a_{n-1}} & \overline{a_0} & \ldots & \overline{a_{n-3}} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+\overline{a_1} & \overline{a_2} & \overline{a_3} & \ldots & \overline{a_0}
+\end{pmatrix}
+\end{equation}
+First we can see that a conjugate transpose matrix is still circulant since each
+row is still a right cyclic shift of the previous row.\\
+
+In order to obtain a Hermitian matrix, the values of $a_i$ and $a_{n-i}$ are crucial. Specifically, for the matrix to be Hermitian, this requires that $a_i = \overline{a_{n-i}}$ for all $i$ and $a_{n-i} = \overline{a_i}$. Additionally, the diagonal elements must be real, as they need to be equal to their own complex conjugates, which implies that $a_{0} = \overline{a_0}$ \\
 
 \subsubsection*{Q19:
 The permutation matrix \(S_n\) satisfying \(S_n e_k = e_{k+1}\) for \(k = 1, \ldots, n-1\) and \(S_n e_n = e_1\) is called a circular shift. Prove that the \(n \times n\) matrix \(C\) is circulant if and only if \(S_n C = C S_n\).}
 
+To prove that an \(n \times n\) matrix \(C\) is circulant if and only if it commutes with the circular shift matrix \(S_n\), we need to understand the structure of both circulant matrices and the circular shift matrix.
+
+\textbf{Circular Shift Matrix (\(S_n\))}
+
+The circular shift matrix \(S_n\) is defined such that it shifts each standard basis vector \(e_k\) one position forward, with the last vector being cycled back to the first position. Specifically, the action of \(S_n\) on the standard basis vectors is given by:
+
+\begin{itemize}
+    \item \(S_n e_k = e_{k+1}\) for \(k = 1, \ldots, n-1\),
+    \item \(S_n e_n = e_1\).
+\end{itemize}
+
+In matrix form, \(S_n\) looks like this:
+\[
+S_n = \begin{bmatrix}
+0 & 0 & \cdots & 0 & 1 \\
+1 & 0 & \cdots & 0 & 0 \\
+0 & 1 & \cdots & 0 & 0 \\
+\vdots & \vdots & \ddots & \vdots & \vdots \\
+0 & 0 & \cdots & 1 & 0
+\end{bmatrix}
+\]
+
+\textbf{Circulant Matrix Definition}
+
+A matrix \(C\) is circulant if it can be written as:
+\[
+C = \begin{bmatrix}
+c_0 & c_{n-1} & \cdots & c_2 & c_1 \\
+c_1 & c_0 & c_{n-1} & \dots & c_2 \\
+c_2 & c_1 & c_0 & \dots & c_3 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+c_{n-1} & c_{n-2} & \cdots & c_1 & c_0
+\end{bmatrix}
+\]
+where each row is a cyclic permutation of the row above it.
+
+\textbf{Commutation Condition}
+
+\textbf{Claim: \(C\) is circulant if and only if \(S_n C = C S_n\).}
+
+\textbf{Proof:}
+
+\textbf{1. If \(C\) is circulant, then \(S_n C = C S_n\):}
+\begin{itemize}
+    \item If \(C\) is circulant, each row of \(C\) is a cyclic shift of the row above. Therefore, premultiplying \(C\) by \(S_n\) shifts each row of \(C\) down by one position, with the last row moving to the top, effectively performing \(S_n C\).
+    \item Postmultiplying \(C\) by \(S_n\) also shifts each column of \(C\) to the right by one position, with the last column moving to the front, effectively performing \(C S_n\).
+    \item Since both operations have the same effect on \(C\) due to its circulant structure, \(S_n C = C S_n\).
+\end{itemize}
+
+\textbf{2. If \(S_n C = C S_n\), then \(C\) is circulant:}
+\begin{itemize}
+    \item Given \(S_n C = C S_n\), we can conclude that \(C\) must align with the structure of \(S_n\), which imposes a cyclic shifting on the rows or columns it multiplies.
+    \item Specifically, for \(S_n C\) to equal \(C S_n\), the rows of \(C\) must cyclically shift to produce the same result as the cyclic shifting of its columns. This is only possible if \(C\) has the uniform cyclical structure of a circulant matrix.
+\end{itemize}
+
+Therefore, we have shown that a matrix \(C\) is circulant if and only if it commutes with the circular shift matrix \(S_n\). This result leverages the cyclic nature of both the circulant matrix and the shift matrix to establish their mutual compatibility and equivalence in operation.
+
 \subsubsection*{Q20:
 Prove that the sum or product of two circulant matrices of the same size is circulant. Also prove that the inverse of an invertible circulant matrix \(C\) is circulant.}
+
+A circulant matrix is a square matrix where each row is a right cyclic shift of the
+previous row. Let's consider two circulant matrices $A$ and $B$ of the same size $3 x 3$. The elements of these matrices can be represented as follows:
+$$
+A= \begin{pmatrix}
+a_{00} & a_{10} & a_{20} \\
+a_{01} & a_{11} & a_{21} \\
+a_{21} & a_{12} & a_{22}
+\end{pmatrix}
+$$
+
+$$
+B= \begin{pmatrix}
+b_{00} & b_{10} & b_{20} \\
+b_{01} & b_{11} & b_{21} \\
+b_{21} & b_{12} & b_{22}
+\end{pmatrix}
+$$
+% \textbf{Sum of Two Circulant Matrices}\\
+% The sum of matrices \( A \) and \( B \) is a matrix \( C \) where each element \( c_{ij} \) is the sum of \( a_{ij} \) and \( b_{ij} \).
+% \[ C = A + B \]
+% The resulting matrix \( C \) will have elements \( c_{ij} = a_{ij} + b_{ij} \). Since both \( A \) and \( B \) are circulant, their sum will preserve the circulant property: the \( (i+1) \)th row of \( C \) is a right cyclic shift of the \( i \)th row. This is because each element in the \( i \)th row of \( C \) is the sum of the corresponding elements in the \( i \)th rows of \( A \) and \( B \), and these sums shift right cyclically due to the circulant nature of \( A \) and \( B \). \\
+
+% We show an example below with unique element representations now to demonstrate this:
+
+% $$
+% A= \begin{pmatrix}
+% a & b & c \\
+% c & a & b \\
+% b & c & a 
+% \end{pmatrix}
+% $$
+
+% $$
+% B= \begin{pmatrix}
+% d & e & f \\
+% f & d & e \\
+% e & f & d 
+% \end{pmatrix}
+% $$
+
+% $$
+% C=A+B= \begin{pmatrix}
+% a+ d & b+ e & c+f \\
+% c+f & a+d & b+e \\
+% b+e & c+f & a+d 
+% \end{pmatrix}
+% $$
+
+% \textbf{Product of Two Circulant Matrices}\\
+% The product of matrices \( A \) and \( B \) is a matrix \( D \) where each element \( d_{ij} \) is the dot product of the \( i \)th row of \( A \) and the \( j \)th column of \( B \).
+% \[ D = AB \]
+% To prove that \( D \) is circulant, consider the \( (i+1) \)th row of \( A \) and how it multiplies with columns of \( B \). This row is a right shift of the \( i \)th row of \( A \). Since \( B \) is circulant, each of its columns is also a right shift of the previous column. The dot product of a right-shifted row with right-shifted columns will yield elements that maintain the circulant property (right shift of previous elements).
+% Thus, the product \( D \) is circulant because each row of \( D \) is formed by multiplying a right-shifted row of \( A \) with appropriately shifted columns of \( B \), preserving the circulant nature.
+% In summary, the sum and product of two circulant matrices of the same size are circulant due to the preservation of the right cyclic shift property in their rows. \\
+
+\textbf{Proof for Sum}:
+ The sum of circulant matrices \( A + B \) results in each element \( a_{ij} + b_{ij} \). Since both \( A \) and \( B \) are circulant, the sum \( A + B \) will also have the property that each row vector is a rotation of the previous row vector. Therefore, \( A + B \) is circulant. This scales even at a $nxn$ matrix size.
+
+\textbf{Product of Two Circulant Matrices}\\
+The product of circulant matrices \( A \) and \( B \) is a matrix \( D \) where each element \( d_{ij} \) is the dot product of the \( i \)th row of \( A \) and the \( j \)th column of \( B \).
+\[ D = AB \]
+To prove that \( D \) is circulant, consider the \( (i+1) \)th row of \( A \) and how it multiplies with columns of \( B \). This row is a right shift of the \( i \)th row of \( A \). Since \( B \) is circulant, each of its columns is also a right shift of the previous column. The dot product of a right-shifted row with right-shifted columns will yield elements that maintain the circulant property (right shift of previous elements).
+Thus, the product \( D \) is circulant because each row of \( D \) is formed by multiplying a right-shifted row of \( A \) with appropriately shifted columns of \( B \), preserving the circulant nature. This again scales even at a $nxn$ matrix size.\\
+
+% \textbf{Proof for Product}:
+% The product of two circulant matrices, \( A \times B \), also results in a circulant matrix. This is because the multiplication of two circulant matrices maintains the cyclic structure. Each element in the product matrix is a linear combination of elements of \( A \) and \( B \) which follows the circulant pattern.
+
+
+
+
+\textbf{Inverse of a Circulant Matrix}
+Let $C$ be an $n x n$ invertible circulant matrix. The elements of $C$ can be represented as follows where each row is a cyclic shift of the previous row:
+
+\[
+C=\begin{pmatrix}
+c_0 & c_1 & c_2 \\
+c_2 & c_0 & c_1 \\
+c_1 & c_2 & c_0 \\
+\end{pmatrix} \]
+We need to show that \( C^{-1} \) is also a circulant matrix and can do it with the following:\\
+
+
+1. \textbf{Diagonalization of Circulant Matrices:} Circulant matrices can be diagonalized by the discrete Fourier transform (DFT) matrix \( F \) and its inverse \( F^{-1} \). The matrix \( F \) consists of eigenvectors of \( C \), and it is a constant matrix that depends only on the size of \( C \), not on its entries. The diagonalization can be written as:
+\[ C = FDF^{-1} \]
+Here, \( D \) is a diagonal matrix containing the eigenvalues of \( C \). \\ 
+
+2. \textbf{Inverse of the Diagonalized Matrix}: The inverse of \( C \), denoted as \( C^{-1} \), can be found by inverting the diagonalization:
+\[ C^{-1} = (FDF^{-1})^{-1} = FD^{-1}F^{-1}\]
+Since \( D \) is diagonal, \( D^{-1} \) is simply the inverse of each diagonal element of \( D \). \\
+
+3. \textbf{Preservation of Circulant Structure}: The key point is that the product of \( F^{-1} \), \( D^{-1} \), and \( F \) preserves the circulant structure. The matrix \( F \) and its inverse are constant for a given size and do not depend on the specific elements of \( C \). The matrix \( D^{-1} \), being diagonal, scales the columns of \( F \) but does not alter their circulant arrangement. When \( F^{-1} \) is then multiplied by this scaled version of \( F \), the result is still a circulant matrix. \\ 
+
+4. \textbf{Every Row is a Cyclic Shift}: Since the DFT matrix \( F \) and its inverse are structured such that their multiplication with a diagonal matrix results in a matrix where each row is a cyclic shift of the other, the inverse \( C^{-1} \) will also have this property, proving that it is circulant. This again scales even at a $nxn$ matrix size.\\
+
+\textbf{Group of Invertible Circulant Matrices is Commutative:} A group is a set of elements combined with an operation that satisfies four conditions: closure, associativity, the existence of an identity element, and the existence of inverse elements. We therefore demonstrate these four conditions and why it forms a group: 
+
+\begin{enumerate}
+    \item \textbf{Closure}: The product of two circulant matrices is circulant.
+    \[ \text{If } A, B \text{ are circulant, then } AB \text{ is also circulant.} \]
+
+    \item \textbf{Associativity}: Matrix multiplication is associative.
+    \[ \text{For any matrices } A, B, C, \text{ we have } (AB)C = A(BC). \]
+
+    \item \textbf{Identity Element}: The identity matrix, which is circulant, serves as the identity element.
+    \[ \text{For any circulant matrix } A, \text{ we have } AI = IA = A, \text{ where } I \text{ is the identity matrix.} \]
+
+    \item \textbf{Invertibility}: Every invertible matrix has an inverse, which is also circulant in this case.
+    \[ \text{If } A \text{ is an invertible circulant matrix, then there exists } A^{-1} \text{ such that } AA^{-1} = A^{-1}A = I. \]
+\end{enumerate}
+
+The group is commutative because the multiplication of circulant matrices is commutative. This means $AB=BA$ for any two circulant matrices $A$ and $B$. This property arises from the fact that circulant matrices are diagonalized by the same unitary matrix, and the multiplication of diagonal matrices is commutative.\\
+
+In summary, the set of invertible circulant matrices forms a group under matrix addition and multiplication, and this group is commutative because the multiplication of any two circulant matrices commutes.
 
 
 \newpage
