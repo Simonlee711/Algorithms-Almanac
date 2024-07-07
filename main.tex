@@ -4326,8 +4326,128 @@ The case \( c = 0 \) produces the weighted median. (Hints: A crude plot of \( f(
 \newpage
 \section*{Chapter 11: Fast Fourier Transfrom}
 
+\subsubsection*{Q3:
+Explicitly calculate discrete Fourier transforms for the sequences \( c_j = 1 \), \( c_j = (-1)^j \), and \( c_j = 1_{\{0,1,\ldots,n/2-1\}} \) defined on \(\{0, 1, \ldots, n-1\}\). For the last two sequences assume that \(n\) is even.}
+
+\subsubsection*{Q4:
+Show that the sequence \( c_j = j \) on \(\{0, 1, \ldots, n-1\}\) has discrete Fourier transform
+\[
+   \hat{c}_k = \begin{cases} 
+   \frac{n-1}{2} & k = 0 \\
+   -\frac{1}{2} + \frac{i}{2} \cot \frac{k\pi}{n} & k \neq 0.
+   \end{cases}
+\]}
+
+\subsubsection*{Q5:
+For \(0 \leq r < n/2\), define the rectangular and triangular smoothing sequences
+\[
+   c_j = \frac{1}{2r+1} 1_{\{-r \leq j \leq r\}}
+\]
+\[
+   d_j = \frac{1}{r} 1_{\{-r \leq j \leq r\}} \left(1 - \frac{|j|}{r}\right).
+\]
+
+and extend them to have period \(n\). Show that
+\[
+\hat{c}_k = \frac{1}{n(2r+1)} \frac{\sin \left(\frac{(2r+1)k\pi}{n}\right)}{\sin \left(\frac{k\pi}{n}\right)}
+\]
+\[
+\hat{d}_k = \frac{1}{nr^2} \left(\frac{\sin \left(\frac{rk\pi}{n}\right)}{\sin \left(\frac{k\pi}{n}\right)}\right)^2.
+\]}
+
+\subsubsection*{Q7:
+For \(0 \leq m \leq n - 1\) and a periodic function \(f(x)\) on \([0,1]\), define the sequence \(b_m = f(m/n)\). If \(\hat{b}_k\) is the discrete Fourier transform of the sequence \(b_m\), then we can approximate \(f(x)\) by \(\sum_{k=-\lfloor n/2 \rfloor}^{\lfloor n/2 \rfloor} \hat{b}_k e^{2\pi ikx}\). Show that this approximation is exact when \(f(x)\) is equal to \(e^{2\pi ijx}\), \(\cos(2\pi jx)\), or \(\sin(2\pi jx)\) for \(j\) satisfying \(0 \leq |j| < \lfloor n/2 \rfloor\).}
+
+\subsubsection*{Q8:
+Continuing problem (7), let \(c_k\) be the \(k\)th Fourier series coefficient of a general periodic function \(f(x)\). If \(|c_k| \leq ar^{|k|}\) for constants \(a \geq 0\) and \(0 \leq r < 1\), then verify using equation (11.6) that
+\[
+|\hat{b}_k - c_k| \leq ar^n \frac{r^k + r^{-k}}{1 - r^n}
+\]
+for \(|k| < n\). Functions analytic around 0 automatically possess Fourier coefficients satisfying the bound \(|c_k| \leq ar^{|k|}\).}
+
+\subsubsection*{Q9:
+Continuing problems (7) and (8), suppose a constant \(a \geq 0\) and positive integer \(p\) exist such that
+\[
+|c_k| \leq \frac{a}{|k|^{p+1}}
+\]
+for all \(k \neq 0\). (One can show that this criterion holds if \(f^{(p+1)}(x)\) is piecewise continuous.) Verify the inequality
+\[
+|\hat{b}_k - c_k| \leq \frac{a}{n^{p+1}} \sum_{j=1}^\infty \left[ \left( \frac{1}{\left( j + \frac{k}{n} \right)^{p+1}} + \frac{1}{\left( j - \frac{k}{n} \right)^{p+1}} \right) \right]
+\]
+when \(|k| < n/2\). To simplify this inequality, demonstrate that
+\[
+\sum_{j=1}^\infty \frac{1}{(j + \alpha)^{p+1}} < \int_{1/2}^\infty (x + \alpha)^{-p-1} \, dx = \frac{1}{p \left( \frac{1}{2} + \alpha \right)^p}
+\]
+for \(\alpha > -1/2\). Finally, conclude that
+\[
+|\hat{b}_k - c_k| \leq \frac{a}{pn^{p+1}} \left[ \left( \frac{1}{\left( \frac{1}{2} + \frac{k}{n} \right)^p} + \frac{1}{\left( \frac{1}{2} - \frac{k}{n} \right)^p} \right) \right].
+\]}
+
+\subsubsection*{Q10:
+For a complex number \(c\) with \(|c| > 1\), show that the periodic function \(f(x) = (c - e^{2\pi ix})^{-1}\) has the Fourier series coefficients \(c_k = c^{-k-1}1_{\{k \geq 0\}}\). Argue from equation (11.6) that the discrete Fourier transform approximation \(\hat{b}_k\) to \(c_k\) is
+\[
+\hat{b}_k = \begin{cases}
+c^{-k-1} \frac{1}{1 - c^{-n}} & 0 \leq k \leq \frac{n}{2} - 1 \\
+c^{-n-k-1} \frac{1}{1 - c^{-n}} & -\frac{n}{2} \leq k \leq 0.
+\end{cases}
+\]}
+
+\subsubsection*{Q11:
+For some purposes it is preferable to have a purely real transform. If \(c_1, \ldots, c_{n-1}\) is a finite sequence of real numbers, then we define its discrete sine transform by
+\[
+\hat{c}_k = \frac{2}{n} \sum_{j=1}^{n-1} c_j \sin \left( \frac{\pi kj}{n} \right).
+\]
+Show that this transform has inverse
+\[
+\dot{d}_j = \frac{2}{n} \sum_{k=1}^{n-1} d_k \sin \left( \frac{\pi kj}{n} \right).
+\]
+(Hint: It is helpful to consider \(c_1, \ldots, c_{n-1}\) as part of a sequence of period \(2n\) that is odd about \(n\).)}
+
+\subsubsection*{Q12:
+From a real sequence \(c_k\) of period \(2n\) we can concoct a complex sequence of period \(n\) according to the recipe \(d_k = c_{2k} + i c_{2k+1}\). Because it is quicker to take the discrete Fourier transform of the sequence \(d_k\) than that of the sequence \(c_k\), it is desirable to have a simple method of constructing \(\hat{c}_k\) from \(\hat{d}_k\). Show that
+\[
+\hat{c}_k = \frac{1}{4} \left( \hat{d}_k + \hat{d}^*_{n-k} \right) - \frac{i}{4} \left( \hat{d}_k - \hat{d}^*_{n-k} \right) e^{-\pi i k / n},
+\]
+where \(*\) denotes the complex conjugate of the complex number \(z\).}
+
+\subsubsection*{Q13:
+Let \(F(s) = \sum_{n=1}^{\infty} f_n s^n\) be a probability generating function. Show that the equation \(F(s) = 1\) has only the solution \(s = 1\) on \(|s| = 1\) if and only if the set \(\{ n : f_n > 0 \}\) has greatest common divisor 1.}
+
+\subsubsection*{Q14:
+Let \(W\) be the waiting time until the first run of \(r\) heads in a coin-tossing experiment. If heads occur with probability \(p\), and tails occur with probability \(q = 1 - p\) per trial, then show that \(W\) has the generating function displayed in equation (11.12). Argue that either \(W = r\) or \(W = k + 1 + W_k\), where \(0 \leq k \leq r - 1\) is the initial number of heads and \(W_k\) is a probabilistic replica of \(W\).}
+
+\subsubsection*{Q15:
+Consider a power series \( f(x) = \sum_{m=0}^{\infty} c_m x^m \) with radius of convergence \( r > 0 \). Prove that
+\[
+\sum_{m = k \mod n} c_m x^m = \frac{1}{n} \sum_{j=0}^{n-1} u_n^{-jk} f(u_n^j x)
+\]
+for any \( x \) with \( |x| < r \). As a special case, verify the identity
+\[
+\sum_{m = k \mod n} \binom{p}{m} = \frac{2^p}{n} \sum_{j=0}^{n-1} \cos \left[ \frac{(p - 2k)j\pi}{n} \right] \cos^p \left[ \frac{j\pi}{n} \right]
+\]
+for any positive integer \( p \).}
+
+\subsubsection*{Q17:
+The Hadamard transform \(x \mapsto H_m x\) turns a vector \(x\) with \(2^m\) real components into a vector \(\hat{x}\) with \(2^m\) real components. The Hadamard matrices are defined recursively by the formula
+\[
+H_{m+1} = \frac{1}{\sqrt{2}} \begin{pmatrix} H_m & H_m \\ H_m & -H_m \end{pmatrix}
+\]
+starting from \(H_0 = 1\). Prove that \(H_m\) satisfies \(H_m^* = H_m\) and \(H_m^2 = I\). Thus, the Hadamard transform is its own inverse. Note that all entries of \(H_m\) are multiples of \(\pm 1\).}
+
+\subsubsection*{Q18:
+Show that the transpose of a circulant matrix is circulant. Under what conditions is a circulant matrix symmetric? What if we replace transpose by adjoint (conjugate transpose) and symmetric by Hermitian (self-adjoint)?}
+
+\subsubsection*{Q19:
+The permutation matrix \(S_n\) satisfying \(S_n e_k = e_{k+1}\) for \(k = 1, \ldots, n-1\) and \(S_n e_n = e_1\) is called a circular shift. Prove that the \(n \times n\) matrix \(C\) is circulant if and only if \(S_n C = C S_n\).}
+
+\subsubsection*{Q20:
+Prove that the sum or product of two circulant matrices of the same size is circulant. Also prove that the inverse of an invertible circulant matrix \(C\) is circulant.}
+
+
 \newpage
 \section*{Chapter 12: Monte Carlo Methods}
+
+
 
 \newpage
 \section*{Chapter 13: Neural Networks}
