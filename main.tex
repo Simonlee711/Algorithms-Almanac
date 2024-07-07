@@ -7107,6 +7107,133 @@ Simulated annealing provides a robust framework for addressing complex optimizat
 
 \subsubsection*{Q1: Apply the central difference formulas (13.2) and (13.3) to approximate \( f''(1) \), where \( f(x) = x^{-1} \) and \(\delta = 10^{-k}\) for \( k = 1, \ldots, 6 \). Find the approximation errors and check if the predicted error estimates are accurate.}
 
+\subsubsection*{Q3: Continuing the previous problem, demonstrate the vector identity}
+\[
+\begin{bmatrix}
+f(x) \\
+\vdots \\
+f(x + nh)
+\end{bmatrix}
+=
+M_n
+\begin{bmatrix}
+f(x) \frac{h^0}{0!} \\
+\vdots \\
+f^{(n)}(x) \frac{h^n}{n!}
+\end{bmatrix}
++ O(h^{n+1}),
+\]
+where the matrix \( M_n \) has entries \( m_{kj} = k^j \). Here \( 0^j \) is interpreted as 1 when \( j = 0 \) and the row index \( k = 0 \). Prove that \( \det M_n = \prod_{i=1}^n i! \), implying that \( M_n \) is invertible. To verify the formula for \( f^{(n)}(x) \), prove the identity \( 1_{\{k=n\}} = \sum_{j=0}^n (-1)^{n-j} \binom{n}{j} j^k \). This nails down the bottom row of \( M_n^{-1} \), which is the pertinent row. (Hints: See https://nhigham.com/2021/06/15/what-is-a-vandermonde-matrix/ for the determinant formula. The bottom row of \( M_n^{-1} \) matches the inverse of the matrix constructed by truncating Pascal’s triangle.)
+
+\subsubsection*{Q4: If the function \( f(x) \) has a power series expansion \( \sum_{j=0}^{\infty} a_j x^j \) converging in a disc \(\{x : |x| < r\}\) centered at 0 in the complex plane, then we can approximate the derivatives \( f^{(j)}(0) = j!a_j \) by evaluating \( f(x) \) on the boundary of a small circle of radius \( h < r \). This is done by expanding the function \( t \rightarrow f(he^{2\pi i t}) \) in the Fourier series
+\[
+f(he^{2\pi it}) = \sum_{j=0}^{\infty} a_j h^j e^{2\pi i jt}.
+\]
+Thus, if we take the discrete Fourier transform \( \hat{b}_k \) of the sequence \( b_j = f(hu_j^n) \), then equation (11.9) mutates into
+\[
+\hat{b}_k - a_k h^k = \sum_{l=1}^{\infty} a_{ln+k} h^{ln+k} = O(h^{n+k})
+\]
+for \( 0 \leq k \leq n - 1 \) under fairly mild conditions on the coefficients \( a_j \). Rearranging this equation gives the derivative approximation
+\[
+f^{(k)}(0) = k! a_k = \frac{k! \hat{b}_k}{h^k} + O(h^n)
+\]
+highlighted by Henrici [112]. Implement this method in computer code and test its accuracy.}
+
+\subsubsection*{Q5: Numerical differentiation can be improved by Romberg’s acceleration technique. If \( f(x) \) has \( 2k \) continuous derivatives, then the central difference formula
+\[
+D_0(h) = \frac{f(x+h) - f(x-h)}{2h} = \sum_{j=0}^{k-1} \frac{f^{(2j+1)}(x) h^{2j}}{(2j+1)!} + O(h^{2k-1})
+\]
+follows from an application of Taylor’s theorem. Show that the inductively defined quantities
+\[
+D_j(h) = \frac{4^j D_{j-1}(\frac{1}{2}h) - D_{j-1}(h)}{4^j - 1} = D_{j-1}(\frac{1}{2}h) - \frac{1}{4^j - 1} \left[D_{j-1}(h) - D_{j-1}(\frac{1}{2}h)\right]
+\]
+satisfy
+\[
+f'(x) = D_j(h) + O(h^{2j+2})
+\]
+for \( j = 0, \ldots, k-1 \). Verify that
+\[
+D_1(h) = \frac{1}{6} \left[ 8f(x+\frac{1}{2}h) - 8f(x-\frac{1}{2}h) - f(x+h) + f(x-h) \right].
+\]
+Finally, try this improvement of central differencing on a few representative functions such as \( \sin(x) \), \( e^x \), and \( \ln \Gamma(x) \).}
+
+\subsubsection*{Q7: The fractional linear transformations \( \frac{\alpha s + \beta}{\gamma s + \delta} \) [117] play a role in continued fraction expansions. To avoid trivial cases where the fractional linear transformation is undefined or constant, we impose the condition that \( \alpha \delta - \beta \gamma \neq 0 \). The restricted set of fractional linear transformations (or Möbius functions) forms a group under functional composition. This group is the homomorphic image of the group of invertible \( 2 \times 2 \) matrices under the correspondence
+\[
+\begin{pmatrix}
+\alpha & \beta \\
+\gamma & \delta
+\end{pmatrix}
+\longrightarrow \frac{\alpha s + \beta}{\gamma s + \delta}.
+\]
+A group homomorphism is a function between two groups that preserves the underlying algebraic operation. Show that the correspondence (13.7) qualifies as a group homomorphism in the sense that if \( f_i(s) = \frac{\alpha_i s + \beta_i}{\gamma_i s + \delta_i} \) for \( i = 1, 2 \), then
+\[
+\begin{pmatrix}
+\alpha_1 & \beta_1 \\
+\gamma_1 & \delta_1
+\end{pmatrix}
+\begin{pmatrix}
+\alpha_2 & \beta_2 \\
+\gamma_2 & \delta_2
+\end{pmatrix}
+\longrightarrow f_1 \circ f_2(s).
+\]
+The homomorphism (13.7) correctly pairs the two identity elements 
+\[
+\begin{pmatrix}
+1 & 0 \\
+0 & 1
+\end{pmatrix}
+\]
+and \( f(s) = s \) of the groups.}
+
+\subsubsection*{Q8: Show that the fractional linear transformations \( \frac{\alpha s}{\gamma s + \delta} \) with \( \alpha \delta = 1 \) constitute a subgroup of the set of fractional linear transformations and send the numbers \( r = \frac{\alpha - \delta}{\gamma} \) into themselves. Furthermore, prove that the iterates \( s_{k+1} = \frac{\alpha s_k}{\gamma s_k + \delta} \) are locally attracted to \( r \) when \( |\delta| < |\alpha| \).}
+
+\subsubsection*{Q9: Demonstrate that the fixed point \( \sqrt{c} - r \) of the fractional linear transformation \( f(y) = \frac{c - r^2}{2r + y} \) is locally attractive. This fact increases our confidence that the continued fraction expansion of \( \sqrt{c} - r \) converges as expected.}
+
+\subsubsection*{Q13: Prove that the function \( f(x) = \sqrt{x^2 + \epsilon} \) for \( \epsilon > 0 \) small is majorized by the quadratic \( g(x) = \sqrt{x_n^2 + \epsilon} + \frac{1}{2\sqrt{x_n^2 + \epsilon}} (x^2 - x_n^2) \). Plot \( f(x) \) and note how well it approximates \(|x|\). Finally, prove that \( f(x) \) is convex.}
+
+\subsubsection*{Q14: Based on the ReLU identity \( x_+ = \frac{1}{2} (x + |x|) \), show that \( x_+ \) is well approximated by the function \( f(x) = \frac{1}{2} (x + \sqrt{x^2 + \epsilon}) \). Furthermore, show that \( f(x) \) is convex and majorized by the quadratic}
+\[
+g(x \mid x_n) = \frac{1}{2} \left[ x + \sqrt{x_n^2 + \epsilon} + \frac{1}{2\sqrt{x_n^2 + \epsilon}} (x^2 - x_n^2) \right].
+\]
+
+\subsubsection*{Q15: Continuing the two previous problems, demonstrate that
+\[
+0 \leq \sqrt{x^2 + \epsilon} - |x| \leq \sqrt{\epsilon}
+\]
+\[
+0 \leq \frac{1}{2} (x + \sqrt{x^2 + \epsilon}) - x_+ \leq \frac{1}{2} \sqrt{\epsilon}
+\]
+for all \( x \).}
+
+\subsubsection*{Q16: Decide whether the following functions are differentiable at the indicated points.
+\[
+f(x) = x^2 \sin\left(\frac{1}{x}\right) \quad \text{at} \; x = 0
+\]
+\[
+g(x) = 
+\begin{cases} 
+0 & x = 0 \\ 
+\frac{x_1^3}{x_1^2 + x_2^2} & x \neq 0 
+\end{cases} 
+\quad \text{at} \; x = 0
+\]
+\[
+h(x) = \| x \| \quad \text{for all} \; x
+\]
+If the differential exists, calculate it.}
+
+\subsubsection*{Q17: Suppose the \( f(x) \) is a differentiable function satisfying the Lipschitz inequality \( \| f(y) - f(x) \| \leq L \| y - x \| \) for all \( x \) and \( y \). Prove that \( \| df(x) \| \leq L \).}
+
+\subsubsection*{Q18: If \( f(x) \) is a real-valued differentiable function on \([a, b]\), then demonstrate that \( f(b) - f(a) = f'(c)(b - a) \) for some intermediate point \( x \).}
+
+\subsubsection*{Q19: Suppose that \( f(x) \) is a differentiable function from an open convex set \( U \) of \( \mathbb{R}^p \) to an open set of \( \mathbb{R}^n \). If \( x \) and \( y \) belong to \( U \), prove that there exists a scalar \( s \in [0, 1] \) such that
+\[
+\| f(y) - f(x) \| \leq \| df[x + s(y - x)] \| \| y - x \|.
+\]
+This is the mean-value inequality.}
+
+
 
 
 \end{document}
