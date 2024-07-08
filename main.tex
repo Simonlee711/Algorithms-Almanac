@@ -7107,6 +7107,33 @@ Simulated annealing provides a robust framework for addressing complex optimizat
 
 \subsubsection*{Q1: Apply the central difference formulas (13.2) and (13.3) to approximate \( f''(1) \), where \( f(x) = x^{-1} \) and \(\delta = 10^{-k}\) for \( k = 1, \ldots, 6 \). Find the approximation errors and check if the predicted error estimates are accurate.}
 
+To answer this question, we'll use the central difference formulas to approximate the second derivative of the function \( f(x) = x^{-1} \) at \( x = 1 \) using decreasing step sizes. The central difference formulas for the second derivative are given as:
+
+\[ f''(x) \approx \frac{f(x+\delta) - 2f(x) + f(x-\delta)}{\delta^2} \]
+
+Let's calculate the approximations and errors for \( \delta = 10^{-k} \) where \( k = 1, \ldots, 6 \). First, we'll define the function and its exact second derivative:
+
+\[ f(x) = x^{-1} \]
+\[ f''(x) = 2x^{-3} \]
+
+At \( x = 1 \), the exact second derivative is:
+\[ f''(1) = 2 \]
+
+We will approximate \( f''(1) \) using the central difference formula for \( \delta = 10^{-1}, 10^{-2}, \ldots, 10^{-6} \) and compute the absolute errors compared to the exact value. Let's perform these calculations.
+
+Using the central difference formulas, the approximations of \( f''(1) \) for decreasing values of \( \delta \) (from \( 10^{-1} \) to \( 10^{-6} \)) and their respective absolute errors compared to the exact value of 2 are as follows:
+
+\begin{itemize}
+    \item For \( \delta = 10^{-1} \), approximation: 2.020202, error: 0.020202
+    \item For \( \delta = 10^{-2} \), approximation: 2.000200, error: 0.000200
+    \item For \( \delta = 10^{-3} \), approximation: 2.000002, error: 0.000002
+    \item For \( \delta = 10^{-4} \), approximation: 2.00000001, error: \( 1.00495 \times 10^{-8} \)
+    \item For \( \delta = 10^{-5} \), approximation: 2.00000017, error: \( 1.65481 \times 10^{-7} \)
+    \item For \( \delta = 10^{-6} \), approximation: 1.99995576, error: \( 4.42434 \times 10^{-5} \)
+\end{itemize}
+
+These results show that as \( \delta \) decreases, the approximation initially becomes more accurate until \( \delta = 10^{-6} \), at which point the error slightly increases. This increase in error for very small \( \delta \) is due to numerical errors arising from subtracting nearly equal numbers, which leads to loss of significant digits (a phenomenon known as catastrophic cancellation). This trend agrees with the theory that there exists an optimal \( \delta \) which balances the truncation error and the rounding error in numerical differentiation.
+
 \subsubsection*{Q3: Continuing the previous problem, demonstrate the vector identity}
 \[
 \begin{bmatrix}
