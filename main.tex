@@ -3915,6 +3915,108 @@ Px = (I - A^T (AA^T)^{-1} A)x = x - A^T (AA^T)^{-1} Ax = x - A^T (AA^T)^{-1}b
 \]
 Since \(A^T (AA^T)^{-1}b\) yields the component of \(x\) in the column space of \(A\), which is orthogonal to \(x\), \(Px = x\).
 
+\subsubsection*{Q13: As an alternative to the revised simplex method and Karmarkar’s algorithm, one can derive a path-following algorithm to solve the linear programming problem [45]. Consider minimizing \( c^* x \) subject to the standard linear programming constraints \( x \geq 0 \) and \( Ax = b \). Given an initial feasible point \( x_0 > 0 \), one can devise a differential equation \( \frac{d}{dt} x(t) = G(x) \) whose solution \( x(t) \) is likely to converge to the optimal point. Simply take \( G(x) = D(x) P(x) v(x) \), where \( D(x) = \text{diag}(x) \) is a diagonal matrix with diagonal entries given by the vector \( x \) and \( P(x) \) is orthogonal projection onto the null space of \( AD(x) \). (See the previous problem.) The matrix \( D(x) \) slows the trajectory down as it approaches a boundary \( x_i = 0 \). The matrix \( P(x) \) ensures that the value of \( Ax(t) \) remains fixed at the constant \( b \). Check this fact. Show that the choice \( v(x) = -P(x) D(x) c \) yields \( \frac{d}{dt} c^* x(t) \leq 0 \). In other words, \( c^* x(t) \) is a Liapunov function for the solution path.}
+
+Let's solve this step-by-step:
+
+1) Check $Ax(t)$ remains constant:
+
+   $\frac{d}{dt}(Ax) = A\frac{dx}{dt} = AG = ADP(x)v(x)$
+   
+   $ADP(x) = AD(AD)^+(AD) - AD = 0$
+
+   Thus, $\frac{d}{dt}(Ax) = 0$
+
+2) Show $\frac{d}{dt} c^* x(t) \leq 0$:
+
+   $\frac{d}{dt} c^* x(t) = c^* \frac{dx}{dt} = c^* DPv$
+   
+   With $v = -PD c$:
+   
+   $c^* DPv = -c^* DP(PD c) = -(PD c)^* (PD c) \leq 0$
+
+Therefore, $c^* x(t)$ is a Liapunov function.
+
+\subsubsection*{Q15: Rigorously prove Proposition 7.5.1.}
+
+Q7.15: Suppose \( x \in \mathbb{R}^n \) is a boundary point. Without loss of generality take \( x_n = 0 \). An optimal point subject to this condition minimizes
+
+\[
+f(x) = \left( \frac{1}{n} - 0 \right)^2 + \sum_{i=1}^{n-1} \left( \frac{1}{n} - x_i \right)^2.
+\]
+
+Suppose the coordinates \( x_i \neq x_j \) for \( 1 \leq i, j \leq n-1 \). Let us show that replacing \( x_i \) and \( x_j \) by the common value \( \frac{x_i + x_j}{2} \) reduces \( f(x) \). Note that the new point remains on the unit simplex. It suffices to prove that
+
+\[
+2 \left( \frac{1}{n} - \frac{x_i + x_j}{2} \right)^2 < \left( \frac{1}{n} - x_i \right)^2 + \left( \frac{1}{n} - x_j \right)^2.
+\]
+
+Canceling common terms on both sides, this is equivalent to
+
+\[
+\left( \frac{x_i + x_j}{2} \right)^2 < x_i^2 + x_j^2,
+\]
+
+which after a little algebra is equivalent to \( x_i x_j < \frac{1}{2} x_i^2 + \frac{1}{2} x_j^2 \), or \( 0 < \frac{1}{2} (x_i - x_j)^2 \). Thus, all coordinates except \( x_n \) must be equal.
+
+\subsubsection*{Q16: As a generalization of the Dinkelbach maneuver, consider \( h(x) = \min_{i=1}^{r} \frac{f_i(x)}{g_i(x)} \) with all denominators \( g_i(x) \) positive. To reduce \( h(x) \) by iteration, let \( S \) be the index set \( \arg\min_i \frac{f_i(x_n)}{g_i(x_n)} \), and define for some \( k \in S \)
+
+\[
+x_{n+1} = \arg\min_x [f_k(x) - h(x_n) g_k(x)].
+\]
+
+Show that \( h(x_{n+1}) \le h(x_n) \) and that strict inequality can be guaranteed unless
+
+\[
+\frac{f_k(x_{n+1})}{g_k(x_{n+1})} = \frac{f_k(x_n)}{g_k(x_n)}.
+\]
+
+\subsubsection*{Q17: Given points \( a_1, \ldots, a_n \) in \( \mathbb{R}^p \), design a linear program to decide whether another point \( y \) belongs to their convex hull.}
+
+Let $x_i$ be weights. The linear program is:
+\begin{align*}
+\text{minimize} & \quad 0 \
+\text{subject to} & \quad y = \sum_{i=1}^n x_i a_i \
+& \quad \sum_{i=1}^n x_i = 1 \
+& \quad x_i \geq 0, \quad i = 1,\ldots,n
+\end{align*}
+$y$ is in the convex hull if and only if this LP is feasible.
+
+\subsubsection*{Q18: Show that the function \( f(x) = |3x_1 + 4x_2| + |2x_1 + x_2| \) is convex and attains its minimum of 0 at 0. Furthermore, show that the slices \( f(x_1, 3) \) and \( f(-4, x_2) \) achieve their minimal value of 5 at \( x_1 = -4 \) and \( x_2 = 3 \). Why do these facts not contradict Fermat’s principle?}
+
+Q7.18: The claimed minimum is obvious since \( f(x) = |3x_1 + 4x_2| + |2x_1 + x_2| \geq 0 \). Define the two coordinate slices \( g(x_1) = f(x_1, 3) \) and \( h(x_2) = f(-4, x_2) \). The one-sided derivatives of these convex functions at \((-4, 3)\) are
+
+\[
+g'_{+}(-4) = 3 - 2 = 1
+\]
+\[
+g'_{-}(-4) = -3 - 2 = -5
+\]
+\[
+h'_{+}(3) = 4 - 1 = 3
+\]
+\[
+h'_{-}(3) = -4 - 1 = -5
+\]
+
+These show that \( f(x) \) is minimized along the coordinate axes at \((-4, 3)\). However, \( f(x) \) is not differentiable, and some forward directional derivatives are negative. Thus, \( x = (-4, 3)^* \) is not a stationary point. For instance, because \( f(x) = 0 + | -5 | = 5 \), the difference quotient in the direction \( v = (4, -3)^* \) satisfies
+
+\[
+\frac{f(x + tv) - f(x)}{t} = \frac{|0 + (12 - 12)t| + | -5 + (8 - 3)t| - 5}{t} < 0
+\]
+
+for \( t > 0 \).
+
+\subsubsection*{Q19: Suppose \( f(x) \) is convex on \( \mathbb{R}^p \) and achieves its minimum at \( y \). If in addition \( f(x) \) is symmetric in the sense that \( f(Px) = f(x) \) for all permutation matrices \( P \), then demonstrate that \( f(x) \) possesses a symmetric minimum point \( z \) with \( Pz = z \) for all \( P \). In other words, all components of \( z \) are equal.}
+
+Q7.19: Define \( z = \frac{1}{p!} \sum_P Py \), and observe that Jensen’s inequality implies
+
+\[
+f(z) \leq \frac{1}{p!} \sum_P f(Py) = \frac{1}{p!} \sum_P f(y) = f(y).
+\]
+
+\text{Hence, \( z \) also provides a minimum point. The identity \( Pz = z \) holds because the permutation matrices constitute a subgroup of the group of invertible matrices. All coordinates of \( z \) are equal since transposition of two components of a vector can be realized by a permutation matrix.}
+
 \newpage
 \section*{Chapter 8: Eigenvalues and Eigenvectors}
 
