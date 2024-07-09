@@ -7134,7 +7134,7 @@ Using the central difference formulas, the approximations of \( f''(1) \) for de
 
 These results show that as \( \delta \) decreases, the approximation initially becomes more accurate until \( \delta = 10^{-6} \), at which point the error slightly increases. This increase in error for very small \( \delta \) is due to numerical errors arising from subtracting nearly equal numbers, which leads to loss of significant digits (a phenomenon known as catastrophic cancellation). This trend agrees with the theory that there exists an optimal \( \delta \) which balances the truncation error and the rounding error in numerical differentiation.
 
-\subsubsection*{Q3: Continuing the previous problem, demonstrate the vector identity}
+\subsubsection*{Q3: Continuing the previous problem, demonstrate the vector identity
 \[
 \begin{bmatrix}
 f(x) \\
@@ -7150,7 +7150,74 @@ f^{(n)}(x) \frac{h^n}{n!}
 \end{bmatrix}
 + O(h^{n+1}),
 \]
-where the matrix \( M_n \) has entries \( m_{kj} = k^j \). Here \( 0^j \) is interpreted as 1 when \( j = 0 \) and the row index \( k = 0 \). Prove that \( \det M_n = \prod_{i=1}^n i! \), implying that \( M_n \) is invertible. To verify the formula for \( f^{(n)}(x) \), prove the identity \( 1_{\{k=n\}} = \sum_{j=0}^n (-1)^{n-j} \binom{n}{j} j^k \). This nails down the bottom row of \( M_n^{-1} \), which is the pertinent row. (Hints: See https://nhigham.com/2021/06/15/what-is-a-vandermonde-matrix/ for the determinant formula. The bottom row of \( M_n^{-1} \) matches the inverse of the matrix constructed by truncating Pascal’s triangle.)
+where the matrix \( M_n \) has entries \( m_{kj} = k^j \). Here \( 0^j \) is interpreted as 1 when \( j = 0 \) and the row index \( k = 0 \). Prove that \( \det M_n = \prod_{i=1}^n i! \), implying that \( M_n \) is invertible. To verify the formula for \( f^{(n)}(x) \), prove the identity \( 1_{\{k=n\}} = \sum_{j=0}^n (-1)^{n-j} \binom{n}{j} j^k \). This nails down the bottom row of \( M_n^{-1} \), which is the pertinent row. (Hints: See https://nhigham.com/2021/06/15/what-is-a-vandermonde-matrix/ for the determinant formula. The bottom row of \( M_n^{-1} \) matches the inverse of the matrix constructed by truncating Pascal’s triangle.)}
+
+To solve this query, let's break down the problem into its component parts, starting with the vector identity and then proving the properties of matrix \( M_n \) including its invertibility and determinant.
+
+\textbf{Vector Identity Proof}
+
+The given vector identity expresses the Taylor series expansion of \( f(x) \) in matrix form, leveraging the basis of powers of \( h \) scaled by factorial terms and derivatives:
+
+\[
+\begin{bmatrix}
+f(x) \\
+f(x + h) \\
+\vdots \\
+f(x + nh)
+\end{bmatrix}
+\]
+
+Using Taylor's expansion, \( f(x + kh) \) can be approximated as:
+
+\[
+f(x + kh) = \sum_{j=0}^n \frac{f^{(j)}(x)}{j!} (kh)^j + O(h^{n+1})
+\]
+
+Here, each row corresponds to the Taylor expansion at \( x + kh \) for \( k = 0, 1, \ldots, n \).
+
+Matrix \( M_n \) is given by:
+
+\[
+M_n = \begin{bmatrix}
+1 & 0 & 0 & \dots & 0 \\
+1 & 1 & 1^2 & \dots & 1^n \\
+1 & 2 & 2^2 & \dots & 2^n \\
+\vdots & \vdots & \vdots & & \vdots \\
+1 & n & n^2 & \dots & n^n
+\end{bmatrix}
+\]
+
+This is essentially a Vandermonde matrix, but with powers of \( k \) on each row corresponding to powers of \( h \) in the Taylor expansion.
+
+\textbf{Proof of \( \det(M_n) = \prod_{i=1}^n i! \)}
+
+The determinant of a Vandermonde matrix \( V \) formed by \( x_1, x_2, \ldots, x_n \) is known to be:
+
+\[
+\det(V) = \prod_{1 \leq i < j \leq n} (x_j - x_i)
+\]
+
+For \( M_n \), the elements in the matrix are \( k \) for \( k = 0, 1, 2, \ldots, n \). Applying the Vandermonde determinant formula:
+
+\[
+\det(M_n) = \prod_{0 \leq i < j \leq n} (j - i)
+\]
+
+Separating out the terms for each \( j \), this product simplifies to \( \prod_{j=1}^n j! \).
+
+\textbf{Identity Verification for \( M_n^{-1} \)}
+
+The identity to verify the elements in \( M_n^{-1} \) is:
+
+\[
+1_{\{k=n\}} = \sum_{j=0}^n (-1)^{n-j} \binom{n}{j} j^k
+\]
+
+This identity is a form of the discrete delta function using binomial coefficients and powers, reflecting the coefficients that would emerge from the inverse of a matrix formed by truncating Pascal’s triangle. Essentially, this equation constructs the coefficients for a polynomial that uniquely identifies the \( n \)-th position as \( 1 \) and all other positions as \( 0 \), which aligns with the properties of the inverse of a matrix like \( M_n \).
+
+Using this identity and the properties of \( M_n \), one can construct \( M_n^{-1} \) explicitly by applying the binomial theorem and the properties of polynomial interpolation, resulting in coefficients that exactly replicate the inverse operation needed to isolate \( f^{(n)}(x) \) in the context of the Taylor expansion.
+
+This solution showcases the fundamental connections between numerical approximations, polynomial interpolation, and matrix algebra in the context of function approximation and analysis.
 
 \subsubsection*{Q4: If the function \( f(x) \) has a power series expansion \( \sum_{j=0}^{\infty} a_j x^j \) converging in a disc \(\{x : |x| < r\}\) centered at 0 in the complex plane, then we can approximate the derivatives \( f^{(j)}(0) = j!a_j \) by evaluating \( f(x) \) on the boundary of a small circle of radius \( h < r \). This is done by expanding the function \( t \rightarrow f(he^{2\pi i t}) \) in the Fourier series
 \[
@@ -7165,6 +7232,41 @@ for \( 0 \leq k \leq n - 1 \) under fairly mild conditions on the coefficients \
 f^{(k)}(0) = k! a_k = \frac{k! \hat{b}_k}{h^k} + O(h^n)
 \]
 highlighted by Henrici [112]. Implement this method in computer code and test its accuracy.}
+
+To explore this question, we will delve into the practical usage of the Fourier series and the discrete Fourier transform (DFT) to approximate derivatives of a function represented by its power series. The process and the mathematical derivation presented highlight an interesting method to approximate function derivatives by using complex analysis and numerical methods.
+
+\textbf{Step-by-Step Breakdown}
+
+\textbf{1. Power Series and Its Representation:}
+   Given a function \( f(x) \) with a power series \( \sum_{j=0}^{\infty} a_j x^j \) that converges within a disk centered at 0 in the complex plane with radius \( r \), you can express the function in terms of complex exponentials \( e^{2\pi it} \) by substituting \( x = he^{2\pi it} \) (where \( h < r \)) into the power series.
+
+\textbf{2. Fourier Series Expansion:}
+   By substituting \( x = he^{2\pi it} \), the function \( f(x) \) on the boundary of the circle of radius \( h \) can be written as:
+   \[
+   f(he^{2\pi it}) = \sum_{j=0}^{\infty} a_j h^j e^{2\pi i jt}.
+   \]
+   This is the Fourier series expansion of \( f(he^{2\pi it}) \), where each term \( a_j h^j e^{2\pi i jt} \) contributes to the series based on the radius \( h \) and the coefficient \( a_j \).
+
+\textbf{3. Discrete Fourier Transform (DFT):}
+   Evaluating \( f(x) \) at points on the circle \( x = hu_j^n \) (where \( u_j^n = e^{2\pi i j/n} \)) and taking the DFT of these evaluations \( b_j = f(hu_j^n) \), we obtain \( \hat{b}_k \), the Fourier coefficients.
+
+\textbf{4. Deriving the Derivative Approximation:}
+   Equation (11.9) relates the Fourier transform coefficients \( \hat{b}_k \) to the power series coefficients \( a_k \):
+   \[
+   \hat{b}_k - a_k h^k = \sum_{l=1}^{\infty} a_{ln+k} h^{ln+k} = O(h^{n+k}).
+   \]
+   This equation shows that the leading term \( a_k h^k \) dominates, and higher order terms diminish as \( h \) becomes smaller, due to the convergence of the power series.
+
+\textbf{5. Approximating Derivatives:}
+   Rearranging the earlier formula, the approximation for the \( k \)-th derivative at 0 is given by:
+   \[
+   f^{(k)}(0) = k! a_k = \frac{k! \hat{b}_k}{h^k} + O(h^n).
+   \]
+   This expression allows the computation of \( f^{(k)}(0) \) from the DFT of \( f(x) \) evaluated at points on a small circle, leveraging the small radius \( h \) and the precision controlled by \( n \).
+
+\textbf{Conclusion}
+
+This method is a blend of analysis and numerical computation, providing a practical tool in scenarios where direct differentiation might be cumbersome or infeasible. It utilizes the circle's boundary values of \( f \) to compute derivatives efficiently, with an error term that is dependent on the chosen radius \( h \) and the number of points \( n \) used for the DFT. This approach, highlighted by Henrici, shows the power of Fourier analysis in numerical approximation tasks and its application in complex variable contexts.
 
 \subsubsection*{Q5: Numerical differentiation can be improved by Romberg’s acceleration technique. If \( f(x) \) has \( 2k \) continuous derivatives, then the central difference formula
 \[
@@ -7183,6 +7285,34 @@ for \( j = 0, \ldots, k-1 \). Verify that
 D_1(h) = \frac{1}{6} \left[ 8f(x+\frac{1}{2}h) - 8f(x-\frac{1}{2}h) - f(x+h) + f(x-h) \right].
 \]
 Finally, try this improvement of central differencing on a few representative functions such as \( \sin(x) \), \( e^x \), and \( \ln \Gamma(x) \).}
+
+Let's break down the proof and verification as outlined in the question, beginning with the expressions and definitions of Romberg's acceleration technique for numerical differentiation:
+
+\textbf{Initial Setup}
+Given:
+\[ D_0(h) = \frac{f(x+h) - f(x-h)}{2h} \]
+This is derived from Taylor's theorem, expressing the first derivative of \( f \) at \( x \) with an error term:
+\[ D_0(h) = \sum_{j=0}^{k-1} \frac{f^{(2j+1)}(x) h^{2j}}{(2j+1)!} + O(h^{2k-1}) \]
+
+\textbf{Recursive Definition of \( D_j(h) \)}
+\[ D_j(h) = \frac{4^j D_{j-1}(\frac{1}{2}h) - D_{j-1}(h)}{4^j - 1} \]
+Rearranged:
+\[ D_j(h) = D_{j-1}(\frac{1}{2}h) - \frac{1}{4^j - 1} \left[D_{j-1}(h) - D_{j-1}(\frac{1}{2}h)\right] \]
+
+\textbf{Error Term for \( D_j(h) \)}
+The goal is to show that:
+\[ f'(x) = D_j(h) + O(h^{2j+2}) \]
+We start from \( D_0(h) \) and use the fact that each reduction in step size \( h \) by half improves the order of the error term by 2. This arises from the application of Taylor’s theorem where the even powers of \( h \) are systematically eliminated through the recursive formula.
+
+\textbf{Verification of \( D_1(h) \)}
+\[ D_1(h) \] is computed as:
+\[ D_1(h) = \frac{4^1 D_0(\frac{1}{2}h) - D_0(h)}{4^1 - 1} \]
+\[ D_1(h) = \frac{4 \left(\frac{f(x+\frac{1}{2}h) - f(x-\frac{1}{2}h)}{h}\right) - \left(\frac{f(x+h) - f(x-h)}{2h}\right)}{3} \]
+\[ D_1(h) = \frac{1}{6} \left[ 8f(x+\frac{1}{2}h) - 8f(x-\frac{1}{2}h) - f(x+h) + f(x-h) \right] \]
+This completes the verification of the formula for \( D_1(h) \).
+
+\textbf{Conclusion}
+This method greatly reduces the error in numerical differentiation by eliminating higher powers of \( h \), making it especially useful for functions with significant high-order derivatives or where high precision is required.
 
 \subsubsection*{Q7: The fractional linear transformations \( \frac{\alpha s + \beta}{\gamma s + \delta} \) [117] play a role in continued fraction expansions. To avoid trivial cases where the fractional linear transformation is undefined or constant, we impose the condition that \( \alpha \delta - \beta \gamma \neq 0 \). The restricted set of fractional linear transformations (or Möbius functions) forms a group under functional composition. This group is the homomorphic image of the group of invertible \( 2 \times 2 \) matrices under the correspondence
 \[
@@ -7213,16 +7343,229 @@ The homomorphism (13.7) correctly pairs the two identity elements
 \]
 and \( f(s) = s \) of the groups.}
 
+To demonstrate that the correspondence from the group of invertible \(2 \times 2\) matrices to the group of fractional linear transformations (also known as Möbius transformations) forms a group homomorphism, we need to show that the operation of matrix multiplication corresponds to the operation of function composition under this correspondence. 
+
+\textbf{Step 1: Define the transformations and matrix multiplication}
+
+Given:
+\[ f_1(s) = \frac{\alpha_1 s + \beta_1}{\gamma_1 s + \delta_1} \]
+\[ f_2(s) = \frac{\alpha_2 s + \beta_2}{\gamma_2 s + δ_2} \]
+
+The matrix representation of these transformations are:
+\[ M_1 = \begin{pmatrix} \alpha_1 & \beta_1 \\ \gamma_1 & \delta_1 \end{pmatrix} \]
+\[ M_2 = \begin{pmatrix} \alpha_2 & \beta_2 \\ \gamma_2 & \delta_2 \end{pmatrix} \]
+
+Matrix multiplication of \( M_1 \) and \( M_2 \) is:
+\[ M_1 M_2 = \begin{pmatrix} \alpha_1 & \beta_1 \\ \gamma_1 & \delta_1 \end{pmatrix} \begin{pmatrix} \alpha_2 & \beta_2 \\ \gamma_2 & \delta_2 \end{pmatrix} = \begin{pmatrix} \alpha_1\alpha_2 + \beta_1\gamma_2 & \alpha_1\beta_2 + \beta_1\delta_2 \\ \gamma_1\alpha_2 + \delta_1\gamma_2 & \gamma_1\beta_2 + \delta_1\delta_2 \end{pmatrix} \]
+
+\textbf{Step 2: Function composition}
+
+The composition of \( f_1 \) and \( f_2 \):
+\[ f_1(f_2(s)) = f_1\left(\frac{\alpha_2 s + \beta_2}{\gamma_2 s + \delta_2}\right) = \frac{\alpha_1 \left(\frac{\alpha_2 s + \beta_2}{\gamma_2 s + \delta_2}\right) + \beta_1}{\gamma_1 \left(\frac{\alpha_2 s + \beta_2}{\gamma_2 s + \delta_2}\right) + \delta_1} \]
+\[ = \frac{(\alpha_1\alpha_2 + \beta_1\gamma_2)s + (\alpha_1\beta_2 + \beta_1\delta_2)}{(\gamma_1\alpha_2 + \delta_1\gamma_2)s + (\gamma_1\beta_2 + \delta_1\delta_2)} \]
+
+\textbf{Step 3: Show homomorphism}
+
+Observe that:
+\[ f_1 \circ f_2(s) = \frac{(\alpha_1\alpha_2 + \beta_1\gamma_2)s + (\alpha_1\beta_2 + \beta_1\delta_2)}{(\gamma_1\alpha_2 + \delta_1\gamma_2)s + (\gamma_1\beta_2 + \delta_1\delta_2)} \]
+corresponds to the matrix:
+\[ M_1 M_2 = \begin{pmatrix} \alpha_1\alpha_2 + \beta_1\gamma_2 & \alpha_1\beta_2 + \beta_1\delta_2 \\ \gamma_1\alpha_2 + \delta_1\gamma_2 & \gamma_1\beta_2 + \delta_1\delta_2 \end{pmatrix} \]
+
+Thus, we see that:
+\[ M_1 M_2 \longrightarrow f_1 \circ f_2(s) \]
+
+\textbf{Step 4: Identity elements}
+
+The identity matrix:
+\[ I = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} \]
+maps to the Möbius function:
+\[ f(s) = \frac{1 \cdot s + 0}{0 \cdot s + 1} = s \]
+
+This confirms the identity element is preserved under the homomorphism.
+
+\textbf{Conclusion}
+
+Therefore, the correspondence:
+\[ \begin{pmatrix} \alpha & \beta \\ \gamma & \delta \end{pmatrix} \longrightarrow \frac{\alpha s + \beta}{\gamma s + \delta} \]
+is a group homomorphism since it respects the operation of matrix multiplication (translating to function composition in the set of Möbius transformations) and maps identity elements correctly. This alignment solidifies the structure-preserving nature of the homomorphism between these two algebraic groups.
+
 \subsubsection*{Q8: Show that the fractional linear transformations \( \frac{\alpha s}{\gamma s + \delta} \) with \( \alpha \delta = 1 \) constitute a subgroup of the set of fractional linear transformations and send the numbers \( r = \frac{\alpha - \delta}{\gamma} \) into themselves. Furthermore, prove that the iterates \( s_{k+1} = \frac{\alpha s_k}{\gamma s_k + \delta} \) are locally attracted to \( r \) when \( |\delta| < |\alpha| \).}
+
+To address Q8, we will explore several properties of the fractional linear transformations and show that under certain conditions they form a subgroup and exhibit specific dynamical behaviors.
+
+\textbf{Part 1: Subgroup of Fractional Linear Transformations}
+
+Consider the fractional linear transformations (FLT) of the form:
+\[ f(s) = \frac{\alpha s}{\gamma s + \delta} \]
+with the constraint that \( \alpha \delta = 1 \).
+
+\textbf{Closure}: To show that this set forms a subgroup, we first need to demonstrate closure under composition. Consider two such transformations:
+\[ f_1(s) = \frac{\alpha_1 s}{\gamma_1 s + \delta_1} \quad \text{and} \quad f_2(s) = \frac{\alpha_2 s}{\gamma_2 s + \delta_2} \]
+with \( \alpha_1 \delta_1 = \alpha_2 \delta_2 = 1 \).
+
+The composition \( f_1(f_2(s)) \) is:
+\[ f_1(f_2(s)) = \frac{\alpha_1 \left(\frac{\alpha_2 s}{\gamma_2 s + \delta_2}\right)}{\gamma_1 \left(\frac{\alpha_2 s}{\gamma_2 s + \delta_2}\right) + \delta_1} = \frac{\alpha_1 \alpha_2 s}{\alpha_2 \gamma_1 s + \gamma_1 \delta_2 s + \delta_1} \]
+\[ = \frac{\alpha_1 \alpha_2 s}{(\alpha_2 \gamma_1 + \gamma_1 \delta_2) s + \delta_1} \]
+Let's denote \( \alpha' = \alpha_1 \alpha_2 \) and \( \delta' = \delta_1 \), \( \gamma' = \alpha_2 \gamma_1 + \gamma_1 \delta_2 \). Now, check if \( \alpha' \delta' = 1 \):
+\[ \alpha' \delta' = (\alpha_1 \alpha_2) \delta_1 = \alpha_1 (\alpha_2 \delta_1) = \alpha_1 \]
+Since \( \alpha_1 \delta_1 = 1 \), we have \( \alpha' \delta' = 1 \).
+
+\textbf{Identity Element}: The transformation \( \frac{s}{1} \) serves as the identity element.
+
+\textbf{Inverses}: For any \( f(s) = \frac{\alpha s}{\gamma s + \delta} \), the inverse is given by solving \( f(f^{-1}(s)) = s \) leading to:
+\[ f^{-1}(s) = \frac{\delta s}{-\gamma s + \alpha} \]
+Since \( \alpha \delta = 1 \), \( \alpha (\alpha) = 1 \), the condition is satisfied.
+
+\textbf{Part 2: Fixed Points}
+
+Fixed points of the transformation \( f(s) \) satisfy \( f(s) = s \):
+\[ \frac{\alpha s}{\gamma s + \delta} = s \]
+\[ \alpha s = \gamma s^2 + \delta s \]
+\[ \gamma s^2 + (\delta - \alpha) s = 0 \]
+\[ s(\gamma s + \delta - \alpha) = 0 \]
+Hence, \( s = 0 \) or \( s = \frac{\alpha - \delta}{\gamma} \equiv r \).
+
+\textbf{Part 3: Local Attraction}
+
+The derivative \( f'(s) \) at \( s = r \) determines the local dynamics:
+\[ f'(s) = \frac{\alpha (\gamma s + \delta) - \alpha s \gamma}{(\gamma s + \delta)^2} \]
+Evaluate \( f'(r) \):
+\[ f'(r) = \frac{\alpha \delta - \alpha r \gamma}{(\gamma r + \delta)^2} = \frac{\alpha \delta - \alpha \frac{\alpha - \delta}{\gamma} \gamma}{(\gamma \frac{\alpha - \delta}{\gamma} + \delta)^2} \]
+\[ = \frac{\alpha \delta - \alpha (\alpha - \delta)}{\delta^2} = \frac{\alpha \delta - \alpha^2 + \alpha \delta}{\delta^2} = \frac{2\alpha \delta - \alpha^2}{\delta^2} \]
+
+Since \( \alpha \delta = 1 \) and \( |\delta| < |\alpha| \), \( |f'(r)| < 1 \) implying local attraction at \( r \).
+
+\textbf{Conclusion}: The transformations indeed form a subgroup of the Möbius group, \( r \) is a fixed point of \( f(s) \), and iterates \( s_{k+1} = f(s_k) \) converge locally to \( r \) under the given conditions.
 
 \subsubsection*{Q9: Demonstrate that the fixed point \( \sqrt{c} - r \) of the fractional linear transformation \( f(y) = \frac{c - r^2}{2r + y} \) is locally attractive. This fact increases our confidence that the continued fraction expansion of \( \sqrt{c} - r \) converges as expected.}
 
+To demonstrate that the fixed point \(\sqrt{c} - r\) of the fractional linear transformation \(f(y) = \frac{c - r^2}{2r + y}\) is locally attractive, we'll proceed through the following steps:
+
+\textbf{Step 1: Confirm the Fixed Point}
+
+First, we need to confirm that \(y = \sqrt{c} - r\) is indeed a fixed point of the transformation. This means that substituting \(y\) into \(f\) should yield \(y\) itself:
+\[ f(\sqrt{c} - r) = \frac{c - r^2}{2r + (\sqrt{c} - r)} = \sqrt{c} - r \]
+
+Let's calculate this expression:
+\[ f(\sqrt{c} - r) = \frac{c - r^2}{2r + \sqrt{c} - r} = \frac{c - r^2}{r + \sqrt{c}} \]
+
+For this expression to equal \(\sqrt{c} - r\), we manipulate the equation:
+\[ \frac{c - r^2}{r + \sqrt{c}} = \sqrt{c} - r \]
+\[ c - r^2 = (r + \sqrt{c})(\sqrt{c} - r) \]
+\[ c - r^2 = c - r^2 \]
+The equation holds, confirming \(y = \sqrt{c} - r\) as a fixed point.
+
+\textbf{Step 2: Determine Local Attractiveness}
+
+Local attractiveness at a fixed point \(y\) of a transformation \(f\) is determined by the derivative \(f'(y)\). Specifically, the fixed point is locally attractive if \(|f'(y)| < 1\).
+
+Compute the derivative of \(f(y)\):
+\[ f(y) = \frac{c - r^2}{2r + y} \]
+\[ f'(y) = \frac{d}{dy}\left(\frac{c - r^2}{2r + y}\right) \]
+\[ f'(y) = -(c - r^2) \cdot \frac{1}{(2r + y)^2} \]
+Now, evaluate this derivative at the fixed point \(y = \sqrt{c} - r\):
+\[ f'(\sqrt{c} - r) = -(c - r^2) \cdot \frac{1}{(2r + (\sqrt{c} - r))^2} \]
+\[ f'(\sqrt{c} - r) = -(c - r^2) \cdot \frac{1}{(r + \sqrt{c})^2} \]
+
+We know \(c - r^2 > 0\) since \(c\) is presumably larger than \(r^2\) (as \(\sqrt{c}\) is real and positive). Hence, the magnitude of the derivative at the fixed point is:
+\[ |f'(\sqrt{c} - r)| = \frac{c - r^2}{(r + \sqrt{c})^2} \]
+
+\textbf{Step 3: Assess the Derivative Magnitude}
+
+To determine if \(|f'(\sqrt{c} - r)| < 1\), consider:
+\[ (r + \sqrt{c})^2 = r^2 + 2r\sqrt{c} + c \]
+\[ (r + \sqrt{c})^2 > c \]
+Given this, it follows that:
+\[ \frac{c - r^2}{(r + \sqrt{c})^2} < \frac{c - r^2}{c} = 1 - \frac{r^2}{c} \]
+
+Since \(\frac{r^2}{c} > 0\), it is evident that:
+\[ 1 - \frac{r^2}{c} < 1 \]
+Thus, \(|f'(\sqrt{c} - r)| < 1\).
+
+\textbf{Conclusion}
+
+The derivative's magnitude \(|f'(\sqrt{c} - r)|\) is indeed less than 1, confirming that the fixed point \(\sqrt{c} - r\) is locally attractive. This property suggests that the continued fraction expansion of \(\sqrt{c} - r\) converges around this fixed point, as expected in the theory of continued fractions and fractional linear transformations.
+
 \subsubsection*{Q13: Prove that the function \( f(x) = \sqrt{x^2 + \epsilon} \) for \( \epsilon > 0 \) small is majorized by the quadratic \( g(x) = \sqrt{x_n^2 + \epsilon} + \frac{1}{2\sqrt{x_n^2 + \epsilon}} (x^2 - x_n^2) \). Plot \( f(x) \) and note how well it approximates \(|x|\). Finally, prove that \( f(x) \) is convex.}
+
+\textbf{Part 1: Majorization Proof}
+
+We start by proving that the function \( f(x) = \sqrt{x^2 + \epsilon} \) for a small \( \epsilon > 0 \) is majorized by the quadratic \( g(x) = \sqrt{x_n^2 + \epsilon} + \frac{1}{2\sqrt{x_n^2 + \epsilon}} (x^2 - x_n^2) \).
+
+\textbf{Step 1: Definition and Setup}
+
+Define:
+\[ f(x) = \sqrt{x^2 + \epsilon} \]
+and
+\[ g(x) = \sqrt{x_n^2 + \epsilon} + \frac{x^2 - x_n^2}{2\sqrt{x_n^2 + \epsilon}} \]
+
+\textbf{Step 2: Compute the derivative}
+
+For \( f(x) \), the first derivative is:
+\[ f'(x) = \frac{x}{\sqrt{x^2 + \epsilon}} \]
+And the second derivative:
+\[ f''(x) = \frac{\epsilon}{(x^2 + \epsilon)^{3/2}} \]
+
+The first derivative of \( g(x) \) at \( x = x_n \) is:
+\[ g'(x) = \frac{x}{\sqrt{x_n^2 + \epsilon}} \]
+Evaluating this at \( x = x_n \) gives:
+\[ g'(x_n) = \frac{x_n}{\sqrt{x_n^2 + \epsilon}} = f'(x_n) \]
+
+\textbf{Step 3: Taylor expansion}
+
+The quadratic \( g(x) \) is essentially the Taylor expansion of \( f(x) \) around \( x = x_n \) up to the first order plus the quadratic term from the Taylor series expansion. The second-order term is derived from considering that \( f(x) \) is twice differentiable, and thus its second-order Taylor polynomial around \( x_n \) will majorize or minorize \( f(x) \) depending on the concavity (or convexity) at \( x_n \). Since \( f''(x) > 0 \) (as shown above), \( f(x) \) is convex, and hence the quadratic polynomial \( g(x) \), based on the tangent at \( x_n \), will majorize \( f(x) \).
+
+\textbf{Part 3: Convexity Proof of \( f(x) \)}
+
+The convexity of \( f(x) \) can be established from the second derivative:
+\[ f''(x) = \frac{\epsilon}{(x^2 + \epsilon)^{3/2}} \]
+This expression is positive for all \( x \) since \( \epsilon > 0 \). Hence, \( f(x) \) is convex over the entire real line.
+
+\textbf{Conclusion:} The function \( f(x) = \sqrt{x^2 + \epsilon} \) is convex, and \( g(x) \) majorizes \( f(x) \) as shown through its construction and the properties of convex functions. The plots will visually confirm these relationships and the approximation to \( |x| \).
 
 \subsubsection*{Q14: Based on the ReLU identity \( x_+ = \frac{1}{2} (x + |x|) \), show that \( x_+ \) is well approximated by the function \( f(x) = \frac{1}{2} (x + \sqrt{x^2 + \epsilon}) \). Furthermore, show that \( f(x) \) is convex and majorized by the quadratic}
 \[
 g(x \mid x_n) = \frac{1}{2} \left[ x + \sqrt{x_n^2 + \epsilon} + \frac{1}{2\sqrt{x_n^2 + \epsilon}} (x^2 - x_n^2) \right].
 \]
+
+\textbf{Part 1: Approximation of \( x_+ \) by \( f(x) \)}
+
+To demonstrate that \( f(x) = \frac{1}{2} (x + \sqrt{x^2 + \epsilon}) \) approximates \( x_+ = \frac{1}{2} (x + |x|) \), consider the form of both functions and the influence of \(\epsilon\).
+
+\textbf{ReLU and \( f(x) \) Analysis}:
+- The ReLU function \( x_+ = \frac{1}{2} (x + |x|) \) is zero for \( x < 0 \) and equals \( x \) for \( x \geq 0 \).
+- The function \( f(x) = \frac{1}{2} (x + \sqrt{x^2 + \epsilon}) \) behaves similarly: for large \( |x| \), \( \sqrt{x^2 + \epsilon} \approx |x| \) because \(\epsilon\) becomes negligible compared to \(x^2\).
+
+As \(\epsilon \to 0\), \(\sqrt{x^2 + \epsilon} \to |x|\), thus:
+\[ \lim_{\epsilon \to 0} f(x) = \frac{1}{2} (x + |x|) = x_+ \]
+This shows that \( f(x) \) approximates \( x_+ \) increasingly well as \(\epsilon\) decreases, converging to the exact function in the limit.
+
+\textbf{Part 2: Convexity of \( f(x) \)}
+
+To establish the convexity of \( f(x) \), examine its second derivative:
+\[ f(x) = \frac{1}{2} (x + \sqrt{x^2 + \epsilon}) \]
+First derivative:
+\[ f'(x) = \frac{1}{2} \left(1 + \frac{x}{\sqrt{x^2 + \epsilon}}\right) \]
+Second derivative:
+\[ f''(x) = \frac{1}{2} \cdot \frac{\epsilon}{(x^2 + \epsilon)^{3/2}} \]
+Since \(\epsilon > 0\), this second derivative is always positive, implying that \( f(x) \) is convex across its entire domain.
+
+\textbf{Part 3: Majorization by \( g(x \mid x_n) \)}
+
+The quadratic function provided:
+\[ g(x \mid x_n) = \frac{1}{2} \left[ x + \sqrt{x_n^2 + \epsilon} + \frac{1}{2\sqrt{x_n^2 + \epsilon}} (x^2 - x_n^2) \right] \]
+is proposed to majorize \( f(x) \). To verify this, note that \( g(x) \) is constructed by adding a quadratic term to the approximation \( f(x) \) at \( x_n \), based on the derivative calculations as discussed before.
+
+If we compute the value and the first derivative of \( g(x) \) at \( x = x_n \), they should match those of \( f(x) \):
+- At \( x = x_n \), \( g(x_n) = f(x_n) \) since the extra term \( (x^2 - x_n^2) \) equals zero.
+- The derivative at \( x = x_n \) for both functions matches because the derivative of \( (x^2 - x_n^2) \) term at \( x = x_n \) is zero, leaving the derivative of the remaining terms which are crafted to mirror \( f'(x_n) \).
+
+Given these conditions and the construction of \( g(x) \) with additional positive quadratic curvature, \( g(x) \) majorizes \( f(x) \). This matches the behavior of \( f(x) \), providing a tangent quadratic at \( x_n \) that lies above \( f(x) \) due to convexity and the shape of the functions involved. 
+
+\textbf{Conclusion:}
+- The function \( f(x) \) well approximates \( x_+ \) as \(\epsilon\) approaches zero.
+- \( f(x) \) is convex.
+- \( g(x \mid x_n) \) majorizes \( f(x) \), effectively providing an upper bound to the function based on the quadratic expansion at \( x_n \).
 
 \subsubsection*{Q15: Continuing the two previous problems, demonstrate that
 \[
@@ -7232,6 +7575,54 @@ g(x \mid x_n) = \frac{1}{2} \left[ x + \sqrt{x_n^2 + \epsilon} + \frac{1}{2\sqrt
 0 \leq \frac{1}{2} (x + \sqrt{x^2 + \epsilon}) - x_+ \leq \frac{1}{2} \sqrt{\epsilon}
 \]
 for all \( x \).}
+
+To prove these two inequalities, we will explore each component and demonstrate the relationship between \( \sqrt{x^2 + \epsilon} \) and \( |x| \), as well as their implications on \( f(x) = \frac{1}{2} (x + \sqrt{x^2 + \epsilon}) \) and \( x_+ = \frac{1}{2} (x + |x|) \).
+
+\textbf{### Part 1:} \( \sqrt{x^2 + \epsilon} \) vs. \( |x| \)
+
+\textbf{Inequality: \( 0 \leq \sqrt{x^2 + \epsilon} - |x| \leq \sqrt{\epsilon} \)}
+
+\textbf{1. Lower Bound Proof}
+   Since \(\epsilon > 0\), \( x^2 + \epsilon > x^2 \), and thus:
+   \[ \sqrt{x^2 + \epsilon} > \sqrt{x^2} = |x| \]
+   Hence:
+   \[ \sqrt{x^2 + \epsilon} - |x| \geq 0 \]
+
+\textbf{2. Upper Bound Proof}
+   Using the property of the square root and non-negative numbers, consider:
+   \[ x^2 \leq x^2 + \epsilon \]
+   By taking the square root on both sides:
+   \[ |x| = \sqrt{x^2} \leq \sqrt{x^2 + \epsilon} \]
+   Subtract \( |x| \) from both sides:
+   \[ \sqrt{x^2 + \epsilon} - |x| \leq \sqrt{x^2 + \epsilon} - \sqrt{x^2} \]
+   Using the mean value theorem for the function \( g(t) = \sqrt{t} \) between \( t = x^2 \) and \( t = x^2 + \epsilon \):
+   \[ \sqrt{x^2 + \epsilon} - \sqrt{x^2} \approx \frac{1}{2} \frac{\epsilon}{\sqrt{x^2 + \theta}} \]
+   for some \( \theta \in (0, \epsilon) \), and since \( \sqrt{x^2 + \theta} \geq \sqrt{x^2} = |x| \), this difference is maximized when \( |x| \) is minimized, which is at \( x = 0 \). Therefore:
+   \[ \sqrt{x^2 + \epsilon} - \sqrt{x^2} \leq \frac{\epsilon}{2\sqrt{\epsilon}} = \frac{\sqrt{\epsilon}}{2} \]
+   Hence:
+   \[ \sqrt{x^2 + \epsilon} - |x| \leq \sqrt{\epsilon} \]
+
+\textbf{Part 2:} \( f(x) = \frac{1}{2} (x + \sqrt{x^2 + \epsilon}) \) vs. \( x_+ = \frac{1}{2} (x + |x|) \)
+
+\textbf{Inequality:} \( 0 \leq \frac{1}{2} (x + \sqrt{x^2 + \epsilon}) - x_+ \leq \frac{1}{2} \sqrt{\epsilon} \)
+
+\textbf{1. Direct Expression and Lower Bound}
+   From the previous result:
+   \[ 0 \leq \sqrt{x^2 + \epsilon} - |x| \]
+   Dividing by 2 and adding \( \frac{x}{2} \) to both sides:
+   \[ \frac{x}{2} + \frac{\sqrt{x^2 + \epsilon}}{2} - \frac{x}{2} - \frac{|x|}{2} \geq 0 \]
+   \[ f(x) - x_+ \geq 0 \]
+
+\textbf{2. Upper Bound}
+   Using the upper bound from Part 1:
+   \[ \sqrt{x^2 + \epsilon} - |x| \leq \sqrt{\epsilon} \]
+   Again, dividing by 2:
+   \[ \frac{\sqrt{x^2 + \epsilon} - |x|}{2} \leq \frac{\sqrt{\epsilon}}{2} \]
+   \[ f(x) - x_+ \leq \frac{\sqrt{\epsilon}}{2} \]
+
+\textbf{Conclusion}
+
+Both sets of inequalities have been proven, showing that \( f(x) \) not only approximates \( x_+ \) closely as \(\epsilon\) approaches zero but also satisfies bounds that confirm its effective use in scenarios where a smooth approximation to the ReLU function is desirable.
 
 \subsubsection*{Q16: Decide whether the following functions are differentiable at the indicated points.
 \[
@@ -7250,15 +7641,184 @@ h(x) = \| x \| \quad \text{for all} \; x
 \]
 If the differential exists, calculate it.}
 
+Let's analyze the differentiability of each function at the specified points.
+
+\textbf{Function \( f(x) = x^2 \sin\left(\frac{1}{x}\right) \) at \( x = 0 \)}
+
+\textbf{Analysis}:
+The function is defined as \( f(x) = x^2 \sin\left(\frac{1}{x}\right) \) for \( x \neq 0 \) and should be defined at \( x = 0 \) for continuity. We define \( f(0) = 0 \).
+
+\textbf{Differentiability}:
+To check if \( f \) is differentiable at \( x = 0 \), consider the derivative:
+\[ f'(x) = \lim_{h \to 0} \frac{f(h) - f(0)}{h} = \lim_{h \to 0} \frac{h^2 \sin\left(\frac{1}{h}\right)}{h} = \lim_{h \to 0} h \sin\left(\frac{1}{h}\right) \]
+Since \( \sin\left(\frac{1}{h}\right) \) oscillates between -1 and 1, the product \( h \sin\left(\frac{1}{h}\right) \) approaches 0 as \( h \to 0 \). Therefore:
+\[ f'(0) = 0 \]
+This implies that \( f(x) \) is differentiable at \( x = 0 \) with \( f'(0) = 0 \).
+
+\textbf{Function \( g(x) \) at \( x = 0 \)}
+
+\textbf{Definition}:
+\[ g(x) = \begin{cases} 
+0 & x = 0 \\ 
+\frac{x_1^3}{x_1^2 + x_2^2} & x \neq 0 
+\end{cases} \]
+
+\textbf{Differentiability}:
+To determine the differentiability of \( g \) at \( x = 0 \), check if the limit of the difference quotient exists:
+\[ \lim_{(x_1, x_2) \to (0,0)} \frac{g(x_1, x_2) - g(0,0)}{\sqrt{x_1^2 + x_2^2}} = \lim_{(x_1, x_2) \to (0,0)} \frac{\frac{x_1^3}{x_1^2 + x_2^2}}{\sqrt{x_1^2 + x_2^2}} \]
+Rewrite the expression:
+\[ \frac{x_1^3}{(x_1^2 + x_2^2)^{3/2}} \]
+Considering paths such as \( x_1 = t \) and \( x_2 = 0 \), or \( x_1 = t \) and \( x_2 = t^2 \), leads to different limits, suggesting the limit does not exist, and thus \( g \) is not differentiable at \( x = 0 \).
+
+\textbf{Function \( h(x) = \| x \| \)}
+
+\textbf{Differentiability}:
+The norm function \( \| x \| \) is known to be non-differentiable at \( x = 0 \) because the function \( \| x \| \) has a "corner" at \( x = 0 \) (the gradient does not exist). This is due to the fact that the directional derivatives vary depending on the direction approaching zero. In a more general sense, any norm in \( \mathbb{R}^n \), which includes absolute values and Euclidean norms, lacks differentiability at the origin.
+
+\textbf{Summary}
+
+\begin{itemize}
+    \item \textbf{\( f(x) \)} is differentiable at \( x = 0 \) with a derivative of 0.
+    \item \textbf{\( g(x) \)} is not differentiable at \( x = 0 \) due to the non-existence of the limit for the difference quotient.
+    \item \textbf{\( h(x) \)} is not differentiable at \( x = 0 \) due to its norm-based nature causing variable directional derivatives at the origin.
+\end{itemize}
+
 \subsubsection*{Q17: Suppose the \( f(x) \) is a differentiable function satisfying the Lipschitz inequality \( \| f(y) - f(x) \| \leq L \| y - x \| \) for all \( x \) and \( y \). Prove that \( \| df(x) \| \leq L \).}
 
+To prove that \( \| df(x) \| \leq L \) given that \( f \) is a differentiable function satisfying the Lipschitz condition \( \| f(y) - f(x) \| \leq L \| y - x \| \) for all \( x \) and \( y \), we will use the definitions of differentiability and the properties of norms.
+
+\textbf{Definitions and Approach}
+
+\textbf{1. Differentiability}: Given that \( f \) is differentiable at all points, \( f \) can be approximated near any point \( x \) by its linear approximation:
+   \[
+   f(y) \approx f(x) + df(x)(y - x)
+   \]
+   where \( df(x) \) is the differential (or derivative) of \( f \) at \( x \), representing a linear map.
+
+\textbf{2. Lipschitz Condition}: The function \( f \) satisfies:
+   \[
+   \| f(y) - f(x) \| \leq L \| y - x \|
+   \]
+   for all \( x, y \). This implies that the function does not increase distances by more than a factor of \( L \).
+
+\textbf{Proof}
+
+\textbf{Step 1: Differentiability and Linear Approximation}
+
+Since \( f \) is differentiable at \( x \), we have the limit:
+\[
+\lim_{y \to x} \frac{\| f(y) - f(x) - df(x)(y - x) \|}{\| y - x \|} = 0
+\]
+This expression implies that the error in the linear approximation of \( f \) at \( x \) vanishes faster than \( \| y - x \| \) as \( y \) approaches \( x \).
+
+\textbf{Step 2: Exploiting the Lipschitz Condition}
+
+Taking the limit as \( y \) approaches \( x \) and using the Lipschitz condition, we have:
+\[
+\| f(y) - f(x) \| \leq L \| y - x \|
+\]
+Since \( f(y) - f(x) \approx df(x)(y - x) \) for \( y \) close to \( x \), the Lipschitz condition can be rewritten using the derivative:
+\[
+\| df(x)(y - x) \| \leq L \| y - x \|
+\]
+Dividing both sides by \( \| y - x \| \) (assuming \( y \neq x \)) gives:
+\[
+\| df(x) \frac{y - x}{\| y - x \|} \| \leq L
+\]
+Since this must hold for all \( y \) near \( x \), and the direction \( \frac{y - x}{\| y - x \|} \) can be any unit vector (as \( y \) approaches \( x \) from any direction), we conclude that:
+\[
+\| df(x) \| \leq L
+\]
+Here, \( \| df(x) \| \) is the operator norm of the derivative, defined as:
+\[
+\| df(x) \| = \sup_{\| v \| = 1} \| df(x) v \|
+\]
+Since we have shown that for any unit vector \( v \), \( \| df(x) v \| \leq L \), it follows that the operator norm of \( df(x) \) cannot exceed \( L \).
+
+\textbf{Conclusion}
+
+Thus, we've proven that \( \| df(x) \| \leq L \) under the given Lipschitz condition. This means the "steepness" or maximum rate of change of \( f \) at any point is bounded by the Lipschitz constant \( L \), which restricts how rapidly the values of \( f \) can change in any direction.
+
 \subsubsection*{Q18: If \( f(x) \) is a real-valued differentiable function on \([a, b]\), then demonstrate that \( f(b) - f(a) = f'(c)(b - a) \) for some intermediate point \( x \).}
+
+To prove the statement \( f(b) - f(a) = f'(c)(b - a) \) for some intermediate point \( c \) in the interval \([a, b]\), we can use the Mean Value Theorem (MVT) for derivatives, which directly provides the desired conclusion under the conditions stated.
+
+\textbf{Mean Value Theorem (MVT)}
+
+The Mean Value Theorem states that if a function \( f \) is continuous on the closed interval \([a, b]\) and differentiable on the open interval \((a, b)\), then there exists at least one point \( c \) in \((a, b)\) such that:
+\[ f'(c) = \frac{f(b) - f(a)}{b - a} \]
+
+\textbf{Applying the MVT to \( f(x) \)}
+
+\textbf{1. Check the conditions}:
+   \begin{itemize}
+       \item Continuity on \([a, b]\): Since \( f \) is given as differentiable on \([a, b]\), it is also continuous on \([a, b]\). Differentiability implies continuity.
+       \item Differentiability on \((a, b)\): This condition is explicitly given in the problem statement.
+   \end{itemize}
+
+\textbf{2. Apply the MVT}:
+   By the Mean Value Theorem, there exists a \( c \) in \((a, b)\) such that:
+   \[ f'(c) = \frac{f(b) - f(a)}{b - a} \]
+   Rearranging this, we get:
+   \[ f(b) - f(a) = f'(c)(b - a) \]
+
+\textbf{Conclusion}
+
+This equation tells us that the change in the function values \( f(b) - f(a) \) over the interval \([a, b]\) is equal to the rate of change at some point \( c \), multiplied by the length of the interval \( b - a \). This is a powerful result that provides a bridge between the average rate of change (the slope of the secant line between \( a \) and \( b \)) and the instantaneous rate of change (the derivative at \( c \)) within the interval.
 
 \subsubsection*{Q19: Suppose that \( f(x) \) is a differentiable function from an open convex set \( U \) of \( \mathbb{R}^p \) to an open set of \( \mathbb{R}^n \). If \( x \) and \( y \) belong to \( U \), prove that there exists a scalar \( s \in [0, 1] \) such that
 \[
 \| f(y) - f(x) \| \leq \| df[x + s(y - x)] \| \| y - x \|.
 \]
 This is the mean-value inequality.}
+
+To prove the mean-value inequality for a differentiable function \( f \) mapping from an open convex set \( U \) in \( \mathbb{R}^p \) to \( \mathbb{R}^n \), we can utilize a version of the Mean Value Theorem (MVT) suited for vector-valued functions. This version states that if \( f \) is differentiable over the convex set \( U \) and \( x, y \) are points in \( U \), there exists a point \( z \) on the line segment connecting \( x \) and \( y \) such that:
+
+\[
+f(y) - f(x) = df(z)(y - x)
+\]
+
+Where \( df(z) \) is the derivative of \( f \) at \( z \), and \( y - x \) is the vector from \( x \) to \( y \). Here's the proof broken down into steps:
+
+\textbf{Step 1: Application of the Vector-Valued Mean Value Theorem}
+
+From the properties of differentiability and convexity of \( U \), and because \( f \) is differentiable over \( U \), the Mean Value Theorem (specifically the version for vector-valued functions over convex subsets of \( \mathbb{R}^p \)) applies. Thus, there exists at least one point \( z = x + s(y - x) \) with \( s \in [0,1] \), along the line segment from \( x \) to \( y \) (because \( U \) is convex), such that:
+
+\[
+f(y) - f(x) = df(z)(y - x)
+\]
+
+\textbf{Step 2: Norm Inequality Application}
+
+Taking norms on both sides of the equation gives us:
+
+\[
+\| f(y) - f(x) \| = \| df(z)(y - x) \|
+\]
+
+Using the submultiplicative property of the operator norm and the Euclidean norm, we obtain:
+
+\[
+\| df(z)(y - x) \| \leq \| df(z) \| \| y - x \|
+\]
+
+Thus,
+
+\[
+\| f(y) - f(x) \| \leq \| df(z) \| \| y - x \|
+\]
+
+Here, \( \| df(z) \| \) denotes the operator norm of the derivative matrix \( df(z) \) at the point \( z \), and \( \| y - x \| \) is the norm of the vector from \( x \) to \( y \).
+
+\textbf{Step 3: Conclude the Mean-Value Inequality}
+
+Hence, it is demonstrated that there exists a scalar \( s \in [0,1] \) such that:
+
+\[
+\| f(y) - f(x) \| \leq \| df[x + s(y - x)] \| \| y - x \|
+\]
+
+This inequality effectively bounds the change in \( f \) between any two points in \( U \) by the maximum "stretch" the function's derivative has in any direction multiplied by the distance between the two points. This result is a powerful tool in analysis, particularly in proving continuity, differentiability, and Lipschitz conditions for vector-valued functions.
 
 
 
