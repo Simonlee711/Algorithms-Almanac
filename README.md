@@ -12,5 +12,5 @@ A painful attempt at solving all the Ken Lange Problems in "Algorithms from the 
 - [x] **Chapter 9: MM Algorithms**
 - [x] **Chapter 10: Data Mining**
 - [x] **Chapter 11: The Fast Fourier Transforms**
-- [ ] **Chapter 12: Monte Carlo Methods**
-- [ ] **Chapter 13: Neural Networks**
+- [x] **Chapter 12: Monte Carlo Methods**
+- [x] **Chapter 13: Neural Networks**
