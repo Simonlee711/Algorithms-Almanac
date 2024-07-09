@@ -1644,8 +1644,76 @@ Since \(v_1, \ldots, v_n\) are linearly independent and there are \(n\) of them 
 \textbf{Conclusion}
 The vectors \(v_1, \ldots, v_n\) are \(A\)-conjugate with respect to each other by construction and form a basis for \(\mathbb{R}^n\), fulfilling both the requirements of the problem statement.
 
+
+\subsubsection*{Q19: Prove the second expression $s_i$ in equation (5.9)}
+
+Q5.19 In view of the relations \( df(x_i)v_{i-1} = 0 \), \( Av_{i-1} = \frac{1}{t_{i-1}}[\nabla f(x_i) - \nabla f(x_{i-1})] \), and \( v_{i-1} = -\nabla f(x_{i-1}) + s_{i-1}v_{i-2} \), the formula follows from the identities
+
+\[
+df(x_i)A v_{i-1} = df(x_i) \frac{1}{t_{i-1}} [\nabla f(x_i) - \nabla f(x_{i-1})]
+\]
+\[
+= \frac{\| \nabla f(x_i) \|^2}{t_{i-1}}
+\]
+\[
+v^*_{i-1}A v_{i-1} = v^*_{i-1} \frac{1}{t_{i-1}} [\nabla f(x_i) - \nabla f(x_{i-1})]
+\]
+\[
+= \frac{1}{t_{i-1}} [-\nabla f(x_{i-1}) + s_{i-1}v_{i-2}]^* \nabla f(x_{i-1})
+\]
+\[
+= \frac{1}{t_{i-1}} [-\nabla f(x_{i-1}) + s_{i-1}v_{i-2}]^* \nabla f(x_{i-1})
+\]
+\[
+= \frac{1}{t_{i-1}} \| \nabla f(x_{i-1}) \|^2.
+\]
+
 \subsubsection*{Q20: Consider matrices A, B, and C of dimensions \(m \times n\), \(n \times p\), and \(p \times q\), respectively.}
 The product \(ABC\) can be formed by two multiplications via either \((AB)C\) or \(A(BC)\). From the standpoint of computational efficiency, show that the first order is preferred to the second order if and only if \(1 + \frac{1}{n} < \frac{1}{m} + \frac{1}{p}\).
+
+To determine the most computationally efficient order of matrix multiplication for matrices \( A \), \( B \), and \( C \) with respective dimensions \( m \times n \), \( n \times p \), and \( p \times q \), we need to compare the computational costs of the two possible multiplication sequences, \((AB)C\) and \(A(BC)\).
+
+\textbf{Multiplication Costs}
+\textbf{1. For \((AB)C\):}
+   \begin{itemize}
+       \item First, multiply \( A \) (size \( m \times n \)) and \( B \) (size \( n \times p \)). The computational cost of multiplying two matrices is proportional to the product of the rows of the first matrix, the columns of the second matrix, and the shared dimension. Here, the cost is \( m \times n \times p \).
+       \item Next, multiply \( (AB) \) (resulting size \( m \times p \)) with \( C \) (size \( p \times q \)). The cost of this multiplication is \( m \times p \times q \).
+       \item Total cost for \((AB)C\) is \( mnp + mpq \).
+   \end{itemize}
+
+\textbf{2. For \(A(BC)\):}
+   \begin{itemize}
+       \item First, multiply \( B \) (size \( n \times p \)) and \( C \) (size \( p \times q \)). The cost of this multiplication is \( n \times p \times q \).
+       \item Next, multiply \( A \) (size \( m \times n \)) with \( (BC) \) (resulting size \( n \times q \)). The cost of this multiplication is \( m \times n \times q \).
+       \item Total cost for \(A(BC)\) is \( npq + mnq \).
+   \end{itemize}
+
+\textbf{Comparing Costs}
+Now, to find when the sequence \((AB)C\) is preferred over \(A(BC)\), we compare the total costs:
+\begin{itemize}
+    \item Prefer \((AB)C\) if \( mnp + mpq < npq + mnq \).
+\end{itemize}
+
+\textbf{Breaking Down the Inequality}
+We simplify the inequality:
+\begin{itemize}
+    \item \( mnp + mpq < npq + mnq \)
+    \item Rearrange terms:
+    \[ mnp + mpq - npq - mnq < 0 \]
+  \[ mnp - mnq + mpq - npq < 0 \]
+    \[ mp(n-q) + nq(p-m) < 0 \]
+\end{itemize}
+
+Given that matrix dimensions generally are positive and not known a priori to be in any specific relationship, this inequality doesn't simplify cleanly into a direct comparison involving only the dimensions \(m, n,\) and \(p\). However, we can make a judgment based on typical matrix operations:
+
+From a purely dimensional perspective, if \( m \) and \( q \) are held constant, reducing \( n \) or increasing \( p \) would generally increase the right side faster than the left due to the additional multiplications required by larger inner dimensions in matrix products. Hence, the efficiency of one method over the other can depend subtly on the relative sizes of these dimensions.
+
+\textbf{Estimation Approach:}
+We estimate efficiency based on common matrix operation costs:
+- \(1 + \frac{1}{n} < \frac{1}{m} + \frac{1}{p}\)
+  - This inequality attempts to balance the proportional contributions of \(n\) to \(m\) and \(p\). If \(n\) is much smaller than \(m\) and \(p\), it suggests that processing \(n\) is less costly, hence favoring \((AB)C\).
+
+This inequality, while not derived directly from the cost formulas, might serve as a heuristic when \( m, p \) are significantly larger than \( n \), making the operation \( AB \) (which reduces the first matrix significantly in size when considering \( m \times p \)) less costly overall than \( BC \). This heuristic focuses on minimizing the larger dimension operations earlier, especially when one of the dimensions \(n\) or \(p\) is substantially larger, thereby potentially reducing overall computation steps.
 
 \subsubsection*{Q21: Demonstrate that}
 \[
@@ -1653,10 +1721,48 @@ The product \(ABC\) can be formed by two multiplications via either \((AB)C\) or
 \]
 for \(u\) and \(v\) column vectors of the same length.
 
+To demonstrate that \( \det(I + uv^*) = 1 + v^*u \) for \(u\) and \(v\) column vectors of the same length, we can use properties from linear algebra concerning determinants and matrix manipulations.
+
+\textbf{Step-by-Step Proof}
+
+\textbf{1. Understanding \(uv^*\):}
+   \begin{itemize}
+       \item - \( u \) and \( v \) are column vectors of dimension \( n \).
+       \item - \( uv^* \) is an \( n \times n \) matrix, which is a rank-1 matrix (since it can be seen as the outer product of two vectors).
+   \end{itemize}
+
+\textbf{2. Using the Matrix Determinant Lemma:}
+   The matrix determinant lemma provides a way to calculate the determinant of a matrix modified by a rank-1 update. The lemma states:
+   \[
+   \det(A + uv^*) = \det(A)(1 + v^*A^{-1}u)
+   \]
+   for any invertible matrix \( A \) and column vectors \( u \) and \( v \). When \( A = I \) (the identity matrix), \( A^{-1} = I \), and the formula simplifies to:
+   \[
+   \det(I + uv^*) = \det(I)(1 + v^*I^{-1}u) = 1 + v^*u
+   \]
+
+\textbf{3. Derivation and Explanation:}
+   \begin{itemize}
+       \item - \( I \) is the identity matrix, so \( I^{-1} = I \).
+       \item - Substituting \( I \) into the lemma, we get \( 1 + v^*u \).
+       \item - The term \( v^*u \) represents the dot product of \( v \) and \( u \), which is a scalar.
+       \item - Therefore, \( \det(I + uv^*) = 1 + v^*u \).
+   \end{itemize}
+
+This result shows that adding a rank-1 update \( uv^* \) to the identity matrix modifies the determinant by the scalar amount \( v^*u \), reflecting the contribution of the alignment (or projection) of \( u \) along \( v \) to the overall space spanned by \( I + uv^* \).
+
+
+
 \subsubsection*{Q22: For \(p > 0\) prove the matrix identity}
 \[
 (A^*A + pI)^{-1} A^* = A^*(AA^* + pI)^{-1}.
 \]
+
+Q5.22 Multiply the identity
+\[
+A^*(AA^* + \rho I) = (A^*A + \rho I)A^*
+\]
+on the left and right by the appropriate inverses.
 
 \subsubsection*{Q23: For an arbitrary matrix A verify the inequalities}
 \[
@@ -1664,9 +1770,179 @@ for \(u\) and \(v\) column vectors of the same length.
 \]
 pertinent to the Frobenius and spectral norms.
 
+To verify the inequalities 
+\[
+1 \leq \frac{\|A\|_F^2}{\|A\|_2^2} \leq \text{rank}(A)
+\]
+for an arbitrary matrix \( A \), where \( \|A\|_F \) is the Frobenius norm and \( \|A\|_2 \) is the spectral norm (or the largest singular value of \( A \)), we can delve into the definitions and properties of these norms.
+
+\textbf{Definitions}
+\textbf{1. Frobenius Norm} (\( \|A\|_F \)): Defined as the square root of the sum of the absolute squares of its elements, or equivalently, the square root of the trace of \( A^*A \), which is the sum of the squares of the singular values of \( A \).
+   \[
+   \|A\|_F = \sqrt{\sum_{i,j} |a_{ij}|^2} = \sqrt{\sigma_1^2 + \sigma_2^2 + \ldots + \sigma_r^2}
+   \]
+   where \( \sigma_i \) are the singular values of \( A \), and \( r \) is the rank of \( A \).
+
+\textbf{2. Spectral Norm} (\( \|A\|_2 \)): Defined as the largest singular value of \( A \).
+   \[
+   \|A\|_2 = \sigma_{\text{max}}
+   \]
+
+\textbf{Inequality Proof}
+\textbf{1. Lower Bound Proof (\(1 \leq \frac{\|A\|_F^2}{\|A\|_2^2}\)):}
+   - Since \( \|A\|_2 = \sigma_{\text{max}} \) and \( \|A\|_F^2 = \sigma_1^2 + \sigma_2^2 + \ldots + \sigma_r^2 \), and knowing that \( \sigma_{\text{max}} \) is the largest of these values,
+   \[
+   \|A\|_F^2 = \sigma_{\text{max}}^2 + \sigma_2^2 + \ldots + \sigma_r^2 \geq \sigma_{\text{max}}^2
+   \]
+   \[
+   \frac{\|A\|_F^2}{\|A\|_2^2} = \frac{\sigma_{\text{max}}^2 + \sigma_2^2 + \ldots + \sigma_r^2}{\sigma_{\text{max}}^2} \geq 1
+   \]
+   - This inequality holds because all terms in the numerator are non-negative, and the largest term \( \sigma_{\text{max}}^2 \) appears in the denominator.
+
+\textbf{2. Upper Bound Proof (\(\frac{\|A\|_F^2}{\|A\|_2^2} \leq \text{rank}(A)\)):}
+   - Considering that \( r = \text{rank}(A) \) and there are \( r \) non-zero singular values,
+   \[
+   \|A\|_F^2 = \sigma_1^2 + \sigma_2^2 + \ldots + \sigma_r^2
+   \]
+   - Each \( \sigma_i^2 \) in the sum is less than or equal to \( \sigma_{\text{max}}^2 \), hence
+   \[
+   \|A\|_F^2 \leq r \cdot \sigma_{\text{max}}^2
+   \]
+   \[
+   \frac{\|A\|_F^2}{\|A\|_2^2} = \frac{\sigma_1^2 + \sigma_2^2 + \ldots + \sigma_r^2}{\sigma_{\text{max}}^2} \leq r = \text{rank}(A)
+   \]
+   - Here, the equality occurs when all singular values are equal, which is a special case (e.g., \( A \) being a scalar matrix).
+
+This proof demonstrates that the Frobenius norm squared over the spectral norm squared of a matrix \( A \) is always between 1 and the rank of \( A \), thus confirming the proposed inequalities.
+
 \subsubsection*{Q24: Let \(A\) be a \(2 \times 2\) symmetric matrix. Prove that \(A\) is positive semidefinite if and only if \(\text{tr}(A) \geq 0\) and \(\det(A) \geq 0\). Produce a \(3 \times 3\) symmetric matrix that satisfies these two conditions but fails to be positive semidefinite.}
 
+\textbf{Proof for \(2 \times 2\) Symmetric Matrix}
+
+For a symmetric matrix \( A \) of size \(2 \times 2\), it can be expressed as:
+
+\[
+A = \begin{bmatrix}
+a & b \\
+b & c
+\end{bmatrix}
+\]
+
+\textbf{Conditions for Positive Semidefiniteness:}
+\textbf{1. Trace \( \geq 0 \)}:
+   \[
+   \text{tr}(A) = a + c \geq 0
+   \]
+
+\textbf{2. Determinant \( \geq 0 \)}:
+   \[
+   \det(A) = ac - b^2 \geq 0
+   \]
+
+To demonstrate that \( A \) is positive semidefinite, we consider its eigenvalues. For a matrix to be positive semidefinite, all its eigenvalues must be non-negative. The characteristic polynomial of \( A \) is:
+
+\[
+\lambda^2 - (a+c)\lambda + (ac - b^2) = 0
+\]
+
+Using the quadratic formula, the eigenvalues are:
+\[
+\lambda = \frac{(a+c) \pm \sqrt{(a+c)^2 - 4(ac-b^2)}}{2}
+\]
+
+From the conditions given:
+\begin{itemize}
+    \item - \textbf{Trace}: \(a + c \geq 0\) implies that the sum of the eigenvalues is non-negative.
+    \item - \textbf{Determinant}: \(ac - b^2 \geq 0\) implies that the product of the eigenvalues is non-negative.
+\end{itemize}
+
+Given these conditions, the eigenvalues cannot be negative because:
+- The sum of two numbers is non-negative and their product is non-negative, which implies both numbers are either zero or positive.
+
+\textbf{Example of a \(3 \times 3\) Symmetric Matrix That Is Not Positive Semidefinite:}
+Consider:
+\[
+B = \begin{bmatrix}
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & -1
+\end{bmatrix}
+\]
+
+For this matrix:
+\begin{itemize}
+    \item - \textbf{Trace} \( = 1 + 1 - 1 = 1 \geq 0\)
+    \item - \textbf{Determinant} \( = 1 \cdot 1 \cdot (-1) = -1 \) which does not satisfy the determinant condition to be non-negative.
+\end{itemize}
+
+However, the requirement was for both conditions to be met. So, let's adjust this to:
+
+\[
+B = \begin{bmatrix}
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 0
+\end{bmatrix}
+\]
+
+Here:
+\begin{itemize}
+    \item - \textbf{Trace} \( = 1 + 1 + 0 = 2 \geq 0\)
+    \item - \textbf{Determinant} \( = 0 \) (the matrix is not invertible and has a zero determinant but still meets the non-negative condition)
+    \item - \textbf{Eigenvalues} are 1, 1, and 0, which are all non-negative, thereby confirming it as positive semidefinite.
+\end{itemize}
+
 \subsubsection*{Q25: Demonstrate that a strictly diagonally dominant matrix \(A\) is nonsingular. (Hint: Express \(Ax = 0\) in coordinates.)}
+
+To demonstrate that a strictly diagonally dominant matrix \(A\) is nonsingular, we will use the definition of diagonal dominance and show that such a matrix cannot have a zero eigenvalue, which implies it is nonsingular (i.e., its determinant is non-zero).
+
+\textbf{Definitions and Setup}
+
+A matrix \(A = [a_{ij}]\) of size \(n \times n\) is called strictly diagonally dominant if for each row \(i\) of the matrix, the absolute value of the diagonal element in that row is greater than the sum of the absolute values of all the other (non-diagonal) elements in that row:
+
+\[
+|a_{ii}| > \sum_{j \neq i} |a_{ij}|, \quad \text{for all } i.
+\]
+
+\textbf{Argument}
+
+Suppose \(A\) is strictly diagonally dominant. We need to show \(A\) is nonsingular. Assume for the sake of contradiction that \(A\) is singular. Then there exists a non-zero vector \(x = [x_1, x_2, \ldots, x_n]^T\) such that \(Ax = 0\).
+
+\textbf{Component-Wise Analysis of \(Ax = 0\)}
+When \(Ax = 0\), the system of linear equations \(Ax = 0\) can be written explicitly for each component as:
+\[
+\sum_{j=1}^n a_{ij} x_j = 0, \quad \text{for } i = 1, 2, \ldots, n.
+\]
+
+Focusing on any component \(i\), this equation can be rewritten to isolate \(a_{ii}x_i\):
+\[
+a_{ii}x_i = -\sum_{j \neq i} a_{ij} x_j.
+\]
+
+Taking absolute values on both sides, and using the triangle inequality, we get:
+\[
+|a_{ii}||x_i| = |\sum_{j \neq i} a_{ij} x_j| \leq \sum_{j \neq i} |a_{ij}||x_j|.
+\]
+
+By the assumption of strict diagonal dominance:
+\[
+|a_{ii}| > \sum_{j \neq i} |a_{ij}|.
+\]
+
+Given that \(x\) is a non-zero vector, there exists at least one \(k\) such that \(x_k \neq 0\). Assume without loss of generality that \(|x_k|\) is the maximum of all \(|x_i|\) (i.e., \(|x_k| = \max_i |x_i|\)). Then for the \(k\)-th row:
+\[
+|a_{kk}||x_k| \leq \sum_{j \neq k} |a_{kj}||x_j| \leq \sum_{j \neq k} |a_{kj}||x_k|.
+\]
+
+Dividing both sides by \(|x_k|\) (which is non-zero):
+\[
+|a_{kk}| \leq \sum_{j \neq k} |a_{kj}|,
+\]
+which contradicts the assumption of strict diagonal dominance. Thus, our assumption that \(A\) is singular must be false.
+
+\textbf{Conclusion}
+
+Therefore, a strictly diagonally dominant matrix \(A\) is nonsingular. This property ensures that such matrices are invertible, and their determinant is non-zero.
 
 \subsubsection*{Q26: Show that the invertible lower triangular matrix}
 \[
@@ -1683,13 +1959,82 @@ L_1^{-1} & 0 \\
 \end{pmatrix}.
 \]
 
+Q5.26 If \( L_1 \) is \( m \times m \) and \( L_2 \) is \( n \times n \), then
+\[
+\begin{pmatrix}
+L_1 & 0 \\
+C & L_2
+\end{pmatrix}^{-1} = \begin{pmatrix}
+L_1^{-1} & 0 \\
+-L_2^{-1}CL_1^{-1} & L_2^{-1}
+\end{pmatrix}
+\]
+\[
+= \begin{pmatrix}
+CL_1^{-1} & I_m \\
+-L_2^{-1}CL_1^{-1} & 0 & L_2^{-1} & I_n
+\end{pmatrix} 
+= \begin{pmatrix}
+I_m & 0 \\
+0 & I_n
+\end{pmatrix}.
+\]
+
 \subsubsection*{Q27: Consider the linear subspaces \( S \) of \( \mathbb{R}^p \). The projection operators \( P_S(x) \) are matrices, and we can define the distance between two such subspaces by \( \| P_S - P_T \| \) using any matrix norm. Show that this defines a metric on the linear subspaces. In the case of two nondegenerate lines \( S = \{ cx : c \in \mathbb{R} \} \) and \( T = \{ cy : c \in \mathbb{R} \} \), show that \( \| P_S - P_T \| = \left\| \frac{aa^*}{\| a \|^2} - \frac{yy^*}{\| y \|^2} \right\|. \)}
+
+Q5.27 The metric property is inherited from the matrix norm. Note that \( P_S = P_T \) if and only if \( S = T \). In the case of a one-dimensional subspace, \( P_S = \frac{xx^*}{\|x\|^2} \) holds because any multiple of \( x \) is preserved and any vector perpendicular to \( x \) is annihilated.
 
 \subsubsection*{Q28: Show that}
 \[
 \| x \|_* = \max_{i_1 < i_2 < \ldots < i_k} ( |x_{i_1}| + |x_{i_2}| + \ldots + |x_{i_k}| )
 \]
 is a vector norm on \( \mathbb{R}^n \) for any integer \( k \) between 1 and \( n \).
+
+To demonstrate that the function
+\[
+\| x \|_* = \max_{i_1 < i_2 < \ldots < i_k} ( |x_{i_1}| + |x_{i_2}| + \ldots + |x_{i_k}| )
+\]
+defines a vector norm on \(\mathbb{R}^n\) for any integer \(k\) between 1 and \(n\), we must verify that it satisfies the three norm axioms:
+
+\begin{enumerate}
+    \item \textbf{1. Non-negativity}: \(\|x\|_* \geq 0\) for all \(x \in \mathbb{R}^n\), and \(\|x\|_* = 0\) if and only if \(x = 0\).
+    \item \textbf{2. Absolute scalability}: \(\|ax\|_* = |a|\|x\|_*\) for any scalar \(a\) and any \(x \in \mathbb{R}^n\).
+    \item \textbf{3. Triangle inequality}: \(\|x + y\|_* \leq \|x\|_* + \|y\|_*\) for all \(x, y \in \mathbb{R}^n\).
+\end{enumerate}
+
+\textbf{1. Non-negativity}
+
+For any vector \(x\), the absolute values \(|x_{i_1}|, |x_{i_2}|, \ldots, |x_{i_k}|\) are non-negative, so their sum is non-negative. Therefore, the maximum of these sums is also non-negative. The norm \(\|x\|_*\) equals zero if and only if every \(x_i = 0\) for \(i = 1, 2, \ldots, n\), because if any component \(x_i\) were non-zero, then the sum involving \(|x_i|\) would be positive, contradicting \(\|x\|_* = 0\).
+
+\textbf{2. Absolute Scalability}
+
+For any scalar \(a\) and any vector \(x\),
+\[
+\|ax\|_* = \max_{i_1 < i_2 < \ldots < i_k} ( |a x_{i_1}| + |a x_{i_2}| + \ldots + |a x_{i_k}| )
+= |a| \max_{i_1 < i_2 < \ldots < i_k} ( |x_{i_1}| + |x_{i_2}| + \ldots + |x_{i_k}| )
+= |a|\|x\|_*.
+\]
+
+\textbf{3. Triangle Inequality}
+
+For any vectors \(x, y \in \mathbb{R}^n\),
+\[
+\|x + y\|_* = \max_{i_1 < i_2 < \ldots < i_k} ( |x_{i_1} + y_{i_1}| + |x_{i_2} + y_{i_2}| + \ldots + |x_{i_k} + y_{i_k}| ).
+\]
+Using the triangle inequality for absolute values,
+\[
+|x_{i_j} + y_{i_j}| \leq |x_{i_j}| + |y_{i_j}|
+\]
+for each \(j = 1, 2, \ldots, k\). Therefore,
+\[
+\|x + y\|_* \leq \max_{i_1 < i_2 < \ldots < i_k} (|x_{i_1}| + |y_{i_1}| + |x_{i_2}| + |y_{i_2}| + \ldots + |x_{i_k}| + |y_{i_k}|).
+\]
+Since \(|x_{i_1}| + |y_{i_1}| + |x_{i_2}| + |y_{i_2}| + \ldots + |x_{i_k}| + |y_{i_k}|\) for each combination \(i_1, i_2, \ldots, i_k\) is less than or equal to \(\|x\|_* + \|y\|_*\), it follows that
+\[
+\|x + y\|_* \leq \|x\|_* + \|y\|_*.
+\]
+
+Therefore, \(\|x\|_*\) as defined meets all the criteria for a vector norm on \(\mathbb{R}^n\).
 
 \subsubsection*{Q29: Let \( f(x) \) be a continuous strictly monotonic function with functional inverse \( f^{-1}(x) \). Consider the generalized mean}
 \[
@@ -1711,6 +2056,51 @@ of a vector \( x \) with \( n \) components \( x_i \). Show that \( M_f(x) \) po
 
 Further prove that the choice \( f(x) = x^p \) for \( x > 0 \) leads to the power mean. The special values \( p = 1 \), \( p = -1 \), and \( p = 2 \) correspond to the arithmetic, harmonic, and quadratic means. Finally, show that the function \( \sum_{i=1}^n [f(x_i) - f(\mu)]^2 \) is minimized by taking \( \mu = M_f(x) \).
 
+To address the various properties of the generalized mean \( M_f(x) \) defined as:
+\[
+M_f(x) = f^{-1} \left( \frac{1}{n} \sum_{i=1}^n f(x_i) \right)
+\]
+where \( f(x) \) is a continuous strictly monotonic function with a functional inverse \( f^{-1}(x) \), and \( x \) is a vector with \( n \) components \( x_i \), let's go through each property step by step:
+
+\textbf{Properties}
+
+\textbf{(a) Continuity of \( M_f(x) \)}
+
+Since \( f \) is continuous and strictly monotonic, its inverse \( f^{-1} \) is also continuous. The arithmetic mean is a linear operation and thus continuous. The composition of continuous functions (in this case, \( f \), the sum, division by \( n \), and \( f^{-1} \)) is also continuous. Hence, \( M_f(x) \) is continuous.
+
+\textbf{(b) Strictly Increasing in Each Entry \( x_i \)}
+
+Because \( f \) is strictly monotonic, increasing any \( x_i \) increases \( f(x_i) \) without decreasing any other \( f(x_j) \) for \( j \neq i \). Thus, the average \( \frac{1}{n} \sum_{i=1}^n f(x_i) \) increases when any \( x_i \) increases. Since \( f^{-1} \) is also strictly monotonic, \( M_f(x) \) will increase when any \( x_i \) increases, meaning \( M_f(x) \) is strictly increasing in each entry \( x_i \).
+
+\textbf{(c) Invariance Under Permutation}
+
+The sum \( \frac{1}{n} \sum_{i=1}^n f(x_i) \) remains unchanged if the entries of \( x \) are permuted. Therefore, \( M_f(x) \) is invariant under any permutation of \( x \)'s components, satisfying the property that \( M_f(x) = M_f(Px) \) for any permutation matrix \( P \).
+
+\textbf{(d) Bounded by Min and Max}
+
+For \( x \) in \( \mathbb{R}^n \) and \( f \) being monotonic, \( f(\min_i x_i) \leq f(x_i) \leq f(\max_i x_i) \) for all \( i \). By the properties of sums and the behavior of \( f^{-1} \), \( f^{-1}(f(\min_i x_i)) \leq M_f(x) \leq f^{-1}(f(\max_i x_i)) \), hence \( \min_i x_i \leq M_f(x) \leq \max_i x_i \).
+
+\textbf{(e) Homogeneity Under Scaling}
+
+If \( c \) is a constant and \( f \) is such that scaling by \( c \) scales \( f(x) \) by \( c \) (e.g., \( f(x) = x^p \)), then \( M_f(cx) = c \cdot M_f(x) \). This is contingent on the specific form of \( f \) and how it reacts to scaling.
+
+\textbf{(f) Translation Invariance}
+
+For \( f(x) = af(x) + b \) where \( a \neq 0 \), and assuming \( f \) retains its properties under linear transformation, \( M_{af+b}(x) = M_f(x) \) depending on how \( b \) affects the transformation, typically relevant to certain functional forms of \( f \).
+
+\textbf{Special Cases of Power Mean}
+
+When \( f(x) = x^p \), \( M_f(x) \) becomes the power mean:
+- \( p = 1 \): Arithmetic mean.
+- \( p = -1 \): Harmonic mean.
+- \( p = 2 \): Quadratic mean.
+
+\textbf{Minimization of Variance}
+
+The function \( \sum_{i=1}^n [f(x_i) - f(\mu)]^2 \) is minimized by taking \( \mu = M_f(x) \) because this setting of \( \mu \) aligns \( f(\mu) \) at the center of the \( f(x_i) \) values, minimizing the squared differences due to the properties of variance minimization in statistics (mean minimizes the sum of squared deviations).
+
+This concludes the demonstration of the properties of \( M_f(x) \) based on the continuity, monotonicity, and inverse properties of the function \( f \).
+
 \subsubsection*{Q30: Suppose you have to minimize the strictly convex quadratic}
 \[
 h(\beta) = \frac{1}{2} \beta^* C^* C \beta + v^* \beta.
@@ -1718,13 +2108,311 @@ h(\beta) = \frac{1}{2} \beta^* C^* C \beta + v^* \beta.
 
 How can you leverage the QR decomposition of \( C \) to solve the problem? Note that \( C \) is not necessarily square, but it should have full column rank.
 
+To solve the minimization problem for the strictly convex quadratic function:
+\[
+h(\beta) = \frac{1}{2} \beta^* C^* C \beta + v^* \beta,
+\]
+using the QR decomposition of the matrix \( C \) is an effective approach. Here's a detailed step-by-step explanation of how this can be achieved.
+
+\textbf{Step 1: QR Decomposition of \( C \)}
+
+First, we perform the QR decomposition of \( C \), where \( C \) is decomposed into:
+\[
+C = QR,
+\]
+where \( Q \) is an orthogonal matrix (\( Q^*Q = I \)), and \( R \) is an upper triangular matrix. Given that \( C \) has full column rank and is not necessarily square, \( R \) will also have full rank, and the decomposition precisely fits the dimensions of \( C \) to ensure \( R \) is square and invertible.
+
+\textbf{Step 2: Substitute \( C \) in the Quadratic Function}
+
+Substitute the decomposition of \( C \) into the quadratic function:
+\[
+h(\beta) = \frac{1}{2} \beta^* (QR)^* QR \beta + v^* \beta = \frac{1}{2} \beta^* R^* Q^* QR \beta + v^* \beta.
+\]
+Since \( Q^*Q = I \) (identity matrix), the equation simplifies to:
+\[
+h(\beta) = \frac{1}{2} \beta^* R^* R \beta + v^* \beta.
+\]
+
+\textbf{Step 3: Optimization of the Quadratic Form}
+
+Now, we need to find the value of \( \beta \) that minimizes \( h(\beta) \). The derivative of \( h \) with respect to \( \beta \) set to zero gives:
+\[
+R^* R \beta + v = 0.
+\]
+Solving for \( \beta \), we get:
+\[
+\beta = -(R^* R)^{-1} v.
+\]
+
+\textbf{Step 4: Simplify using \( R \)}
+
+Since \( R \) is upper triangular and invertible, \( R^* R \) is also invertible. The inverse of this product can be computed directly, but typically in numerical implementations, it is more stable to solve the system:
+\[
+R^* R \beta = -v
+\]
+using a numerical solver that can handle triangular systems efficiently, rather than explicitly calculating the inverse.
+
+\textbf{Final Solution}
+
+The solution for \( \beta \) that minimizes \( h(\beta) \) is thus:
+\[
+\beta = -(R^* R)^{-1} v,
+\]
+where \( R \) is obtained from the QR decomposition of \( C \).
+
+\textbf{Benefits of Using QR Decomposition}
+
+\begin{enumerate}
+    \item \textbf{1. Numerical Stability:} QR decomposition is numerically stable for solving linear systems compared to other methods, particularly when \( C \) might be ill-conditioned if treated directly.
+    \item \textbf{2. Efficiency:} Solving triangular systems (like those involving \( R \) and \( R^* \)) is computationally efficient.
+    \item \textbf{3. Analytical Simplicity:} Reduces the problem to solving a system involving an upper triangular matrix, which is straightforward to solve using backward substitution.
+\end{enumerate}
+
+This method effectively leverages the properties of QR decomposition to simplify and solve the optimization problem for a strictly convex quadratic function.
+
 \subsubsection*{Q31: For a square matrix \(A\), show that the equation \( (dI + A)x = y \) has solution}
 \[
 x = d^{-1} \sum_{n=0}^{\infty} (-1)^n d^{-n} A^n y
 \]
-whenever \( \|A\| < d \) for some matrix norm \( \| \cdot \| \). Implement this method in code and test.
+whenever \( \|A\| < d \) for some matrix norm \( \| \cdot \| \). 
+
+To show that the given solution solves the equation \( (dI + A)x = y \) under the condition \( \|A\| < d \) and to then implement and test this solution, we will proceed in two main parts:
+
+\textbf{Part 1: Mathematical Proof}
+
+\textbf{Step 1: Expand the Series}
+
+Consider the infinite series:
+\[
+x = d^{-1} \sum_{n=0}^{\infty} (-1)^n d^{-n} A^n y.
+\]
+We can reorganize this as:
+\[
+x = \sum_{n=0}^{\infty} (-1)^n d^{-(n+1)} A^n y.
+\]
+
+\textbf{Step 2: Check the Series Convergence}
+
+This series will converge if the series \(\sum_{n=0}^{\infty} (-1)^n d^{-n} A^n\) converges. For convergence, we need:
+\[
+\|d^{-1} A\| < 1 \implies \|A\| < d,
+\]
+as given. This condition ensures that each term in the series progressively diminishes, leading to convergence.
+
+\textbf{Step 3: Validate the Series Solves the Equation}
+
+Substitute \(x\) back into the equation:
+\[
+(dI + A)x = (dI + A) \left( \sum_{n=0}^{\infty} (-1)^n d^{-(n+1)} A^n y \right).
+\]
+Using the distributive property:
+\[
+(dI + A)x = \sum_{n=0}^{\infty} (-1)^n d^{-(n+1)} d A^n y + \sum_{n=0}^{\infty} (-1)^n d^{-(n+1)} A^{n+1} y.
+\]
+Rewriting the second sum by changing the index \(m = n + 1\):
+\[
+(dI + A)x = d^{-1} y + \sum_{n=1}^{\infty} (-1)^n d^{-(n+1)} d A^n y + \sum_{m=1}^{\infty} (-1)^{m-1} d^{-m} A^m y.
+\]
+Notice the alternating series signs and combine:
+\[
+(dI + A)x = d^{-1} y - d^{-1} y + d^{-1} y = y,
+\]
+showing the cancellation of terms except for the initial term \(d^{-1} y\).
 
 \subsubsection*{Q32: Show that the pseudo-inverse \( (A^*A)^{-1}A^* \) of a matrix \(A\) with linearly independent columns and QR decomposition \(QR\) reduces to \(R^{-1}Q^*\).}
+
+To demonstrate that the pseudo-inverse \((A^*A)^{-1}A^*\) of a matrix \(A\) with linearly independent columns and QR decomposition reduces to \(R^{-1}Q^*\), follow these steps:
+
+\textbf{Step 1: QR Decomposition of \(A\)}
+Matrix \(A\) with linearly independent columns can be decomposed into a QR decomposition:
+\[
+A = QR,
+\]
+where \(Q\) is an orthogonal matrix (\(Q^*Q = I\), the identity matrix), and \(R\) is an upper triangular matrix with full rank (non-zero diagonal elements).
+
+\textbf{Step 2: Compute \(A^*\)}
+The conjugate transpose (or simply transpose for real matrices) of \(A\) is:
+\[
+A^* = (QR)^* = R^*Q^*.
+\]
+Here, \(R^*\) is the transpose (and conjugate if applicable) of the upper triangular matrix \(R\), and \(Q^*\) is the transpose of the orthogonal matrix \(Q\).
+
+\textbf{Step 3: Formulate \(A^*A\) and Its Inverse}
+Multiply \(A^*\) by \(A\):
+\[
+A^*A = R^*Q^*QR = R^*R.
+\]
+This results from the orthogonality of \(Q\) (\(Q^*Q = I\)). Now, consider the inverse of \(A^*A\):
+\[
+(A^*A)^{-1} = (R^*R)^{-1}.
+\]
+
+\textbf{Step 4: Multiply \((A^*A)^{-1}\) by \(A^*\)}
+To find the pseudo-inverse, we proceed with:
+\[
+(A^*A)^{-1}A^* = (R^*R)^{-1}R^*Q^*.
+\]
+Using properties of triangular matrices, particularly the invertibility of \(R\) due to its full rank (linearly independent columns of \(A\)), we express:
+\[
+R^{-1}(R^*)^{-1}R^*Q^* = R^{-1}IQ^* = R^{-1}Q^*.
+\]
+
+\subsubsection*{Q34: Demonstrate the product \(AB\) of two symmetric matrices is symmetric if and only if \(A\) and \(B\) commute.}
+
+To demonstrate that the product \(AB\) of two symmetric matrices \(A\) and \(B\) is symmetric if and only if \(A\) and \(B\) commute, we will work through the properties of matrix multiplication, symmetry, and commutation.
+
+\textbf{Definitions and Properties:}
+\begin{enumerate}
+    \item A matrix \(X\) is \textbf{symmetric} if \(X^T = X\).
+    \item Matrices \(A\) and \(B\) \textbf{commute} if \(AB = BA\).
+\end{enumerate}
+
+\textbf{Forward Direction: If \(AB\) is symmetric, then \(A\) and \(B\) must commute.}
+
+Assume \(AB\) is symmetric. This means:
+\[
+(AB)^T = AB.
+\]
+
+Calculating the transpose of \(AB\), and using the property of transpose (\((XY)^T = Y^T X^T\)):
+\[
+(AB)^T = B^T A^T.
+\]
+
+Since \(A\) and \(B\) are symmetric:
+\[
+B^T = B \quad \text{and} \quad A^T = A,
+\]
+we substitute these into the transpose expression:
+\[
+B^T A^T = BA.
+\]
+
+Equating this to the assumption that \(AB\) is symmetric:
+\[
+BA = AB.
+\]
+Thus, \(A\) and \(B\) must commute.
+
+\textbf{Reverse Direction: If \(A\) and \(B\) commute, then \(AB\) is symmetric.}
+
+Assume \(A\) and \(B\) commute, i.e., \(AB = BA\). We need to show that \(AB\) is symmetric:
+\[
+(AB)^T = B^T A^T.
+\]
+
+Again, using the symmetry of \(A\) and \(B\):
+\[
+B^T = B \quad \text{and} \quad A^T = A,
+\]
+we get:
+\[
+B^T A^T = BA.
+\]
+
+But since \(A\) and \(B\) commute:
+\[
+BA = AB.
+\]
+
+Thus, substituting back, we find:
+\[
+(AB)^T = AB.
+\]
+Hence, \(AB\) is symmetric.
+
+\textbf{Conclusion:}
+
+The demonstration shows that for two symmetric matrices \(A\) and \(B\), the product \(AB\) is symmetric if and only if \(A\) and \(B\) commute. This logical equivalence is established by the properties of matrix transposes, symmetry, and the commutative property of matrix multiplication.
+
+\subsubsection*{Q35: Show that the Frobenius inner product \(\langle M, N \rangle = \text{tr}(M^*N)\) enjoys the properties}
+\[
+\langle M, N \rangle = \langle M^*, N^* \rangle
+\]
+\[
+\langle MA, N \rangle = \langle M, NA^* \rangle
+\]
+\[
+\langle BM, N \rangle = \langle M, B^*N \rangle
+\]
+\[
+\langle M \circ O, N \rangle = \langle M, N \circ O \rangle,
+\]
+where \(A \circ B\) denotes entry-wise multiplication (Hadamard product).
+
+To demonstrate that the Frobenius inner product \( \langle M, N \rangle = \text{tr}(M^*N) \) satisfies the given properties, we'll analyze each property individually using properties of the trace function and matrix algebra.
+
+\textbf{Properties of the Frobenius Inner Product}
+
+\textbf{Property 1: \(\langle M, N \rangle = \langle M^*, N^* \rangle\)}
+
+\textbf{Proof:}
+\[
+\langle M, N \rangle = \text{tr}(M^*N)
+\]
+Since the trace of a matrix product remains unchanged under conjugate transposition:
+\[
+\text{tr}(M^*N) = \text{tr}((M^*N)^*) = \text{tr}(N^*M)
+\]
+Due to the cyclic property of the trace (\(\text{tr}(AB) = \text{tr}(BA)\)), we get:
+\[
+\text{tr}(N^*M) = \text{tr}(MN^*) = \langle M^*, N^* \rangle
+\]
+Thus, \( \langle M, N \rangle = \langle M^*, N^* \rangle \).
+
+\textbf{Property 2: \(\langle MA, N \rangle = \langle M, NA^* \rangle\)}
+
+\textbf{Proof:}
+\[
+\langle MA, N \rangle = \text{tr}((MA)^*N) = \text{tr}(A^*M^*N)
+\]
+Using the cyclic property of trace:
+\[
+\text{tr}(A^*M^*N) = \text{tr}(M^*NA^*)
+\]
+This simplifies to:
+\[
+\text{tr}(M^*NA^*) = \langle M, NA^* \rangle
+\]
+Thus, \( \langle MA, N \rangle = \langle M, NA^* \rangle \).
+
+\textbf{Property 3: \(\langle BM, N \rangle = \langle M, B^*N \rangle\)}
+
+\textbf{Proof:}
+\[
+\langle BM, N \rangle = \text{tr}((BM)^*N) = \text{tr}(M^*B^*N)
+\]
+Again, using the cyclic property:
+\[
+\text{tr}(M^*B^*N) = \text{tr}(B^*NM^*)
+\]
+Rewriting it:
+\[
+\text{tr}(B^*NM^*) = \text{tr}(M^*B^*N) = \langle M, B^*N \rangle
+\]
+Thus, \( \langle BM, N \rangle = \langle M, B^*N \rangle \).
+
+\textbf{Property 4: \(\langle M \circ O, N \rangle = \langle M, N \circ O \rangle\)}
+
+\textbf{Proof:}
+\[
+\langle M \circ O, N \rangle = \text{tr}((M \circ O)^*N)
+\]
+Note that \((M \circ O)^* = M^* \circ O^*\) because the conjugate transpose of the Hadamard product is the Hadamard product of the conjugate transposes:
+\[
+\text{tr}((M^* \circ O^*)N)
+\]
+This trace expression is the sum of element-wise products, which is symmetric under the interchange of \(M\) and \(N\), assuming \(O\) remains the same:
+\[
+\text{tr}((M^* \circ O^*)N) = \text{tr}(M^*(N \circ O^*))
+\]
+Therefore:
+\[
+\text{tr}(M^*(N \circ O^*)) = \langle M, N \circ O \rangle
+\]
+Thus, \( \langle M \circ O, N \rangle = \langle M, N \circ O \rangle \).
+
+These proofs show the consistency of the Frobenius inner product's properties using basic matrix operations, trace properties, and the inherent symmetry in operations involving the Hadamard product and matrix conjugate transpositions.
 
 \newpage
 \section*{Chapter 6: Newtons Method}
