@@ -8105,6 +8105,180 @@ The group is commutative because the multiplication of circulant matrices is com
 
 In summary, the set of invertible circulant matrices forms a group under matrix addition and multiplication, and this group is commutative because the multiplication of any two circulant matrices commutes.
 
+\subsubsection*{Q21: Show that the nth root of unity \(u_n\) satisfies}
+\[
+\prod_{j=0}^{n-1} u_n^j = 
+\begin{cases} 
+-1 & n \text{ is even} \\
+1 & n \text{ is odd}
+\end{cases}
+\]
+\text{for all \(n \ge 1\).}
+
+Let $u_n = e^{2\pi i/n}$ be the nth root of unity.
+
+1) First, we calculate the product:
+
+   $\prod_{j=0}^{n-1} u_n^j = \prod_{j=0}^{n-1} (e^{2\pi i/n})^j = e^{2\pi i \sum_{j=0}^{n-1} j/n}$
+
+2) The sum in the exponent is an arithmetic series:
+
+   $\sum_{j=0}^{n-1} j = \frac{n(n-1)}{2}$
+
+3) Substituting this back:
+
+   $\prod_{j=0}^{n-1} u_n^j = e^{2\pi i \cdot \frac{n(n-1)}{2n}} = e^{\pi i (n-1)}$
+
+4) Now, consider two cases:
+
+   a) If $n$ is even:
+      $n-1$ is odd, so $e^{\pi i (n-1)} = e^{\pi i \cdot \text{odd}} = -1$
+
+   b) If $n$ is odd:
+      $n-1$ is even, so $e^{\pi i (n-1)} = e^{\pi i \cdot \text{even}} = 1$
+
+Therefore, the product equals -1 when $n$ is even and 1 when $n$ is odd, for all $n \ge 1$.
+
+\subsubsection*{Q22: Derive the cubic polynomial equations (11.8) by substitution. The identity}
+\[
+\hat{r}_0 \hat{r}_1 = \hat{r}_0^2 + \hat{r}_1^2 + \hat{r}_2^2 + (\hat{r}_0 \hat{r}_1 + \hat{r}_0 \hat{r}_2 + \hat{r}_1 \hat{r}_2)(u_3 + u_3^2) = \hat{r}_0^2 + \hat{r}_1^2 + \hat{r}_2^2 - (\hat{r}_0 \hat{r}_1 + \hat{r}_0 \hat{r}_2 + \hat{r}_1 \hat{r}_2)
+\]
+\text{is representative of the needed steps.}
+
+Let's derive the cubic polynomial equations (11.8) by substitution:
+
+1) We start with the identity:
+
+   $\hat{r}_0 \hat{r}_1 = \hat{r}_0^2 + \hat{r}_1^2 + \hat{r}_2^2 + (\hat{r}_0 \hat{r}_1 + \hat{r}_0 \hat{r}_2 + \hat{r}_1 \hat{r}_2)(u_3 + u_3^2)$
+
+2) Note that $u_3 + u_3^2 = -1$ because $u_3 = e^{2\pi i/3}$:
+
+   $\hat{r}_0 \hat{r}_1 = \hat{r}_0^2 + \hat{r}_1^2 + \hat{r}_2^2 - (\hat{r}_0 \hat{r}_1 + \hat{r}_0 \hat{r}_2 + \hat{r}_1 \hat{r}_2)$
+
+3) Rearranging:
+
+   $2\hat{r}_0 \hat{r}_1 + \hat{r}_0 \hat{r}_2 + \hat{r}_1 \hat{r}_2 = \hat{r}_0^2 + \hat{r}_1^2 + \hat{r}_2^2$
+
+4) Similarly, we can derive:
+
+   $\hat{r}_0 \hat{r}_1 + 2\hat{r}_0 \hat{r}_2 + \hat{r}_1 \hat{r}_2 = \hat{r}_0^2 + \hat{r}_1^2 + \hat{r}_2^2$
+   
+   $\hat{r}_0 \hat{r}_1 + \hat{r}_0 \hat{r}_2 + 2\hat{r}_1 \hat{r}_2 = \hat{r}_0^2 + \hat{r}_1^2 + \hat{r}_2^2$
+
+5) These are the cubic polynomial equations (11.8):
+
+   $2x_0x_1 + x_0x_2 + x_1x_2 = x_0^2 + x_1^2 + x_2^2$
+   $x_0x_1 + 2x_0x_2 + x_1x_2 = x_0^2 + x_1^2 + x_2^2$
+   $x_0x_1 + x_0x_2 + 2x_1x_2 = x_0^2 + x_1^2 + x_2^2$
+
+where $x_i = \hat{r}_i$ for $i = 0, 1, 2$.
+
+\subsubsection*{Q23: Consider the symmetric \(n \times n\) matrix}
+\[
+C = \begin{pmatrix}
+1 & \rho & \rho^2 & \cdots & \rho^{n-1} \\
+\rho & 1 & \rho & \cdots & \rho^{n-2} \\
+\rho^2 & \rho & 1 & \cdots & \rho^{n-3} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+\rho^{n-1} & \rho^{n-2} & \rho^{n-3} & \cdots & 1
+\end{pmatrix}
+\]
+\text{for \(|\rho| \leq 1\) arising in the autoregressive AR(1) model of statistics and signal processing. Show that \(C\) has rank 1 for \(\rho = \pm 1\). Otherwise, show that \(C\) is invertible with the symmetric tridiagonal inverse}
+\[
+C^{-1} = \frac{1}{1 - \rho^2} \begin{pmatrix}
+1 & -\rho & 0 & \cdots & 0 \\
+-\rho & 1 + \rho^2 & -\rho & \cdots & 0 \\
+0 & -\rho & 1 + \rho^2 & \cdots & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+0 & 0 & 0 & \cdots & 1
+\end{pmatrix}.
+\]
+\text{Use this representation to prove that \(C\) is positive definite when \(|\rho| < 1\).}
+
+Q11.23: If \(\rho = 1\), then \(C = 11^*\), which has rank 1. If \(\rho = -1\), then let \(v\) be the vector with \(j\)th entry \((-1)^j\). In this case \(C = vv^*\) also has rank 1. Otherwise, \(C^{-1}\) is symmetric and strictly diagonally dominant because \(1 + \rho^2 - 2\rho = (1 - \rho)^2 > 0\). Thus, \(C\) is positive definite with positive definite inverse. To verify the suggested inverse, consider the \(4 \times 4\) case. Then
+\[
+\begin{pmatrix}
+1 & -\rho & 0 & 0 \\
+-\rho & 1 + \rho^2 & -\rho & 0 \\
+0 & -\rho & 1 + \rho^2 & -\rho \\
+0 & 0 & -\rho & 1
+\end{pmatrix}
+\begin{pmatrix}
+1 & \rho & \rho^2 & \rho^3 \\
+\rho & 1 & \rho & \rho^2 \\
+\rho^2 & \rho & 1 & \rho \\
+\rho^3 & \rho^2 & \rho & 1
+\end{pmatrix}
+= 
+\begin{pmatrix}
+1 - \rho^2 & 0 & 0 & 0 \\
+0 & 1 - \rho^2 & 0 & 0 \\
+0 & 0 & 1 - \rho^2 & 0 \\
+0 & 0 & 0 & 1 - \rho^2
+\end{pmatrix}
+\]
+
+\subsubsection*{Q24: Given two finite sequences \(\mathbf{a}\) and \(\mathbf{b}\) of nonnegative integers, show how to find all possible sums \(a_i + b_j\) efficiently and for each sum count how often it appears. For instance, if \(\mathbf{a} = (1, 2, 3)\) and \(\mathbf{b} = (2, 4)\), then the sum 3 can be obtained in 1 way, 4 in 1 way, 5 in 2 ways, 6 in 1 way, and 7 in 1 way.}
+
+Q11.24: Consider the polynomials \(\sum_i x^{a_i}\) and \(\sum_j x^{b_j}\). If we multiply these via the FFT, then the coefficients of the product \(\sum_k c_k x^k\) yield the required counts, some of which may be 0. The above example leads to
+\[
+(x^1 + x^2 + x^3)(x^2 + x^4) = x^3 + x^4 + 2x^5 + x^6 + x^7.
+\]
+
+\subsubsection*{Q25: Consider two strings drawn from an alphabet \(A\) with \(d\) letters. Suppose we assign a complex number to each letter. This transforms the strings into two numeric sequences \(\mathbf{a}\) and \(\mathbf{b}\) of length \(m\) and \(n > m\). It is of interest to count the number of occurrences of \(\mathbf{a}\) in \(\mathbf{b}\). We can measure the difference between \(\mathbf{a}\) and the block \((b_k, \ldots, b_{k+m-1})\) of \(\mathbf{b}\) by}
+\[
+c_k = \sum_{j=0}^{m-1} |a_j - b_{j+k}|^2
+\]
+\[
+= \sum_{j=0}^{m-1} |a_j|^2 - 2 \sum_{j=0}^{m-1} \text{Real}(a_j b_{j+k}^*) + \sum_{j=0}^{m-1} |b_{j+k}|^2,
+\]
+\text{where \(z^*\) denotes the complex conjugate of \(z\). Show how we can choose the numbers assigned to the letters to reveal which blocks of \(\mathbf{b}\) perfectly match \(\mathbf{a}\). This assignment should support fast matching.}
+
+Q11.25: Take the number assigned to letter \(j\) to be \(u_d^{j-1}\), where \(u_d\) is the \(d\)th root of unity. This propitious choice makes both sums \(\sum_{j=0}^{m-1} |a_j|^2\) and \(\sum_{j=0}^{m-1} |b_{j+k}|^2\) equal \(m\). The cross term \(\sum_{j=0}^{m-1} \text{Real}(a_j b_{j+k}^*)\) equals \(m\) for a perfect match (\(c_k = 0\)) and is strictly less than \(m\) otherwise. Indeed, \(u_d^{r-s} = 1\) if and only if \(r = s\). Furthermore, the cross terms \(\sum_{j=0}^{m-1} a_j b_{j+k}^*\) are cross covariances and can be quickly computed by the FFT.
+
+\subsubsection*{Q26: An upper triangular \(n \times n\) Toeplitz matrix can be written as}
+\[
+T = \sum_{j=0}^{n-1} t_j N^j, \quad N = \begin{pmatrix}
+0 & 1 & & & \\
+& 0 & 1 & & \\
+& & \ddots & \ddots & \\
+& & & 0 & 1 \\
+& & & & 0
+\end{pmatrix},
+\]
+where \(N\) is an upper triangular matrix with a superdiagonal of 1's, \(N^0 = I_n\), and \(N^n = 0\). Show that the product of two upper triangular Toeplitz matrices is an upper triangular Toeplitz, upper triangular Toeplitz matrices commute, and \(T^{-1}\) exists as an upper triangular Toeplitz matrix whenever \(T\) is nonsingular.
+
+Q11.26: The matrix \(N^j\) is an upper triangular matrix with 1's along its \(j\)th super-diagonal and 0's elsewhere. For instance,
+\[
+\begin{pmatrix}
+0 & 1 & 0 \\
+0 & 0 & 1 \\
+0 & 0 & 0
+\end{pmatrix}
+\begin{pmatrix}
+0 & 1 & 0 \\
+0 & 0 & 1 \\
+0 & 0 & 0
+\end{pmatrix}
+=
+\begin{pmatrix}
+0 & 0 & 1 \\
+0 & 0 & 0 \\
+0 & 0 & 0
+\end{pmatrix}.
+\]
+
+\noindent The representation of \(T\) now follows directly from definition (11.18) of a Toeplitz matrix. The product of two such matrices amounts to
+\[
+\sum_{j=0}^{n-1} s_j N^j \sum_{k=0}^{n-1} t_k N^k = \sum_{i=0}^{n-1} \sum_{j+k=i} s_j t_k N^i.
+\]
+
+\noindent The product and commutative laws are consequences of this representation. The inverse \(S\) of \(T\) has coefficients determined by
+\[
+\sum_{j+k=i} s_j t_k = 1_{\{i=0\}}.
+\]
+
+\noindent Thus, the \(s_j\) can be computed recursively beginning with \(s_0 = t_0^{-1}\) and continuing with \(s_i = -t_0^{-1} \sum_{0 \leq j < i} s_j t_{i-j}\) for \(i > 0\). Alternatively, one can view the coefficients of the inverse as satisfying the Fourier convolution equation \(n\hat{s}_j \hat{t}_j = 1 / n\) and then invert the solution \(\hat{s}_j = 1 / (n^2 \hat{t}_j)\).
 
 \newpage
 \section*{Chapter 12: Monte Carlo Methods}
