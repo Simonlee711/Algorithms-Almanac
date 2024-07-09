@@ -8781,6 +8781,103 @@ Simulated annealing is a probabilistic technique for approximating the global op
 
 Simulated annealing provides a robust framework for addressing complex optimization problems like the hardcore model on a graph, where traditional methods might be inefficient or infeasible. By carefully tuning the cooling schedule and acceptance probabilities, simulated annealing can effectively explore the space of feasible solutions to approximate the global maximum number of 1's satisfying the model's constraints.
 
+\subsubsection*{Q21: Consider a graph with \(2n\) nodes. The graph bisection problem involves dividing the nodes into two disjoint subsets \(A\) and \(B\) of size \(n\) such that the number of edges extending between a node in \(A\) and a node in \(B\) is as small as possible. Design and implement a simulated annealing algorithm to find a best pair of subsets. This problem has implications for the design of microchips.}
+
+1) Representation:
+   - Let $x_i \in \{-1,1\}$ represent node $i$
+   - $x_i = 1$ if node $i \in A$, $x_i = -1$ if node $i \in B$
+
+2) Objective function:
+   $f(x) = \sum_{(i,j) \in E} \frac{1}{4}(1 - x_ix_j)$
+   where $E$ is the set of edges
+
+3) Constraint:
+   $\sum_{i=1}^{2n} x_i = 0$
+
+4) Simulated annealing algorithm:
+
+   \begin{algorithm}
+   \caption{Graph Bisection via Simulated Annealing}
+   \begin{algorithmic}
+   \State Initialize $x$ randomly satisfying the constraint
+   \State Set initial temperature $T = T_0$
+   \While{$T > T_{\text{min}}$}
+     \For{$k = 1$ to $K$}
+       \State Generate neighbor $y$ by swapping two nodes
+       \State $\Delta E = f(y) - f(x)$
+       \If{$\Delta E < 0$ or $\text{random}(0,1) < e^{-\Delta E / T}$}
+         \State $x \gets y$
+       \EndIf
+     \EndFor
+     \State $T \gets \alpha T$ \Comment{Cooling schedule}
+   \EndWhile
+   \State \textbf{return} $x$
+   \end{algorithmic}
+   \end{algorithm}
+
+5) Parameters:
+   - $T_0$: Initial temperature
+   - $T_{\text{min}}$: Minimum temperature
+   - $K$: Number of iterations per temperature
+   - $\alpha$: Cooling rate (e.g., 0.95)
+
+This algorithm provides a heuristic solution to the NP-hard graph bisection problem, useful in microchip design for minimizing connections between components.
+
+\subsubsection*{Q22: Suppose \(X\) is a random variable symmetrically distributed around 0. If \(X\) has quantile function \(Q(u)\), then show that the folded random variable \(Y = |X|\) has quantile function \(-Q([(1-u)/2]\). You may assume \(X\) is continuously distributed. In practice, this exercise extends the inverse sampling method to \(|X|\) and related random variables such as \(X^2\).}
+
+12.22 The quantile equation is \( F(x) - F(-x) = u \). By symmetry this amounts to \( 1 - 2F(-x) = u \), or \( F(-x) = (1 - u)/2 \). It now follows that
+\[
+-x = Q[F(-x)] = Q[(1 - u)/2],
+\]
+\text{or \( x = -Q[(1 - u)/2] \).}
+
+\subsubsection*{Q23: Given \(\delta > 0\), generate a sequence of independent standard normal deviates \(X_n\) and define \(Y_0 = X_0\) and inductively
+\[
+Y_{n+1} = e^{-\delta} Y_n + \sqrt{1 - e^{-2\delta}} X_{n+1}.
+\]
+Show that the \(Y_n\) are correlated standard normal deviates with covariances
+\[
+\text{Cov}(Y_m, Y_n) = e^{-|n-m|\delta}.
+\]}
+
+12.23 Because \( Y_{n+1} = e^{-\delta}Y_n + \sqrt{1 - e^{-2\delta}}X_{n+1} \) is the sum of two independent Gaussian deviates, it is Gaussian. By induction \( Y_{n+1} \) has mean 0 and variance \( e^{-2\delta} + 1 - e^{-2\delta} = 1 \). Without loss of generality fix \( m \leq n \). By induction on \( n \geq m \)
+\[
+\text{Cov}(Y_m, Y_{n+1}) = e^{-\delta} \text{Cov}(Y_m, Y_n) + \sqrt{1 - e^{-2\delta}} \text{Cov}(Y_m, X_{n+1})
+\]
+\[
+= e^{-\delta} \text{Cov}(Y_m, Y_n)
+\]
+\[
+= e^{-(n+1-m)\delta}.
+\]
+
+\subsubsection*{Q25: Given a vector \( \mathbf{w} \in \mathbb{R}^p \) of positive weights and a total capacity \( c > 0 \), the knapsack problem asks for the number of vectors \( \mathbf{x} \) with 0/1 entries satisfying \( \mathbf{x}^* \mathbf{w} \leq c \). Suggest a Markov chain method for solving the knapsack problem.}
+
+\subsubsection*{Q26: An asymmetric triangular distribution has triangular-shaped probability density function concentrated on the interval \([a, b]\) with mode at \(m \in (a, b)\). Find the corresponding distribution function \(F(x)\), and show that inverse method generates the random deviate}
+\[
+X = 
+\begin{cases} 
+a + \sqrt{U(b - a)(m - a)} & 0 < U < F(m) \\
+b - \sqrt{(1 - U)(b - a)(b - m)} & F(m) \leq U,
+\end{cases}
+\]
+\text{where \(U\) is uniform on \([0, 1]\). (Hint: The total mass of the density determines the value at the mode.)}
+
+12.26 The density function \(f(x)\) is linear on \([a, m]\) and \([m, b]\) with value \(c\) at \(m\) determined by the total mass requirement \(\frac{1}{2}[c(m - a) + c(b - m)] = 1\). It follows that \(c = \frac{2}{b-a}\). Hence, on the left interval
+\[
+F(x) = \int_a^x \frac{y - a}{m - a} dy = \frac{(x - a)^2}{(b - a)(m - a)}
+\]
+\text{and on the right interval}
+\[
+F(x) = 1 - \int_x^b \frac{b - y}{b - m} dy = 1 - \frac{(b - x)^2}{(b - a)(b - m)}.
+\]
+\text{Now it suffices to solve \(U = F(X)\) for \(X\).}
+
+
+\subsubsection*{Q27: Suppose \(X\) follows a standard normal distribution. Devise an acceptance-rejection method for sampling deviates from \(Y = |X|\) based on an exponentially distributed instrumental random variable \(Z\). What is the density \(f(x)\) of \(Y\)? Find the least constant \(c\) with \(ce^{-x} \geq e^{-\frac{x^2}{2}}\) for all \(x \geq 0\).}
+
+12.27 The random variable \(Y\) has density \(\frac{2}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}\) on \([0, \infty)\). The optimal choice is \(c = \max_{x \geq 0} e^x e^{-\frac{x^2}{2}}\). This maximum occurs when the concave function \(x - \frac{x^2}{2}\) attains its maximum value. The optimal \(x\) is clearly \(x = 1\), dictating the choice \(c = e^{1 - \frac{1}{2}} = \sqrt{e}\). To generate a deviate we sample \(Z = -\ln U\), where \(U\) is uniform. Then we sample another uniform \(V\) and accept when \(V \leq \frac{e^x}{\sqrt{e}} e^{-\frac{x^2}{2}}\).
+
 \newpage
 \section*{Chapter 13: Neural Networks}
 
