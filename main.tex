@@ -3108,6 +3108,282 @@ Since \( dg(x_n)^* dg(x_n) \) is positive definite, this expression is negative 
 
 This setup leads to rapid convergence near roots, as \( f(x) \) is decreased in each step by moving in the direction that most directly reduces the norm of \( g(x) \), demonstrating the effectiveness of Newton's method in this scenario.
 
+\subsubsection*{Q15: If you apply Newton’s method to solve \( f(y) = \frac{1}{y^{1/2}} - xy^{3/2} = 0 \) for \( x > 0 \), then show that the iterates are}
+\[
+y_{n+1} = y_n \left( \frac{3 + xy_n^2}{1 + 3xy_n^2} \right).
+\]
+What is the root of the equation \( f(y) = 0 \)? Observe that the quantity \( c = xy_n^2 \) should be calculated only once per iteration. Show that the factor \(\frac{3 + xy_n^2}{1 + 3xy_n^2} < 1 \) if and only if \(\frac{1}{\sqrt{x}} < y_n\), and \(\frac{3 + xy_n^2}{1 + 3xy_n^2} > 1 \) if and only if \(\frac{1}{\sqrt{x}} > y_n\). Why is this desirable? Finally, show that
+\[
+y_{n+1} - \frac{1}{\sqrt{x}} = \frac{x \left( y_n - \frac{1}{\sqrt{x}} \right)^3}{1 + 3xy_n^2}.
+\]
+Now argue that the algorithm converges globally on \( (0, \infty) \) and locally at a cubic rate.
+
+Q6.15 Given \( f(y) = \frac{1}{y^{1/2}} - xy^{3/2} = 0 \), it follows that \( f'(y) = -\frac{1}{2}y^{-3/2} - \frac{3}{2}xy^{1/2} \).
+
+Hence, Newton’s method gives
+\[
+y_{n+1} = y_n + \frac{\frac{1}{y_n^{1/2}} - xy_n^{3/2}}{-\frac{1}{2}y_n^{-3/2} - \frac{3}{2}xy_n^{1/2}}.
+\]
+Simplify the numerator and denominator:
+\[
+y_{n+1} = y_n + \frac{\frac{1}{y_n^{1/2}} - xy_n^{3/2}}{-\frac{1}{2}y_n^{-3/2} - \frac{3}{2}xy_n^{1/2}}.
+\]
+Further simplification:
+\[
+= y_n \left( \frac{3 + xy_n^2}{1 + 3xy_n^2} \right).
+\]
+
+Furthermore, \( f(y) = 0 \) if and only if \( 1 = xy_n^2 \), so \( y = x^{-1/2} \) is the solution.
+
+Now \( \frac{3 + xy_n^2}{1 + 3xy_n^2} > 1 \) if and only if \( 3 + xy_n^2 > 1 + 3xy_n^2 \), or \( 1 > xy_n^2 \), which is equivalent to \( y_n < \frac{1}{\sqrt{x}} \). As a consequence, we have \( y_{n+1} > y_n \) when \( y_n < \frac{1}{\sqrt{x}} \), and similarly \( y_{n+1} < y_n \) when \( y_n > \frac{1}{\sqrt{x}} \).
+
+The equalities
+\[
+y_{n+1} - \frac{1}{\sqrt{x}} = y_n \left( \frac{3 + xy_n^2}{1 + 3xy_n^2} \right) - \frac{1}{\sqrt{x}}
+\]
+\[
+= \frac{\sqrt{x}(3y_n + xy_n^3) - (1 - 3xy_n)}{\sqrt{x}(1 + 3xy_n^2)}
+\]
+\[
+= \frac{x(y_n - \frac{1}{\sqrt{x}})^3}{1 + 3xy_n^2}
+\]
+demonstrate that \( y_n - x^{-1/2} \) maintains constant sign and that the algorithm converges locally at a cubic rate. Overall, the algorithm converges globally because the iterates converge monotonically to the fixed point.
+
+\subsubsection*{Q16: If \( f(x) \) has a root of multiplicity \( m \) at \( y \), then \( f(x) \) can be expressed in the form \( f(x) = (x - y)^m g(x) \) with \( g(y) \neq 0 \). Show that the function \( h(x) = \frac{f(x)}{f'(x)} \) has a simple root (multiplicity 1) at \( y \) and that Newton’s method for finding a root of \( h(x) \) iterates according to}
+\[
+x_{n+1} = x_n - \frac{f(x_n)f'(x_n)}{f'(x_n)^2 - f(x_n)f''(x_n)}.
+\]
+
+Q16: The first claim follows from the representation
+\[
+h(x) = \frac{f(x)}{f'(x)} = \frac{(x - y) g(x)}{mg(x) + (x - y) g'(x)},
+\]
+and the second claim from the expression
+\[
+h'(x) = \frac{f'(x)}{f'(x)} - \frac{f(x) f''(x)}{f'(x)^2} = 1 - \frac{f(x) f''(x)}{f'(x)^2}
+\]
+\[
+\frac{h(x)}{h'(x)} = \frac{f(x)}{f'(x) - \frac{f(x) f''(x)}{f'(x)}} = \frac{f(x) f'(x)}{f'(x)^2 - f(x) f''(x)}.
+\]
+
+Let's transcribe the provided text manually:
+
+\subsubsection*{Q17: Suppose the real-valued \( f(x) \) satisfies \( f'(x) > 0 \) and \( f''(x) > 0 \) for all \( x \) in its domain \((d, \infty) \). If \( f(x) = 0 \) has a root \( r \), then demonstrate that \( r \) is unique and that Newton’s method converges to \( r \) regardless of its starting point. Further, prove that \( x_n \) converges monotonically to \( r \) from above when \( x_0 > r \) and that \( x_1 > r \) when \( x_0 < r \).}
+
+6.17 Note that \( f(x) = f(x) - f(r) = f'(y)(x - r) \) for some \( y \) in the interval between \( x \) and \( r \). Hence \( f(x) = 0 \) implies \( x - r = 0 \), and the root is unique. Because \( x_{n+1} = x_n - f'(x_n)^{-1}f(x_n) \), if \( f(x_n) < 0 \), then \( x_{n+1} > x_n \), and if \( f(x_n) > 0 \), then \( x_{n+1} < x_n \). Because \( f(x) \) is increasing, \( f(x) > 0 \) to the right of \( r \) and \( f(x) < 0 \) to the left of \( r \). The supporting line property
+
+\[
+f(x_{n+1}) \geq f(x_n) + f'(x_n)(x_{n+1} - x_n)
+\]
+\[
+= f(x_n) - f(x_n)
+\]
+\[
+= 0
+\]
+
+of the convex function \( f(x) \) requires \( x_1 \) and all subsequent iterates to be to the right of \( r \). The inequalities \( r \leq x_{n+1} \leq x_n \) for all \( n \geq 1 \) now force the convergence of \( x_n \) to \( r \).
+
+\subsubsection*{Q18: Consider the map
+\[
+f(x) = \left( \frac{x_1^2 + x_2^2 - 2}{x_1 - x_2} \right)
+\]
+of the plane into itself. Show that \( f(x) = 0 \) has the roots \(-1\) and \(1\) and no other roots. Prove that Newton’s method iterates according to
+\[
+x_{n+1,1} = x_{n+1,2} = \frac{x_{n1}^2 + x_{n2}^2 + 2}{2(x_{n1} + x_{n2})}
+\]
+and that these iterates converge to the root \(-1\) if \( x_{01} + x_{02} \) is negative and to the root \( 1 \) if \( x_{01} + x_{02} \) is positive. If \( x_{01} + x_{02} = 0 \), then the first iterate is undefined. Finally, prove that
+\[
+\lim_{n \to \infty} \frac{|x_{n+1,1} - y_1|}{|x_{n1} - y_1|^2} = \lim_{n \to \infty} \frac{|x_{n+1,2} - y_2|}{|x_{n2} - y_2|^2} = \frac{1}{2},
+\]
+where \( \mathbf{y} \) is the root relevant to the initial point \( x_0 \).}
+
+6.18 A root satisfies \( x_1 - x_2 = 0 \) so \( x_1 = x_2 \). The condition \( x_1^2 + x_2^2 - 2 = 0 \) then forces the root to be \(\pm 1\). The Jacobian matrix
+
+\[
+df(x) = \begin{pmatrix}
+2x_1 & 2x_2 \\
+1 & -1
+\end{pmatrix}
+\]
+
+has inverse
+
+\[
+df(x)^{-1} = -\frac{1}{2(x_1 + x_2)} \begin{pmatrix}
+-1 & -2x_2 \\
+-1 & 2x_1
+\end{pmatrix}.
+\]
+
+Hence, the Newton updates are
+
+\[
+x_{n+1} = x_n + \frac{1}{2(x_{n1} + x_{n2})} \begin{pmatrix}
+-1 & -2x_{n2} \\
+-1 & 2x_{n1}
+\end{pmatrix} \begin{pmatrix}
+x_{n1}^2 + x_{n2}^2 - 2 \\
+x_{n1} - x_{n2}
+\end{pmatrix}
+\]
+
+\[
+= \frac{1}{2(x_{n1} + x_{n2})} \begin{pmatrix}
+2(x_{n1} + x_{n2})x_{n1} - x_{n1}^2 - x_{n2}^2 + 2 - 2x_{n1}x_{n2} + 2x_{n2}^2 \\
+2(x_{n1} + x_{n2})x_{n2} - x_{n1}^2 - x_{n2}^2 + 2 - 2x_{n1}x_{n2} + 2x_{n1}^2
+\end{pmatrix}
+\]
+
+\[
+= \frac{x_{n1}^2 + x_{n2}^2 + 2}{2(x_{n1} + x_{n2})} 1,
+\]
+
+which entails \( x_{n+1,1} = x_{n+1,2} \). If \( x_{01} + x_{02} \) is positive, then all subsequent components are positive by induction. Similarly, if \( x_{01} + x_{02} \) is negative, then all subsequent components are negative. In the former case
+
+\[
+x_{n+1,1} - 1 = \frac{x_{n1}^2 + x_{n2}^2 + 2 - 2(x_{n1} + x_{n2})}{2(x_{n1} + x_{n2})} 1
+\]
+
+\[
+= \frac{(x_{n1} - 1)^2 + (x_{n2} - 1)^2}{2(x_{n1} + x_{n2})} 1,
+\]
+
+and consequently \( x_{n+1,1} > 1 \) for \( n \geq 1 \). Because
+
+\[
+\frac{x_{n+1,1} - 1}{x_{n1} - 1} = \frac{2(x_{n1} - 1)^2}{2(x_{n1} + x_{n2})(x_{n1} - 1)} = \frac{2(x_{n1} - 1)}{2(x_{n1} + x_{n2})} < 1,
+\]
+
+the iterates are squeezed toward 1. The inequality
+
+\[
+\frac{|x_{n+1,1} - 1|}{(x_{n1} - 1)^2} = \frac{2(x_{n1} - 1)^2}{2(x_{n1} + x_{n2})(x_{n1} - 1)^2} = \frac{2}{2(x_{n1} + x_{n2})} \leq \frac{1}{2}
+\]
+
+shows that convergence is locally quadratic. The case where \( x_{01} + x_{02} \) is negative is handled similarly.
+
+\subsubsection*{Q19: Consider the quadratic function \( f(x) = \frac{1}{2} x^* A x + b^* x \), where \( A \) is symmetric with a negative eigenvalue. Show that \( f(x) \) is unbounded below.}
+
+6.19 Let \( \lambda \) be a negative eigenvalue with associated eigenvector \( v \neq 0 \). Then the scalar function
+
+\[
+f(tv) = \frac{t^2}{2} v^* A v + t b^* v = \frac{t^2}{2} \lambda \|v\|^2 + t b^* v
+\]
+
+is unbounded below.
+
+Let's transcribe the text from the image manually:
+
+\subsubsection*{Q21: Show that the equation \( y \ln y = ay + b \) with \( b > 0 \) and the equation \( y = a + b e^{cy} \) with \( b > 0 \) and \( c < 0 \) can be solved in terms of Lambert’s function introduced in Problems 2 and 3.}
+
+6.21 Let \( W(x) \) be Lambert’s function. Under the substitution \( y = e^x \), the first equation \( y \ln y = ay + b \) becomes
+\[
+(x - a)e^{x-a} = be^{-a}.
+\]
+It follows that \( x = a + W[be^{-a}] \). The second equation \( y = a + b e^{cy} \) is equivalent to
+\[
+c(y - a) = bce^{ca}e^{c(y-a)}
+\]
+or \( c(a - y)e^{c(a-y)} = -bce^{ca} \). Solving for \( c(a - y) \) and rearranging yields the solution \( y = a - \frac{1}{c} W(-bce^{ac}) \).
+
+\subsubsection*{Q22: Suppose we write Lambert’s equation \( we^w = x \) as}
+\[
+f(w) = \log w + w - \log x = 0.
+\]
+Show that Newton’s method for \( w > 0 \) has the iterates
+\[
+w_{n+1} = w_n - \frac{1 - \log w_n + \log x}{w_n + 1}.
+\]
+If the initial point \( w_0 > 0 \) satisfies \( w_0 e^{w_0} < x \), then prove that the Newton iterates converge monotonically to the solution from below. (Hint: It might help to sketch the curve \( f(w) \).)
+
+6.22 The Newton iterates for solving \( f(w) = \log w + w - \log x = 0 \) obey
+
+\[
+w_{n+1} = w_n - \frac{f(w_n)}{f'(w_n)}
+\]
+\[
+= w_n - \frac{\log w_n + w_n - \log x}{\frac{1}{w_n} + 1}
+\]
+\[
+= w_n \left( 1 - \frac{\log w_n + w_n - \log x}{\frac{1}{w_n} + 1} \right)
+\]
+\[
+= w_n \left( 1 - \frac{\log w_n + w_n - \log x}{w_n + 1} \right)
+\]
+\[
+= w_n \left( \frac{1 - \log w_n + \log x}{w_n + 1} \right).
+\]
+
+One advantage of this version of Newton’s method is that it avoids exponential overflows for large values of \( w \). Given the derivatives \( f'(w) = w^{-1} + 1 > 0 \) and \( f''(w) = -w^{-2} < 0 \), the logic of Problem 6.17 slightly modified demonstrates that the Newton iterates converge from below when \( w_0 < W(x) \). Because \( f(w) \) is strictly increasing, the condition \( w_0 e^{w_0} < \ln x \) is equivalent to the condition \( w_0 < W(x) \).
+
+\subsubsection*{Q23: Consider the problem of computing \( e^x \) given a fast algorithm for taking logarithms. Why can we restrict \( x \) to positive values? Show Newton’s method iterates according to \( y_{n+1} = y_n - y_n (\ln y_n - x) \). Also show that if \( y_n > e^x \), then \( y_{n+1} < e^x \), and if \( y_n < e^x \), then \( y_{n+1} < e^x \) as well. In the latter case prove that \( y_{n+1} \) is closer to \( e^x \) than \( y_n \) is. Prove that convergence is guaranteed whenever \( y_0 \in (0, e^{1+x}) \). (Hints: Apply the mean value theorem to \( y_{n+1} - e^x \). Under what condition does \( y_{n+1} > 0 \)?)
+
+6.23 Since \( e^{-x} = \frac{1}{e^x} \), it suffices to take \( x > 0 \). The displayed iterates constitute Newton’s method for solving \( \ln y = x \) or equivalently \( y = e^x \). The mean value theorem implies
+
+\[
+y_{n+1} - e^x = y_n - e^x - y_n (\ln y_n - x)
+\]
+\[
+= y_n - e^x - y_n (\ln y_n - \ln e^x)
+\]
+\[
+= y_n - e^x - \frac{y_n}{z_n} (y_n - e^x)
+\]
+\[
+= (y_n - e^x) \left( 1 - \frac{y_n}{z_n} \right),
+\]
+
+where \( z_n \) falls between \( y_n \) and \( e^x \). The behavior of \( y_n \) follows from this representation. After the first iteration the values \( y_n \) monotonically increase to \( e^x \). Also note that \( y_{n+1} > 0 \) if and only if \( 1 - \ln y_n + x > 0 \). Thus, it suffices to assume \( y_0 \in (0, e^{1+x}) \) to prove that convergence is guaranteed.
+
+Let's transcribe the text from the image manually:
+
+\subsubsection*{Q24: Let \( x_1, \ldots, x_m \) be a random sample from the gamma density}
+\[
+f(x) = \Gamma(\alpha)^{-1} \beta^\alpha x^{\alpha - 1} e^{-\beta x}
+\]
+on \( (0, \infty) \). Let \( \overline{x} = \frac{1}{m} \sum_{i=1}^{m} x_i \) and \( \ln \overline{x} = \frac{1}{m} \sum_{i=1}^{m} \ln x_i \). Setting the score function equal to 0 identifies \( \beta = \frac{\alpha}{\overline{x}} \) as the maximum of the loglikelihood
+
+\[
+L(\alpha, \beta) \text{ of the sample for } \alpha \text{ fixed}.
+\]
+
+Substituting this value of \( \beta \) in the loglikelihood reduces maximum likelihood estimation to optimization of the profile loglikelihood
+
+\[
+L(\alpha) = m \alpha \ln \alpha - m \alpha \ln \overline{x} - m \ln \Gamma(\alpha) + m (\alpha - 1) \ln \overline{x} - m \alpha.
+\]
+
+As an alternative to Newton’s method, we approximate \( L(\alpha) \) by the surrogate function \( g(\alpha) = c_0 + c_1 \alpha + c_2 \ln \alpha \). (No majorization is implied.) The coefficients here are generated by matching the derivatives \( g^{(k)}(\alpha_n) \) and \( L^{(k)}(\alpha_n) \) at the current iterate \( \alpha_n \) for \( k = 0, 1, 2 \). Show that maximizing the surrogate leads to the update
+
+\[
+\frac{1}{\alpha_{n+1}} = \frac{1}{\alpha_n} + \frac{\ln \overline{x} - \ln x + \ln \alpha_n - \Psi(\alpha_n)}{\alpha_n - \alpha_n^2 \Psi'(\alpha_n)},
+\]
+
+where \( \Psi(\alpha) \) is the digamma function (derivative of the log gamma function). Convergence is quick with a good starting value. (Hint: First maximize the surrogate. Note that the coefficient \( c_0 \) is irrelevant so it suffices to match first and second derivatives.)
+
+6.24 The surrogate \( g(\alpha) = c_0 + c_1 \alpha + c_2 \ln \alpha \) clearly satisfies the stationary condition \( 0 = c_1 + \frac{c_2}{\alpha} \) with reciprocal solution \( \frac{1}{\alpha_{n+1}} = -\frac{c_1}{c_2} \). The matching conditions are
+
+\[
+c_1 + \frac{c_2}{\alpha_n} = m + m \ln \alpha_n - m \ln \overline{x} - m \Psi(\alpha_n) + m \ln \overline{x} - m
+\]
+
+\[
+= m \ln \alpha_n - m \ln \overline{x} - m \Psi(\alpha_n) + m \ln \overline{x}
+\]
+
+\[
+= \frac{m}{\alpha_n} - m \Psi'(\alpha_n).
+\]
+
+The second equation gives \( c_2 = -m \alpha_n + m \alpha_n^2 \Psi'(\alpha_n) \). Divide the first equation by \( c_2 \) and rearrange to get the claimed update. The surrogate is strictly concave by the second derivative test provided \( c_2 > 0 \). Because
+
+\[
+\Psi'(\alpha) - \frac{1}{\alpha} = \sum_{n=1}^{\infty} \frac{1}{(\alpha + n)^2},
+\]
+
+this is, in fact, the case. (See the Wikipedia page for the trigamma function.) Thus, its stationary point represents the maximum.
+
 \newpage
 \section*{Chapter 7: Linear Programming}
 
