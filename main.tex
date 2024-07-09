@@ -527,6 +527,173 @@ println("Updated Mean: $new_mean")
 println("Updated Variance: $new_variance")
 \end{minted}
 
+\subsubsection*{Q15: Prove the identity}
+\[
+\binom{n}{k} = \frac{n!}{k!(n-k)!}.
+\]
+
+Q1.15 Given the convention that \(0! = 1\), the two boundary conditions \(\binom{n}{0} = \binom{n}{n} = 1\) are obvious. Pascal’s recurrence is a consequence of
+
+\[
+\frac{n!}{(k - 1)!(n - k + 1)!} + \frac{n!}{k!(n - k)!} = \frac{n!}{(k - 1)!(n - k)!} \left( \frac{1}{n - k + 1} + \frac{1}{k} \right)
+\]
+
+\[
+= \frac{n!}{(k - 1)!(n - k)!} \cdot \frac{n + 1}{k(n - k + 1)} = \frac{(n + 1)!}{k!(n - k + 1)!}.
+\]
+
+\subsubsection*{Q16: Verify the identity}
+\[
+\log(\sqrt{1 + x^2 - 1}) = 2\log(x) - \log(\sqrt{1 + x^2 + 1}).
+\]
+
+Evaluate the two sides in single precision for \(x\) close to 0. Compared to double precision, which expansion is more accurate? Explain why.
+
+Q1.16 To prove the identity, observe that
+
+\[
+\log(\sqrt{1 + x^2 - 1}) + \log(\sqrt{1 + x^2 + 1}) = \log(1 + x^2 - 1)
+\]
+
+\[
+= \log x^2
+\]
+
+\[
+= 2 \log(x).
+\]
+
+\subsubsection*{Q17: Show that the Bernoulli number \(B_{2n+1} = 0\) for all \(n \geq 1\). (Hint: Show that the function \(f(x) = \frac{x}{e^x - 1} + \frac{x}{2}\) is even.)}
+
+Q1.17 The following equations
+
+\[
+f(x) - f(-x) = \frac{x}{e^x - 1} + \frac{x}{2} - \frac{-x}{e^{-x} - 1} - \frac{-x}{2}
+\]
+
+\[
+= \frac{x}{e^x - 1} + \frac{x}{e^{-x} - 1} + x
+\]
+
+\[
+= x \frac{(e^{-x} - 1) + (e^x - 1) + (2 - e^x - e^{-x})}{(e^x - 1)(e^{-x} - 1)}
+\]
+
+\[
+= x \frac{0}{(e^x - 1)(e^{-x} - 1)}
+\]
+
+\[
+= 0.
+\]
+
+demonstrate that \(f(x)\) is even. Because the odd coefficients of an even power series vanish, the identity \(f(x) = \sum_{n=0}^{\infty} B_n \frac{x^n}{n!} + \frac{x}{2}\) shows that \(B_{2n+1} = 0\) for \(n \geq 1\).
+
+\subsubsection*{Q18: Based on the result of the previous problem, verify the identities}
+\[
+x \coth x = \frac{2x}{e^{2x} - 1} + x = \sum_{n=0}^{\infty} \frac{4^n B_{2n}}{(2n)!} x^{2n}.
+\]
+
+Show that this in turn implies
+\[
+x \cot x = \sum_{n=0}^{\infty} \frac{(-1)^n 4^n B_{2n}}{(2n)!} x^{2n}.
+\]
+
+The Bernoulli numbers also figure in the Taylor expansion of \(\tan x\) [95].
+
+Q1.18 Because \(B_0 = 1\), \(B_1 = -\frac{1}{2}\), and \(B_{2n+1} = 0\) for all \(n \geq 1\), we have
+
+\[
+\coth x = \frac{e^x + e^{-x}}{e^x - e^{-x}} = \frac{e^{2x} + 1}{e^{2x} - 1} = 1 + \frac{2}{e^{2x} - 1} = 1 + \frac{1}{x} \frac{2x}{e^{2x} - 1}
+\]
+
+\[
+= 1 + \frac{1}{x} \sum_{n=0}^{\infty} \frac{B_n (2x)^n}{n!} = \frac{1}{x} + \frac{1}{x} \sum_{n=2}^{\infty} \frac{B_n (2x)^n}{n!}
+\]
+
+\[
+= \frac{1}{x} + \frac{1}{x} \sum_{n=1}^{\infty} \frac{B_{2n} (2x)^{2n}}{(2n)!} = \frac{1}{x} \sum_{n=0}^{\infty} \frac{B_{2n} (2x)^{2n}}{(2n)!}
+\]
+
+\[
+= \sum_{n=0}^{\infty} \frac{4^n B_{2n}}{(2n)!} x^{2n-1}.
+\]
+
+Now multiply by \(x\). For the second claim, note that \(\cot x = i \coth ix\) so that
+
+\[
+x \cot x = xi \sum_{n=0}^{\infty} \frac{4^n B_{2n} (ix)^{2n-1}}{(2n)!} = \sum_{n=0}^{\infty} \frac{(-1)^n 4^n B_{2n}}{(2n)!} x^{2n}.
+\]
+
+\subsubsection*{Q19: Prove that \(\cos(2x) = 2 \cos^2 x - 1\). Use this fact to code an algorithm for computing \(\cos x\) from its Taylor expansion around 0.}
+
+Q1.19 The double angle formula implies
+
+\[
+\cos(2x) = \cos^2 x - \sin^2 x = \cos^2 x - 1 + \cos^2 x.
+\]
+
+\subsubsection*{Q20: Show that \(\log(y) = 2 \sum_{k=0}^{\infty} \frac{1}{2k+1} \left(\frac{y-1}{y+1}\right)^{2k+1}\). Based on this rapidly converging expansion and the identity \(\ln(y) = 2 \ln(\sqrt{y})\), design, implement, and test an algorithm for computing \(\ln(y)\). (Hint: Verify that the series expansion has value 0 at \(y = 1\) and derivative \(y^{-1}\).)}
+
+Q1.20 It is obvious that the expansion equals 1 when \(y = 1\). Its derivative satisfies
+
+\[
+2 \sum_{k=0}^{\infty} \left(\frac{y - 1}{y + 1}\right)^{2k} \left[ \frac{1}{y + 1} - \frac{y - 1}{(y + 1)^2} \right] = \frac{4}{(y + 1)^2} \sum_{k=0}^{\infty} \left(\frac{y - 1}{y + 1}\right)^{2k}
+\]
+
+\[
+= \frac{4}{(y + 1)^2} \left[ 1 - \frac{(y - 1)^2}{(y + 1)^2} \right] = \frac{1}{y}.
+\]
+
+\subsubsection*{Q23: If \( t = \tan \frac{1}{2} x \), then demonstrate that}
+\[
+\tan x = \frac{2t}{1 - t^2}
+\]
+\[
+\sin x = \frac{2t}{1 + t^2}
+\]
+\[
+\cos x = \frac{1 - t^2}{1 + t^2}.
+\]
+
+Thus, any algorithm for calculating \(\tan x\), can be converted into an algorithm for calculating any of the six trigonometric functions.
+
+To demonstrate the relationships between \( t = \tan \frac{1}{2} x \) and the trigonometric functions \(\tan x\), \(\sin x\), and \(\cos x\), let's use trigonometric identities and double-angle formulas.
+
+\textbf{1. Tangent Double Angle Formula:}
+   \[
+   \tan x = \frac{2 \tan \frac{x}{2}}{1 - \tan^2 \frac{x}{2}}
+   \]
+   Since \( t = \tan \frac{1}{2} x \), substituting \( t \) into the formula gives:
+   \[
+   \tan x = \frac{2t}{1 - t^2}
+   \]
+
+\textbf{2. Sine and Cosine using Double Angle Formulas:}
+   Using the identity for sine and cosine of double angles, where \( x = 2 \theta \) and \( \theta = \frac{x}{2} \):
+   \[
+   \sin x = 2 \sin \frac{x}{2} \cos \frac{x}{2}
+   \]
+   \[
+   \cos x = \cos^2 \frac{x}{2} - \sin^2 \frac{x}{2}
+   \]
+   We can express \(\sin \frac{x}{2}\) and \(\cos \frac{x}{2}\) in terms of \( t \) using the definitions:
+   \[
+   \sin \frac{x}{2} = \frac{t}{\sqrt{1 + t^2}}
+   \]
+   \[
+   \cos \frac{x}{2} = \frac{1}{\sqrt{1 + t^2}}
+   \]
+   Substituting these into the sine and cosine formulas:
+   \[
+   \sin x = 2 \left(\frac{t}{\sqrt{1 + t^2}}\right) \left(\frac{1}{\sqrt{1 + t^2}}\right) = \frac{2t}{1 + t^2}
+   \]
+   \[
+   \cos x = \left(\frac{1}{\sqrt{1 + t^2}}\right)^2 - \left(\frac{t}{\sqrt{1 + t^2}}\right)^2 = \frac{1 - t^2}{1 + t^2}
+   \]
+
+Thus, knowing \( t = \tan \frac{1}{2} x \) allows the computation of \(\tan x\), \(\sin x\), and \(\cos x\) directly. Therefore, any algorithm capable of calculating \(\tan x\) can also be extended to calculate \(\sin x\) and \(\cos x\), and by extension, all six trigonometric functions, including the reciprocal functions \( \csc x \), \( \sec x \), and \( \cot x \) using these relationships. This linkage simplifies the design of algorithms for trigonometric calculations, using the half-angle identity as a starting point.
+
 \newpage
 \section*{Chapter 2: Sorting}
 
@@ -1476,6 +1643,88 @@ Since \(v_1, \ldots, v_n\) are linearly independent and there are \(n\) of them 
 
 \textbf{Conclusion}
 The vectors \(v_1, \ldots, v_n\) are \(A\)-conjugate with respect to each other by construction and form a basis for \(\mathbb{R}^n\), fulfilling both the requirements of the problem statement.
+
+\subsubsection*{Q20: Consider matrices A, B, and C of dimensions \(m \times n\), \(n \times p\), and \(p \times q\), respectively.}
+The product \(ABC\) can be formed by two multiplications via either \((AB)C\) or \(A(BC)\). From the standpoint of computational efficiency, show that the first order is preferred to the second order if and only if \(1 + \frac{1}{n} < \frac{1}{m} + \frac{1}{p}\).
+
+\subsubsection*{Q21: Demonstrate that}
+\[
+\det(I + uv^*) = 1 + v^*u
+\]
+for \(u\) and \(v\) column vectors of the same length.
+
+\subsubsection*{Q22: For \(p > 0\) prove the matrix identity}
+\[
+(A^*A + pI)^{-1} A^* = A^*(AA^* + pI)^{-1}.
+\]
+
+\subsubsection*{Q23: For an arbitrary matrix A verify the inequalities}
+\[
+1 \leq \frac{\|A\|_F^2}{\|A\|_2^2} \leq \text{rank}(A)
+\]
+pertinent to the Frobenius and spectral norms.
+
+\subsubsection*{Q24: Let \(A\) be a \(2 \times 2\) symmetric matrix. Prove that \(A\) is positive semidefinite if and only if \(\text{tr}(A) \geq 0\) and \(\det(A) \geq 0\). Produce a \(3 \times 3\) symmetric matrix that satisfies these two conditions but fails to be positive semidefinite.}
+
+\subsubsection*{Q25: Demonstrate that a strictly diagonally dominant matrix \(A\) is nonsingular. (Hint: Express \(Ax = 0\) in coordinates.)}
+
+\subsubsection*{Q26: Show that the invertible lower triangular matrix}
+\[
+L = \begin{pmatrix}
+L_1 & 0 \\
+C & L_2
+\end{pmatrix}
+\]
+has inverse
+\[
+L^{-1} = \begin{pmatrix}
+L_1^{-1} & 0 \\
+-L_2^{-1} C L_1^{-1} & L_2^{-1}
+\end{pmatrix}.
+\]
+
+\subsubsection*{Q27: Consider the linear subspaces \( S \) of \( \mathbb{R}^p \). The projection operators \( P_S(x) \) are matrices, and we can define the distance between two such subspaces by \( \| P_S - P_T \| \) using any matrix norm. Show that this defines a metric on the linear subspaces. In the case of two nondegenerate lines \( S = \{ cx : c \in \mathbb{R} \} \) and \( T = \{ cy : c \in \mathbb{R} \} \), show that \( \| P_S - P_T \| = \left\| \frac{aa^*}{\| a \|^2} - \frac{yy^*}{\| y \|^2} \right\|. \)}
+
+\subsubsection*{Q28: Show that}
+\[
+\| x \|_* = \max_{i_1 < i_2 < \ldots < i_k} ( |x_{i_1}| + |x_{i_2}| + \ldots + |x_{i_k}| )
+\]
+is a vector norm on \( \mathbb{R}^n \) for any integer \( k \) between 1 and \( n \).
+
+\subsubsection*{Q29: Let \( f(x) \) be a continuous strictly monotonic function with functional inverse \( f^{-1}(x) \). Consider the generalized mean}
+\[
+M_f(x) = f^{-1} \left( \frac{1}{n} \sum_{i=1}^n f(x_i) \right)
+\]
+of a vector \( x \) with \( n \) components \( x_i \). Show that \( M_f(x) \) possesses the following properties:
+
+(a) \( M_f(x) \) is continuous.
+
+(b) \( M_f(x) \) is strictly increasing in each entry \( x_i \).
+
+(c) \( M_f(x) = M_f(Px) \) for every permutation matrix \( P \).
+
+(d) \( \min_i x_i \leq M_f(x) \leq \max_i x_i \).
+
+(e) \( M_f(cx) = c \).
+
+(f) \( M_{af+b}(x) = M_f(x) \) whenever \( a \neq 0 \).
+
+Further prove that the choice \( f(x) = x^p \) for \( x > 0 \) leads to the power mean. The special values \( p = 1 \), \( p = -1 \), and \( p = 2 \) correspond to the arithmetic, harmonic, and quadratic means. Finally, show that the function \( \sum_{i=1}^n [f(x_i) - f(\mu)]^2 \) is minimized by taking \( \mu = M_f(x) \).
+
+\subsubsection*{Q30: Suppose you have to minimize the strictly convex quadratic}
+\[
+h(\beta) = \frac{1}{2} \beta^* C^* C \beta + v^* \beta.
+\]
+
+How can you leverage the QR decomposition of \( C \) to solve the problem? Note that \( C \) is not necessarily square, but it should have full column rank.
+
+\subsubsection*{Q31: For a square matrix \(A\), show that the equation \( (dI + A)x = y \) has solution}
+\[
+x = d^{-1} \sum_{n=0}^{\infty} (-1)^n d^{-n} A^n y
+\]
+whenever \( \|A\| < d \) for some matrix norm \( \| \cdot \| \). Implement this method in code and test.
+
+\subsubsection*{Q32: Show that the pseudo-inverse \( (A^*A)^{-1}A^* \) of a matrix \(A\) with linearly independent columns and QR decomposition \(QR\) reduces to \(R^{-1}Q^*\).}
 
 \newpage
 \section*{Chapter 6: Newtons Method}
