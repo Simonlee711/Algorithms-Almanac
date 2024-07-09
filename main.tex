@@ -7087,6 +7087,107 @@ For \( f(\mu) \) to have a minimum at some \( \mu \), \( f'(\mu^+) \geq 0 \) and
 
 In summary, \( f(\mu) \) has no minimum for \( |c| > 1 \) due to its divergence towards negative infinity in either the positive or negative direction of \( \mu \). When \( |c| < 1 \), the function's behavior changes, and a minimum occurs under the specific balance conditions for the weights of terms crossing \( \mu \), effectively tuning the right and left slopes to zero. The case \( c = 0 \) specifically results in \( \mu \) being a weighted median of \( \{y_i\} \), minimizing the weighted sum of absolute deviations.
 
+\subsubsection*{Q20: Registration of two images is one of the vexing problems of medical imaging. Let \( y_1, \ldots, y_k \) and \( x_1, \ldots, x_k \) represent two sets of matched anatomical landmarks in \( \mathbb{R}^2 \). Registration can be achieved by mapping \( x_j \) into \( y_j \) for each \( j \). Affine maps \( x \mapsto Ax + b \) are the simplest relevant maps. To estimate \( A \) and \( b \), one can minimize the objective
+\[
+\frac{1}{2} \|Y - AX - B\|_F^2,
+\]
+where the matrix \( B \) has all columns equal to \( b \), and the matrices \( Y \) and \( X \) have \( j \)th columns \( y_j \) and \( x_j \), respectively. One can estimate parameters by block relaxation. Show that the minimum of the objective with respect to \( b \) for \( A \) fixed is achieved by taking \( b \) equal to the average of the columns of the matrix \( Y - AX \). For \( B \) fixed, show that the optimal \( A \) is
+\[
+A = (Y - B)X^*(XX^*)^{-1},
+\]
+assuming \( X \) has full rank. Why do these solutions represent minimum points?
+
+Q10.20: The objective is convex in \( (A, b) \). Hence, a stationary point represents a minimum. If \( Z = Y - AX \) has columns \( z_i \), then}
+\[
+\frac{1}{2} \|Y - AX - B\|_F^2 = \frac{1}{2} \sum_{i=1}^k \|z_i - b\|^2.
+\]
+The block update \( b = \frac{1}{k} \sum_{i=1}^k z_i \) now follows. The directional derivative of the objective with respect to \( A \) in the direction \( W \) is
+\[
+-\operatorname{tr}[(Y - AX - B)^*WX] = -\operatorname{tr}[X(Y - AX - B)^*W].
+\]
+Because this vanishes for all \( W \) at a stationary point, \( (Y - AX - B)X^* = 0 \). One can now solve for the block update of \( A \) in the stated form.}
+
+\subsubsection*{Q23: The Minkowski sum \( A + B \) of two sets \( A \) and \( B \) is defined to be the set of all sums \( a + b \) for \( a \in A \) and \( b \in B \). One can easily prove that \( A + B \) is convex whenever \( A \) and \( B \) are both convex. Unfortunately, \( A + B \) is not necessarily closed when \( A \) and \( B \) are both closed; it is closed if one of the two sets is compact and the other is closed. It is also closed when \( A \) and \( B \) are both polyhedral. A natural question is how to project a point \( x \) onto \( A + B \) given both convexity and closure. Suppose that the projection operators \( P_A(y) \) and \( P_B(z) \) are both known. Show that the alternating algorithm
+\[
+y_{n+1} = P_A(x - z_n)
+\]
+\[
+z_{n+1} = P_B(x - y_{n+1})
+\]
+is just block relaxation for solving this problem. One can argue that \( y_n + z_n \) converges to the solution. Describe this block relaxation algorithm in more detail when \( B \) is the sphere \(\{x : \|x\| \leq r\}\). In this setting \( A + B \) is a kind of halo of the set \( A \).}
+
+Q23: The problem involves minimizing \(\frac{1}{2} \|x - y - z\|^2\) for \( y \in A \) and \( z \in B \). The block update of \( z \) amounts to projection of \( w = x - y \) onto the sphere. This is
+\[ 
+P(w) = \argmin_{z \in B} \frac{1}{2} \|w - z\|^2 
+\]
+\[
+= \begin{cases} 
+w & \|w\| \leq r \\
+\frac{r}{\|w\|} w & \text{otherwise}. 
+\end{cases}
+\]
+\noindent The block update of \( y \) requires projection of \( x - z \) onto \( A \).
+
+\subsubsection*{Q24: Show that Lloyd's algorithm is an MM algorithm.}
+
+Q24: The objective in \( k \)-means clustering can be expressed as
+\[
+\sum_{i=1}^n \min \{\|x_i - \mu_1\|^2, \ldots, \|x_i - \mu_k\|^2\}.
+\]
+\noindent At iteration \( m \) majorize \(\min \{\|x_i - \mu_1\|^2, \ldots, \|x_i - \mu_k\|^2 \}\) by \(\|x_i - \mu_j\|^2 \), where \( x_i \) is closest to the center \(\mu_j \). This corresponds to the reassignment step of Lloyd's algorithm. Minimization of the surrogate is just the re-centering step of Lloyd's algorithm.
+
+\subsubsection*{Q25: In multidimensional scaling assume uniform weights. If we impose the constraint \(\sum_{i=1}^q x_i = 0\), then show that the Lagrangian for the SMACOF surrogate
+\[
+L(X, \lambda) = \sum_{1 \leq i < j \leq q} \|x_i - x_j\|^2 - 2 \sum_{i=1}^q v_{ni}^* x_i + \lambda^* \sum_{i=1}^q x_i
+\]
+\[
+v_{ni} = \sum_{j \neq i} d_{ij} \frac{x_{ni} - x_{nj}}{\|x_{ni} - x_{nj}\|}
+\]
+(one majorization, not two) becomes up to a constant
+Demonstrate that solving the stationary equations leads to the simple MM updates}
+\[
+x_{n+1,i} = \frac{1}{q} \sum_{j=1}^q x_{n+1,j} + \frac{v_{ni}}{q} = \frac{v_{ni}}{q}.
+\]
+
+
+1) Given the Lagrangian:
+
+   $L(X, \lambda) = \sum_{1 \leq i < j \leq q} \|x_i - x_j\|^2 - 2 \sum_{i=1}^q v_{ni}^* x_i + \lambda^* \sum_{i=1}^q x_i$
+
+2) Expand the first term:
+
+   $\sum_{1 \leq i < j \leq q} \|x_i - x_j\|^2 = \frac{1}{2}\sum_{i,j} \|x_i - x_j\|^2 = q\sum_i \|x_i\|^2 - \|\sum_i x_i\|^2$
+
+3) With the constraint $\sum_{i=1}^q x_i = 0$, the Lagrangian becomes:
+
+   $L(X, \lambda) = q\sum_i \|x_i\|^2 - 2 \sum_{i=1}^q v_{ni}^* x_i + \lambda^* \sum_{i=1}^q x_i$
+
+4) To find stationary points, differentiate with respect to $x_i$:
+
+   $\frac{\partial L}{\partial x_i} = 2qx_i - 2v_{ni} + \lambda = 0$
+
+5) Solve for $x_i$:
+
+   $x_i = \frac{1}{q}(v_{ni} - \frac{\lambda}{2})$
+
+6) Sum over i and use the constraint:
+
+   $0 = \sum_i x_i = \frac{1}{q}\sum_i v_{ni} - \frac{q\lambda}{2q}$
+
+   $\lambda = \frac{2}{q^2}\sum_i v_{ni}$
+
+7) Substitute back:
+
+   $x_i = \frac{1}{q}v_{ni} - \frac{1}{q^2}\sum_j v_{nj}$
+
+8) This is equivalent to:
+
+   $x_{n+1,i} = \frac{1}{q} \sum_{j=1}^q x_{n+1,j} + \frac{v_{ni}}{q} = \frac{v_{ni}}{q}$
+
+\subsubsection*{Q26: Apply \( k \)-means clustering to the data \((x_1, x_2, x_3) = (0, 2, 3)\), and show that the initial clusters \(\{0, 2\}\) and \(\{3\}\) are stable and preserved by the algorithm. What is the optimal clustering into 2 groups? Thus, \( k \)-means can converge to an inferior solution.}
+
+Q26: The initial clusters have centers 1 and 3. Both clusters are stable with these centers and loss \( 1^2 + 1^2 + 0^2 = 2 \). The optimal clusters are \(\{0\}\) and \(\{2, 3\}\) with centers 0 and 2.5 and loss \( 0^2 + 0.5^2 + 0.5^2 = 0.5 \).
+
 \newpage
 \section*{Chapter 11: Fast Fourier Transfrom}
 
