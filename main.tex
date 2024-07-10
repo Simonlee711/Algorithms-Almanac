@@ -10344,4 +10344,174 @@ Hence, it is demonstrated that there exists a scalar \( s \in [0,1] \) such that
 
 This inequality effectively bounds the change in \( f \) between any two points in \( U \) by the maximum "stretch" the function's derivative has in any direction multiplied by the distance between the two points. This result is a powerful tool in analysis, particularly in proving continuity, differentiability, and Lipschitz conditions for vector-valued functions.
 
+\section*{2019 Comp Exam}
+
+\subsubsection*{Q1: (20 points) In linear regression with response vector \( \mathbf{y} \), design matrix \( \mathbf{X} \), and regression coefficient vector \( \boldsymbol{\beta} \), find the estimate \( \hat{\boldsymbol{\beta}} \), the predicted values \( \hat{\mathbf{y}} \), the residual vector \( \mathbf{r} \), and the residual sum of squares \( \| \mathbf{r} \|^2 \) in terms of the extended QR decomposition}
+\[
+\begin{pmatrix} \mathbf{X} & \mathbf{y} \end{pmatrix} = \begin{pmatrix} \mathbf{Q} & \mathbf{q} \end{pmatrix} \begin{pmatrix} \mathbf{R} & \mathbf{r} \\ \mathbf{0} & d \end{pmatrix}.
+\]
+
+\subsubsection*{Q2: (20 points) Convert the problem of minimizing \( |x_1| - |x_2| \) subject to \( x_1 + x_2 = 5 \), \( 2x_1 + 3x_2 - x_3 \leq 0 \), and \( x_3 \geq 4 \) into a linear program in standard form.}
+
+\subsubsection*{Q3: (30 points) Show that the function}
+\[
+f(\mathbf{x}) = x_1^2 + x_2^2 + x_3^2 + x_1 x_2 + x_1 x_3 + x_2 x_3 + (x_1^2 + x_2^2 + x_3^2)^2
+\]
+\text{is convex and possesses a global minimum at} \(\mathbf{x} = \mathbf{0}\).
+
+\subsubsection*{Q4: (30 points) Suppose \( f(\mathbf{x}) \) is convex on \( \mathbb{R}^p \) and achieves its minimum at \( \mathbf{y} \). If \( f(\mathbf{x}) \) is also symmetric in the sense that \( f(\mathbf{P}\mathbf{x}) = f(\mathbf{x}) \) for all permutation matrices \( \mathbf{P} \), then demonstrate that \( f(\mathbf{x}) \) possesses a symmetric minimum point \( \mathbf{z} \) with \( \mathbf{P}\mathbf{z} = \mathbf{z} \) for all such \( \mathbf{P} \). (Hint: Symmetrize the point \( \mathbf{y} \).)}
+
+\subsubsection*{Q5: (30 points) Suppose \( f(\mathbf{x}) \) is a convex function with domain \( \mathbb{R}^p \). Derive the majorization}
+\[
+f\left( \sum_{i=1}^m \mathbf{x}_i \right) \leq \frac{1}{m} \sum_{i=1}^m f\left[m(\mathbf{x}_i - \mathbf{x}_{ni} + \bar{\mathbf{x}}_n)\right].
+\]
+\text{involving vectors} \( \mathbf{x}_1, \ldots, \mathbf{x}_m \), \text{where} \( \bar{\mathbf{x}}_n = \frac{1}{m} \sum_{i=1}^m \mathbf{x}_{ni} \) \text{and} \( \mathbf{x}_{ni} \) \text{represents the value of} \( \mathbf{x}_i \) \text{at iteration} \( n \) \text{in some optimization scheme. This majorization splits the vectors. The choices} \( f(\mathbf{x}) = \|\mathbf{x}\|_{\ast} \) \text{and} \( f(\mathbf{x}) = \|\mathbf{x}\|_{\ast}^2 \) \text{involving an arbitrary norm are important in practice.}
+
+\subsubsection*{Q6: (30 points) Devise an acceptance-rejection method for generating beta deviates based on the inequality} 
+\[
+x^{\alpha-1} (1 - x)^{\beta-1} \leq x^{\alpha-1} + (1 - x)^{\beta-1}.
+\]
+
+\section*{2020 Comp Exam}
+
+\subsubsection*{Q1: (10 points) Consider computing the number \( e^{-x} \) via the two expansions}
+\[
+\sum_{n=0}^{\infty} \frac{(-x)^n}{n!} = \frac{1}{\sum_{n=0}^{\infty} \frac{x^n}{n!}}
+\]
+\text{in single precision for} \( x > 0 \). \text{Which expansion is apt to be more accurate? Explain why?}
+
+\subsubsection*{Q2: (30 points) To find the square root of \( c > 0 \), consider the iteration scheme \( x_{n+1} = f(x_n) \) with}
+\[
+f(x) = \frac{c + ax}{a + x}
+\]
+\text{and} \( a^2 > c \). \text{Show that}
+\[
+f'(x) = \frac{a^2 - c}{(a + x)^2}
+\]
+\text{and that} \( |f'(x)| < 1 \). \text{Now explain in detail why} \( \sqrt{c} \) \text{is a fixed point and why} \( x_n \) \text{converges to} \( \sqrt{c} \) \text{regardless of the choice of} \( x_0 \geq 0 \). \text{What is the local rate of convergence at the fixed point?}
+
+\subsubsection*{Q3: (25 points) Let \( \mathbf{A} \) be a \( 2 \times 2 \) symmetric matrix. Prove that \( \mathbf{A} \) is positive semidefinite if and only if \( \text{tr}(\mathbf{A}) \geq 0 \) and \( \det(\mathbf{A}) \geq 0 \). Produce a \( 3 \times 3 \) symmetric matrix that satisfies these two conditions but fails to be positive semidefinite.}
+
+\subsubsection*{Q4: (20 points) Demonstrate that}
+\[
+\det(\mathbf{I} + \mathbf{u}\mathbf{v}^*) = 1 + \mathbf{v}^* \mathbf{u}
+\]
+\text{for} \( \mathbf{u} \) \text{and} \( \mathbf{v} \) \text{column vectors of the same length.}
+
+\subsubsection*{Q5: (25 points) Find the Euclidean projection of a point \( \mathbf{x} \) onto a line segment \([a, b] \subset \mathbb{R}^n \). (Hint: This is a purely one-dimensional problem.)}
+
+\subsubsection*{Q6: (40 points) Registration of two images is one of the vexing problems of medical imaging. Let \( \mathbf{y}_1, \ldots, \mathbf{y}_k \) and \( \mathbf{x}_1, \ldots, \mathbf{x}_k \) represent two sets of matched anatomical landmarks in \( \mathbb{R}^2 \). Registration can be achieved by mapping \( \mathbf{x}_j \) into \( \mathbf{y}_j \) for each \( j \). Affine maps \( \mathbf{x} \mapsto A\mathbf{x} + \mathbf{b} \) are the simplest relevant maps. To estimate \( A \) and \( \mathbf{b} \), one can minimize the objective}
+\[
+\frac{1}{2} \| \mathbf{Y} - A\mathbf{X} - \mathbf{B} \|_F^2,
+\]
+\text{where the matrix} \( \mathbf{B} \) \text{has all columns equal to} \( \mathbf{b} \), \text{and the matrices} \( \mathbf{Y} \) \text{and} \( \mathbf{X} \) \text{have} \( j \)th \text{columns} \( \mathbf{y}_j \) \text{and} \( \mathbf{x}_j \), \text{respectively. One can estimate parameters by block descent. Show that the minimum of the objective with respect to} \( \mathbf{b} \) \text{for} \( A \) \text{fixed is achieved by taking} \( \mathbf{b} \) \text{equal to the average of the columns of the matrix} \( \mathbf{Y} - A\mathbf{X} \). \text{For} \( \mathbf{B} \) \text{fixed, show that the optimal} \( A \) \text{is}
+\[
+A = (\mathbf{Y} - \mathbf{B})\mathbf{X}^*(\mathbf{X}\mathbf{X}^*)^{-1},
+\]
+\text{assuming} \( \mathbf{X} \) \text{has full rank. Why do these solutions represent minimum points?}
+
+\section*{2021 Comp Exam}
+
+\subsubsection*{Q1: (40 points) If you apply Newton’s method to find a root of the function}
+\[
+f(y) = \frac{1}{y^{1/2}} - xy^{3/2} \text{ for } x > 0,
+\]
+\text{then show that the iterates are}
+\[
+y_{n+1} = y_n \left( \frac{3 + xy_n^2}{1 + 3xy_n^2} \right).
+\]
+\text{What is the root of the equation} \( f(y) = 0 \)? \text{Observe that the quantity} \( c = xy_n^2 \) \text{should be calculated only once per iteration. Show that the factor} \( \frac{3 + xy_n^2}{1 + 3xy_n^2} \) \text{is less than 1 if and only if} \( \frac{1}{\sqrt{x}} \leq y_n \). \text{Why is this desirable? Finally, show that} \( \frac{1}{\sqrt{x}} \leq y_n \) \text{if and only if} \( (\sqrt{xy_n} - 1)^3 \geq 0 \). \text{Use this equivalence to prove that} \( \frac{1}{\sqrt{x}} \leq y_n \) \text{if and only if} \( \frac{1}{\sqrt{x}} \leq y_{n+1} \). \text{Together these facts establish global convergence of the algorithm on} \( (0, \infty) \). \text{The algorithm has a fast cubic rate of convergence. (Caution: This is a root finding problem, not an optimization problem.)}
+
+\subsubsection*{Q2: (25 points) Show that the \( m \times m \) matrix}
+\[
+\mathbf{A} = a \mathbf{I}_m + b \mathbf{11}^*
+\]
+\text{has the eigenvector 1 with eigenvalue} \( a + mb \) \text{and} \( m - 1 \) \text{orthogonal eigenvectors}
+\[
+\mathbf{u}_i = \frac{1}{i - 1} \sum_{j = 1}^{i - 1} (\mathbf{e}_j - \mathbf{e}_i),
+\]
+\( i = 2, \ldots, m \), \text{with eigenvalue} \( a \). \text{Under what circumstances is} \( \mathbf{A} \) \text{positive definite.}
+
+\subsubsection*{Q3: (25 points) Prove the squared hinge function} \( \max \{ 1 - u, 0 \}^2 \) \text{is majorized by} \( (u - u_n)^2 \) \text{at} \( u_n \geq 1 \) \text{and by} \( (1 - u)^2 \) \text{for} \( u_n < 1 \). \text{Draw a crude graph to visualize the problem.}
+
+\subsubsection*{Q4: (30 points) Prove the inequality}
+\[
+(x + y)^p \leq x^p + y^p \text{ for } p \in (0, 1) \text{ and } x \text{ and } y \text{ nonnegative. (Hint: First reduce to a one-dimensional problem by dividing.)}
+\]
+
+\subsubsection*{Q5: (25 points) Suppose you have to minimize the convex quadratic}
+\[
+h(\boldsymbol{\beta}) = \frac{1}{2} \boldsymbol{\beta}^* \mathbf{C}^* \mathbf{C} \boldsymbol{\beta} + \mathbf{v}^* \boldsymbol{\beta}.
+\]
+\text{How can you leverage the QR decomposition of} \( \mathbf{C} \) \text{to solve the problem? Note that} \( \mathbf{C} \) \text{is not necessarily square, but it should have full column rank.}
+
+\subsubsection*{Q6: (30 points) Suppose \( X \) is a random variable symmetrically distributed around 0. If \( X \) has quantile function \( Q(u) \), then show that the folded random variable \( Y = |X| \) has quantile function}
+\[
+-Q([1 - u]/2).
+\]
+\text{You may assume \( X \) is continuously distributed. In practice, this exercise extends the inverse sampling method to \( |X| \) and related random variables such as} \( X^2 \).
+
+\section*{2022 Comp Exam}
+
+\subsubsection*{Q1: (20 points) Consider the set \( G \) of real \( 2n \times 2n \) matrices \( M \) satisfying}
+\[
+M^* A M = A,
+\]
+\text{where}
+\[
+A = \begin{pmatrix} 0 & I_n \\ -I_n & 0 \end{pmatrix}.
+\]
+\text{Show that \( G \) is a group under matrix multiplication and that all \( M \in G \) have} \( \det M = \pm 1 \). \text{Actually,} \( \det M = 1 \), \text{but this is harder to prove. (Hint: Show that} \( \det A = 1 \) \text{when} \( n = 1 \). \text{Otherwise, assume this fact.)}
+
+\subsubsection*{Q2: (30 points) Let \( x_1, \ldots, x_m \) be a random sample from the gamma density}
+\[
+f(x) = \Gamma(\alpha)^{-1} \beta^\alpha x^{\alpha - 1} e^{-\beta x}
+\]
+on \( (0, \infty) \). Let \( \bar{x} = \frac{1}{m} \sum_{i=1}^m x_i \) and \( \overline{\ln x} = \frac{1}{m} \sum_{i=1}^m \ln x_i \). Setting the score function equal to 0 identifies \( \beta = \alpha / \bar{x} \) as the maximum of the loglikelihood \( L(\alpha, \beta) \) of the sample for \( \alpha \) fixed. Substituting this value of \( \beta \) in the loglikelihood reduces maximum likelihood estimation to optimization of the profile loglikelihood
+\[
+L(\alpha) = m \alpha \ln \alpha - m \alpha \ln \bar{x} - m \ln \Gamma(\alpha) + m (\alpha - 1) \overline{\ln x} - m \alpha.
+\]
+As an alternative to Newton's method, we approximate \( L(\alpha) \) by the surrogate function \( g(\alpha) = c_0 + c_1 \alpha + c_2 \ln \alpha \). (No majorization is implied.) The coefficients here are generated by matching the derivatives \( g^{(k)}(\alpha_n) \) and \( L^{(k)}(\alpha_n) \) at the current iterate \( \alpha_n \) for \( k = 0, 1, 2 \). Show that maximizing the surrogate leads to the update
+\[
+\frac{1}{\alpha_{n+1}} = \frac{1}{\alpha_n} + \frac{\ln \bar{x} - \ln \overline{\ln x} + \ln \alpha_n - \Psi(\alpha_n)}{\alpha_n - \alpha_n^2 \Psi'(\alpha_n)},
+\]
+where \( \Psi(\alpha) \) is the digamma function (derivative of the log gamma function). Convergence is quick with a good starting value. (Hint: First maximize the surrogate. Note that the coefficient \( c_0 \) is irrelevant so it suffices to match first and second derivatives.)
+
+\subsubsection*{Q3: (20 points) Show that the function}
+\[
+f(\mathbf{x}) = |3x_1 + 4x_2| + |2x_1 + x_2|
+\]
+is convex and attains its minimum of 0 at \( 0 \). Furthermore, show that the slices \( f(x_1, 3) \) and \( f(-4, x_2) \) achieve their minimal value of 5 at \( x_1 = -4 \) and \( x_2 = 3 \). Why are these facts not contradictory?
+
+\subsubsection*{Q4: (25 points) Consider the function}
+\[
+f(x) = [x - \text{sgn}(x)w]^2 = (|x| - w)^2 \quad \text{for} \quad w > 0.
+\]
+Show that it is majorized by the convex quadratics
+\[
+f(x) \leq \begin{cases} 
+(x - w)^2 & x_n > 0 \\
+x^2 + w^2 & x_n = 0 \\
+(x + w)^2 & x_n < 0
+\end{cases}
+\]
+(Hint: Graph \( f(x) \).)
+
+\subsubsection*{Q5: (20 points) Apply \( k \)-means clustering to the data \( (x_1, x_2, x_3) = (0, 2, 3) \), and show that the initial clusters \(\{0, 2\}\) and \(\{3\}\) are stable and preserved by the algorithm. What is the optimal clustering into 2 groups? Thus, \( k \)-means can converge to an inferior solution.}
+
+\subsubsection*{Q6: (30 points) An asymmetric triangular distribution has triangular-shaped probability density function concentrated on the interval \( [a, b] \) with mode at \( m \in (a, b) \). Find the corresponding distribution function \( F(x) \), and show that inverse method generates the random deviate}
+\[
+X = \begin{cases} 
+a + \sqrt{U(b - a)(m - a)} & 0 < U < F(m) \\
+b - \sqrt{(1 - U)(b - a)(b - m)} & F(m) \leq U,
+\end{cases}
+\]
+where \( U \) is uniform on \( [0, 1] \). (Hint: The total mass of the density determines the value of the mode.)
+
+\subsubsection*{Q7: (30 points) Consider the problem of computing \( e^x \) given a fast algorithm for taking logarithms. Why can we restrict \( x \) to positive values? Show Newton's method iterates according to}
+\[
+y_{n+1} = y_n - y_n (\ln y_n - x).
+\]
+Also show that if \( y_n > y_\infty \), then \( y_{n+1} < y_\infty \), and if \( y_n < y_\infty \), then \( y_{n+1} < y_\infty \) as well. In the latter case, prove that \( y_{n+1} \) is closer to \( y_\infty \) than \( y_n \) is. Prove that convergence is global whenever \( y_0 \in (0, e^{1+x}) \). (Hints: Apply the mean value theorem to \( y_{n+1} - x \). Under what condition does \( y_{n+1} > 0 \)?)
+
 \end{document}
