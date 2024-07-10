@@ -6,6 +6,7 @@
 \usepackage{minted}
 \usepackage{amsfonts} % Add this line to include the amsfonts package
 \usepackage{datetime} % For date if required
+\usepackage{graphicx}
 
 \usepackage{algorithm}
 \usepackage{algpseudocode} % Part of algorithmicx package
@@ -10607,6 +10608,23 @@ This acceptance-rejection method efficiently generates beta deviates using the g
 \]
 \text{in single precision for} \( x > 0 \). \text{Which expansion is apt to be more accurate? Explain why?}
 
+The accuracy of the two given expansions for computing \( e^{-x} \) can be analyzed based on their numerical stability and convergence behavior, especially when calculated in single precision floating point arithmetic.
+
+\textbf{1. Direct Expansion:}
+   \[
+   \sum_{n=0}^{\infty} \frac{(-x)^n}{n!}
+   \]
+   This series is the standard Taylor series expansion for \( e^{-x} \). It is directly derived from the exponential function's Taylor series by substituting \(-x\) for \(x\). This series is generally well-behaved because each term is computed by multiplying the previous term by a fraction, \( \frac{-x}{n} \), which can be computed with high accuracy even in single precision as long as \(x\) is not excessively large.
+
+\textbf{2. Reciprocal Expansion:}
+   \[
+   \frac{1}{\sum_{n=0}^{\infty} \frac{x^n}{n!}}
+   \]
+   This form calculates \( e^x \) first and then takes the reciprocal to find \( e^{-x} \). While the series for \( e^x \) itself is numerically stable, the operation of taking the reciprocal can introduce significant numerical issues, particularly when \( e^x \) is very large or very small. In single precision, where the number of significant digits is limited, calculating the reciprocal of a very large or very small value can lead to substantial rounding errors.
+
+\textbf{Conclusion:}
+The direct expansion \( \sum_{n=0}^{\infty} \frac{(-x)^n}{n!} \) is more apt to be accurate for computing \( e^{-x} \) in single precision, particularly for values of \( x > 0 \). This method avoids the additional rounding errors that can occur from the reciprocal operation in the alternative expansion. It is directly aligned with how exponential functions are typically computed in numerical analysis, ensuring better control over error propagation and numerical stability.
+
 \subsubsection*{Q2: (30 points) To find the square root of \( c > 0 \), consider the iteration scheme \( x_{n+1} = f(x_n) \) with}
 \[
 f(x) = \frac{c + ax}{a + x}
@@ -10617,7 +10635,121 @@ f'(x) = \frac{a^2 - c}{(a + x)^2}
 \]
 \text{and that} \( |f'(x)| < 1 \). \text{Now explain in detail why} \( \sqrt{c} \) \text{is a fixed point and why} \( x_n \) \text{converges to} \( \sqrt{c} \) \text{regardless of the choice of} \( x_0 \geq 0 \). \text{What is the local rate of convergence at the fixed point?}
 
+To demonstrate the assertions made in the problem statement, let's start by deriving the expression for the derivative of \( f(x) \) as given:
+
+\textbf{Step 1: Derive \( f'(x) \)}
+Given:
+\[
+f(x) = \frac{c + ax}{a + x}
+\]
+
+Applying the quotient rule \( (u/v)' = (u'v - uv')/v^2 \), we set \( u = c + ax \) and \( v = a + x \). Thus, \( u' = a \) and \( v' = 1 \), leading to:
+\[
+f'(x) = \frac{(a)(a + x) - (c + ax)(1)}{(a + x)^2} = \frac{a^2 + ax - c - ax}{(a + x)^2} = \frac{a^2 - c}{(a + x)^2}
+\]
+
+\textbf{Step 2: Analyze \( |f'(x)| < 1 \)}
+Given \( a^2 > c \), \( a^2 - c > 0 \). Therefore, \( f'(x) = \frac{a^2 - c}{(a + x)^2} \) where \( (a + x)^2 \) is always positive for any \( x \geq 0 \) given \( a > 0 \). Thus:
+\[
+|f'(x)| = \frac{a^2 - c}{(a + x)^2}
+\]
+Since \( a + x \geq a \), and \( a > 0 \), \( (a + x)^2 \) is always greater than \( a^2 \) when \( x > 0 \) and equal when \( x = 0 \). Therefore, \( |f'(x)| < 1 \).
+
+\textbf{Step 3: Show \( \sqrt{c} \) as a Fixed Point and Convergence}
+\( \sqrt{c} \) is a fixed point if \( f(\sqrt{c}) = \sqrt{c} \). Substitute \( x = \sqrt{c} \) into \( f(x) \):
+\[
+f(\sqrt{c}) = \frac{c + a\sqrt{c}}{a + \sqrt{c}} = \frac{\sqrt{c}(a + \sqrt{c})}{a + \sqrt{c}} = \sqrt{c}
+\]
+Thus, \( \sqrt{c} \) is indeed a fixed point.
+
+For convergence, since \( |f'(x)| < 1 \) for all \( x \geq 0 \), by the contraction mapping theorem, the sequence \( x_n \) defined by the iteration \( x_{n+1} = f(x_n) \) converges to the fixed point \( \sqrt{c} \) for any initial \( x_0 \geq 0 \). The absolute value of the derivative being less than 1 ensures that errors diminish geometrically, making the scheme convergent.
+
+\textbf{Step 4: Local Rate of Convergence}
+The local rate of convergence at the fixed point \( \sqrt{c} \) can be approximated by \( |f'(\sqrt{c})| \), representing the speed at which the iterations approach the fixed point:
+\[
+f'(\sqrt{c}) = \frac{a^2 - c}{(a + \sqrt{c})^2}
+\]
+This ratio quantifies the convergence rate, suggesting a linear convergence rate determined by the magnitude of \( f'(\sqrt{c}) \).
+
+This iterative method, thus, not only provides a mechanism to compute \( \sqrt{c} \) but does so efficiently, converging linearly to the true value under the conditions provided.
+
 \subsubsection*{Q3: (25 points) Let \( \mathbf{A} \) be a \( 2 \times 2 \) symmetric matrix. Prove that \( \mathbf{A} \) is positive semidefinite if and only if \( \text{tr}(\mathbf{A}) \geq 0 \) and \( \det(\mathbf{A}) \geq 0 \). Produce a \( 3 \times 3 \) symmetric matrix that satisfies these two conditions but fails to be positive semidefinite.}
+
+\textbf{Proof for \(2 \times 2\) Case}
+
+Let \( \mathbf{A} \) be a \(2 \times 2\) symmetric matrix, which can be expressed as:
+\[
+\mathbf{A} = \begin{bmatrix}
+a & b \\
+b & c
+\end{bmatrix}
+\]
+A matrix \( \mathbf{A} \) is positive semidefinite if and only if all its eigenvalues are non-negative.
+
+\textbf{Eigenvalues of \( \mathbf{A} \)}
+The characteristic equation of \( \mathbf{A} \) is given by the determinant of \( \mathbf{A} - \lambda \mathbf{I} \):
+\[
+\det(\mathbf{A} - \lambda \mathbf{I}) = \det\begin{bmatrix}
+a - \lambda & b \\
+b & c - \lambda
+\end{bmatrix} = (a-\lambda)(c-\lambda) - b^2 = \lambda^2 - (a+c)\lambda + (ac - b^2)
+\]
+The eigenvalues \( \lambda \) are the roots of the quadratic equation \( \lambda^2 - \text{tr}(\mathbf{A})\lambda + \det(\mathbf{A}) = 0 \).
+
+\textbf{Positive Semidefiniteness Conditions}
+\textbf{1. Trace Condition}: \( \text{tr}(\mathbf{A}) = a + c \geq 0 \)
+\textbf{2. Determinant Condition}: \( \det(\mathbf{A}) = ac - b^2 \geq 0 \)
+
+These conditions ensure that the discriminant of the characteristic polynomial is non-negative (as \( \text{tr}(\mathbf{A})^2 - 4\det(\mathbf{A}) \geq 0 \)) and thus the eigenvalues are real. Since the trace is the sum of eigenvalues and both eigenvalues multiply to a non-negative number (the determinant), both eigenvalues are non-negative if and only if both conditions are met.
+
+\textbf{Constructing a \(3 \times 3\) Counterexample}
+
+Now, let's construct a \(3 \times 3\) symmetric matrix that satisfies the trace \(\geq 0\) and determinant \(\geq 0\) conditions but is not positive semidefinite:
+
+Consider the matrix:
+\[
+\mathbf{B} = \begin{bmatrix}
+0 & 1 & 0 \\
+1 & 0 & 1 \\
+0 & 1 & 0
+\end{bmatrix}
+\]
+\textbf{Trace Calculation:}
+\[
+\text{tr}(\mathbf{B}) = 0 + 0 + 0 = 0
+\]
+\textbf{Determinant Calculation:}
+Expanding by minors along the first row:
+\[
+\det(\mathbf{B}) = 0 \cdot \det\begin{bmatrix}
+0 & 1 \\
+1 & 0
+\end{bmatrix} - 1 \cdot \det\begin{bmatrix}
+1 & 1 \\
+0 & 0
+\end{bmatrix} + 0 \cdot \det\begin{bmatrix}
+1 & 0 \\
+0 & 1
+\end{bmatrix} = 0 - 0 + 0 = 0
+\]
+
+Despite satisfying the conditions, to verify whether it is positive semidefinite, we need to look at the eigenvalues. Calculating eigenvalues of \(\mathbf{B}\):
+\[
+\det(\mathbf{B} - \lambda \mathbf{I}) = \det\begin{bmatrix}
+-\lambda & 1 & 0 \\
+1 & -\lambda & 1 \\
+0 & 1 & -\lambda
+\end{bmatrix}
+\]
+The characteristic polynomial is:
+\[
+-\lambda(-\lambda^2 - 1) + 1(-\lambda) = \lambda^3 - \lambda - \lambda = \lambda^3 - 2\lambda
+\]
+Factorizing:
+\[
+\lambda(\lambda^2 - 2)
+\]
+The eigenvalues are \(0, \sqrt{2}, -\sqrt{2}\). Since \(-\sqrt{2}\) is negative, \(\mathbf{B}\) is not positive semidefinite despite satisfying both the trace and determinant conditions, proving it can fail for higher dimensions.
 
 \subsubsection*{Q4: (20 points) Demonstrate that}
 \[
@@ -10625,17 +10757,139 @@ f'(x) = \frac{a^2 - c}{(a + x)^2}
 \]
 \text{for} \( \mathbf{u} \) \text{and} \( \mathbf{v} \) \text{column vectors of the same length.}
 
+To demonstrate the given identity, consider \(\mathbf{u}\) and \(\mathbf{v}\) as column vectors of the same length. The matrix \(\mathbf{u}\mathbf{v}^*\) is a rank-1 matrix formed by the outer product of \(\mathbf{u}\) and \(\mathbf{v}\).
+
+\textbf{Matrix Rank-1 Property}
+The matrix \(\mathbf{u}\mathbf{v}^*\) can be expressed as:
+\[
+\mathbf{u}\mathbf{v}^* = [u_1, u_2, \dots, u_n]^T [v_1, v_2, \dots, v_n] = \begin{bmatrix}
+u_1v_1 & u_1v_2 & \cdots & u_1v_n \\
+u_2v_1 & u_2v_2 & \cdots & u_2v_n \\
+\vdots & \vdots & \ddots & \vdots \\
+u_nv_1 & u_nv_2 & \cdots & u_nv_n
+\end{bmatrix}
+\]
+
+\textbf{Determinant of Identity Plus a Rank-1 Matrix}
+The matrix \(\mathbf{I} + \mathbf{u}\mathbf{v}^*\) is the identity matrix plus a rank-1 matrix. The determinant of such a matrix can be computed using a known result from linear algebra, which states:
+\[
+\det(\mathbf{I} + \mathbf{AB}) = 1 + \text{tr}(\mathbf{AB})
+\]
+where \(\mathbf{A}\) and \(\mathbf{B}\) are matrices such that \(\mathbf{AB}\) is square. In our case, \(\mathbf{A} = \mathbf{u}\) and \(\mathbf{B} = \mathbf{v}^*\), and \(\mathbf{AB} = \mathbf{u}\mathbf{v}^*\) which is also square.
+
+\textbf{Trace of \(\mathbf{u}\mathbf{v}^*\)}
+The trace of a matrix is the sum of its diagonal elements. For \(\mathbf{u}\mathbf{v}^*\), each diagonal element is \(u_iv_i\), so:
+\[
+\text{tr}(\mathbf{u}\mathbf{v}^*) = \sum_{i=1}^n u_iv_i = \mathbf{v}^* \mathbf{u}
+\]
+where \(\mathbf{v}^*\) is the conjugate transpose of \(\mathbf{v}\), and the operation \(\mathbf{v}^* \mathbf{u}\) results in the dot product of \(\mathbf{v}\) and \(\mathbf{u}\).
+
+\textbf{Resulting Determinant}
+Applying the trace result to the determinant formula, we have:
+\[
+\det(\mathbf{I} + \mathbf{u}\mathbf{v}^*) = 1 + \text{tr}(\mathbf{u}\mathbf{v}^*) = 1 + \mathbf{v}^* \mathbf{u}
+\]
+
+This shows that the determinant of \(\mathbf{I} + \mathbf{u}\mathbf{v}^*\) is indeed \(1 + \mathbf{v}^* \mathbf{u}\), confirming the statement given in the problem. This conclusion holds regardless of whether the field over which the vectors are defined is real or complex, as the properties used in the derivation are general.
+
 \subsubsection*{Q5: (25 points) Find the Euclidean projection of a point \( \mathbf{x} \) onto a line segment \([a, b] \subset \mathbb{R}^n \). (Hint: This is a purely one-dimensional problem.)}
 
-\subsubsection*{Q6: (40 points) Registration of two images is one of the vexing problems of medical imaging. Let \( \mathbf{y}_1, \ldots, \mathbf{y}_k \) and \( \mathbf{x}_1, \ldots, \mathbf{x}_k \) represent two sets of matched anatomical landmarks in \( \mathbb{R}^2 \). Registration can be achieved by mapping \( \mathbf{x}_j \) into \( \mathbf{y}_j \) for each \( j \). Affine maps \( \mathbf{x} \mapsto A\mathbf{x} + \mathbf{b} \) are the simplest relevant maps. To estimate \( A \) and \( \mathbf{b} \), one can minimize the objective}
+The Euclidean projection of a point \(\mathbf{x}\) onto a line segment \([a, b] \subset \mathbb{R}^n\) can be determined through a series of geometric and algebraic steps. This process involves computing the closest point on the line segment \([a, b]\) to the point \(\mathbf{x}\), which minimizes the Euclidean distance between \(\mathbf{x}\) and any point on the segment.
+
+\textbf{Step 1: Parametric Representation of the Line Segment}
+First, represent the line segment \([a, b]\) parametrically. Any point \(\mathbf{y}\) on the line segment can be expressed as:
+\[
+\mathbf{y}(t) = a + t(b - a), \quad t \in [0, 1]
+\]
+where \(a\) and \(b\) are endpoints of the segment, and \(t\) is a parameter that varies linearly from 0 to 1.
+
+\textbf{Step 2: Formulate the Optimization Problem}
+The task is to find the point \(\mathbf{y}(t)\) on the segment that minimizes the Euclidean distance to \(\mathbf{x}\). This distance can be expressed as:
+\[
+\|\mathbf{x} - \mathbf{y}(t)\|^2 = \|\mathbf{x} - (a + t(b - a))\|^2
+\]
+Expanding this, we have:
+\[
+\|\mathbf{x} - a - t(b - a)\|^2 = \|\mathbf{x} - a\|^2 - 2t(\mathbf{x} - a) \cdot (b - a) + t^2\|b - a\|^2
+\]
+To find the minimum distance, we take the derivative with respect to \(t\) and set it to zero, solving for \(t\):
+\[
+\frac{d}{dt}[\|\mathbf{x} - a\|^2 - 2t(\mathbf{x} - a) \cdot (b - a) + t^2\|b - a\|^2] = 0
+\]
+\[
+-2(\mathbf{x} - a) \cdot (b - a) + 2t\|b - a\|^2 = 0
+\]
+\[
+t = \frac{(\mathbf{x} - a) \cdot (b - a)}{\|b - a\|^2}
+\]
+
+\textbf{Step 3: Clamping \(t\) Within the Interval \([0, 1]\)}
+Since \(t\) must lie within the interval \([0, 1]\) for \(\mathbf{y}(t)\) to be on the segment, the projection \(t\) is clamped:
+\[
+t = \max(0, \min(1, \frac{(\mathbf{x} - a) \cdot (b - a)}{\|b - a\|^2}))
+\]
+
+\textbf{Step 4: Compute the Projection Point}
+Using the clamped value of \(t\), the projection point \(\mathbf{y}\) on the segment is given by:
+\[
+\mathbf{y} = a + t(b - a)
+\]
+
+This projection point \(\mathbf{y}\) is the closest point on the line segment \([a, b]\) to \(\mathbf{x}\) in Euclidean space. This solution effectively handles all cases, including when \(\mathbf{x}\) projects outside the segment, wherein the projection clamps to the nearest endpoint, either \(a\) or \(b\).
+
+\subsubsection*{Q6: (40 points) Registration of two images is one of the vexing problems of medical imaging. Let \( \mathbf{y}_1, \ldots, \mathbf{y}_k \) and \( \mathbf{x}_1, \ldots, \mathbf{x}_k \) represent two sets of matched anatomical landmarks in \( \mathbb{R}^2 \). Registration can be achieved by mapping \( \mathbf{x}_j \) into \( \mathbf{y}_j \) for each \( j \). Affine maps \( \mathbf{x} \mapsto A\mathbf{x} + \mathbf{b} \) are the simplest relevant maps. To estimate \( A \) and \( \mathbf{b} \), one can minimize the objective
 \[
 \frac{1}{2} \| \mathbf{Y} - A\mathbf{X} - \mathbf{B} \|_F^2,
 \]
-\text{where the matrix} \( \mathbf{B} \) \text{has all columns equal to} \( \mathbf{b} \), \text{and the matrices} \( \mathbf{Y} \) \text{and} \( \mathbf{X} \) \text{have} \( j \)th \text{columns} \( \mathbf{y}_j \) \text{and} \( \mathbf{x}_j \), \text{respectively. One can estimate parameters by block descent. Show that the minimum of the objective with respect to} \( \mathbf{b} \) \text{for} \( A \) \text{fixed is achieved by taking} \( \mathbf{b} \) \text{equal to the average of the columns of the matrix} \( \mathbf{Y} - A\mathbf{X} \). \text{For} \( \mathbf{B} \) \text{fixed, show that the optimal} \( A \) \text{is}
+where the matrix \( \mathbf{B} \) has all columns equal to \( \mathbf{b} \), and the matrices \( \mathbf{Y} \) and \( \mathbf{X} \) have \( j \)th columns \( \mathbf{y}_j \) and \( \mathbf{x}_j \), respectively. One can estimate parameters by block descent. Show that the minimum of the objective with respect to \( \mathbf{b} \) for \( A \) fixed is achieved by taking \( \mathbf{b} \) equal to the average of the columns of the matrix \( \mathbf{Y} - A\mathbf{X} \). For \( \mathbf{B} \) fixed, show that the optimal \( A \) is
 \[
 A = (\mathbf{Y} - \mathbf{B})\mathbf{X}^*(\mathbf{X}\mathbf{X}^*)^{-1},
 \]
-\text{assuming} \( \mathbf{X} \) \text{has full rank. Why do these solutions represent minimum points?}
+assuming \( \mathbf{X} \) has full rank. Why do these solutions represent minimum points?}
+
+To solve this problem, we'll analyze both the minimization of the given objective with respect to \(\mathbf{b}\) when \(A\) is fixed, and with respect to \(A\) when \(\mathbf{B}\) is fixed. We'll also explain why these solutions represent minimum points of the objective.
+
+\textbf{Minimizing with Respect to \(\mathbf{b}\)}
+
+Given the objective function:
+\[
+\frac{1}{2} \| \mathbf{Y} - A\mathbf{X} - \mathbf{B} \|_F^2
+\]
+where \(\mathbf{B}\) is a matrix with all columns equal to \(\mathbf{b}\), we need to find the value of \(\mathbf{b}\) that minimizes this function when \(A\) is fixed.
+
+First, express \(\mathbf{B}\) as \(\mathbf{B} = \mathbf{1}\mathbf{b}^T\), where \(\mathbf{1}\) is a matrix of all ones (matching the dimensions). Then:
+\[
+\mathbf{Y} - A\mathbf{X} - \mathbf{B} = \mathbf{Y} - A\mathbf{X} - \mathbf{1}\mathbf{b}^T
+\]
+
+To minimize \(\|\mathbf{Y} - A\mathbf{X} - \mathbf{1}\mathbf{b}^T\|_F^2\), take the derivative with respect to \(\mathbf{b}\) and set it to zero. The Frobenius norm is minimized when the column means of the residual matrix \(\mathbf{Y} - A\mathbf{X}\) equal \(\mathbf{b}\), effectively making:
+\[
+\mathbf{b} = \text{average}(\mathbf{Y} - A\mathbf{X})
+\]
+Here, the average is taken column-wise, which indeed minimizes the objective because this balances the residuals across all observations by reducing the sum of squared deviations from the mean (minimizing each element of the residual matrix).
+
+\textbf{Minimizing with Respect to \(A\)}
+
+With \(\mathbf{B}\) fixed, rewrite the objective function emphasizing \(A\):
+\[
+\frac{1}{2} \| \mathbf{Y} - \mathbf{B} - A\mathbf{X} \|_F^2
+\]
+
+To minimize this with respect to \(A\), consider the form:
+\[
+A\mathbf{X}\mathbf{X}^* = (\mathbf{Y} - \mathbf{B})\mathbf{X}^*
+\]
+
+Multiplying both sides by \((\mathbf{X}\mathbf{X}^*)^{-1}\) (assuming \(\mathbf{X}\) has full rank and hence \(\mathbf{X}\mathbf{X}^*\) is invertible), we obtain:
+\[
+A = (\mathbf{Y} - \mathbf{B})\mathbf{X}^*(\mathbf{X}\mathbf{X}^*)^{-1}
+\]
+
+This solution is derived by setting the gradient of the objective with respect to \(A\) to zero, reflecting a least squares solution for the linear system, and ensuring that the sum of squared errors between the predicted and actual values is minimized.
+
+\textbf{Why These Solutions Represent Minimum Points}
+
+These solutions represent minimum points of the objective function because they are derived by setting the gradient (first derivative) of the objective function to zero, which is a necessary condition for a minimum in a convex optimization problem. The objective function is quadratic in terms of both \(A\) and \(\mathbf{b}\), and hence any critical point derived by setting the gradient to zero is a global minimum. This ensures that the solutions for \(A\) and \(\mathbf{b}\) provided indeed lead to the lowest possible values of the objective function under the constraints set by the matrix equations.
 
 \newpage
 
@@ -10645,11 +10899,56 @@ A = (\mathbf{Y} - \mathbf{B})\mathbf{X}^*(\mathbf{X}\mathbf{X}^*)^{-1},
 \[
 f(y) = \frac{1}{y^{1/2}} - xy^{3/2} \text{ for } x > 0,
 \]
-\text{then show that the iterates are}
+then show that the iterates are
 \[
 y_{n+1} = y_n \left( \frac{3 + xy_n^2}{1 + 3xy_n^2} \right).
 \]
-\text{What is the root of the equation} \( f(y) = 0 \)? \text{Observe that the quantity} \( c = xy_n^2 \) \text{should be calculated only once per iteration. Show that the factor} \( \frac{3 + xy_n^2}{1 + 3xy_n^2} \) \text{is less than 1 if and only if} \( \frac{1}{\sqrt{x}} \leq y_n \). \text{Why is this desirable? Finally, show that} \( \frac{1}{\sqrt{x}} \leq y_n \) \text{if and only if} \( (\sqrt{xy_n} - 1)^3 \geq 0 \). \text{Use this equivalence to prove that} \( \frac{1}{\sqrt{x}} \leq y_n \) \text{if and only if} \( \frac{1}{\sqrt{x}} \leq y_{n+1} \). \text{Together these facts establish global convergence of the algorithm on} \( (0, \infty) \). \text{The algorithm has a fast cubic rate of convergence. (Caution: This is a root finding problem, not an optimization problem.)}
+What is the root of the equation \( f(y) = 0 \)? Observe that the quantity \( c = xy_n^2 \) should be calculated only once per iteration. Show that the factor \( \frac{3 + xy_n^2}{1 + 3xy_n^2} \) is less than 1 if and only if \( \frac{1}{\sqrt{x}} \leq y_n \). Why is this desirable? Finally, show that \( \frac{1}{\sqrt{x}} \leq y_n \) if and only if \( (\sqrt{xy_n} - 1)^3 \geq 0 \). Use this equivalence to prove that \( \frac{1}{\sqrt{x}} \leq y_n \) if and only if \( \frac{1}{\sqrt{x}} \leq y_{n+1} \). Together these facts establish global convergence of the algorithm on \( (0, \infty) \). The algorithm has a fast cubic rate of convergence. (Caution: This is a root finding problem, not an optimization problem.)
+
+To analyze the given iterative process and prove the assertions about the convergence of Newton's method applied to the function \( f(y) \), let's break down the steps:
+
+\textbf{Function and Its Derivative}
+The function given is:
+\[
+f(y) = \frac{1}{y^{1/2}} - xy^{3/2}
+\]
+For Newton's method, we need the derivative \( f'(y) \), which is:
+\[
+f'(y) = -\frac{1}{2}y^{-3/2} - \frac{3}{2}xy^{1/2}
+\]
+
+\textbf{Newton's Iteration Formula}
+Newton's method updates \( y \) according to:
+\[
+y_{n+1} = y_n - \frac{f(y_n)}{f'(y_n)}
+\]
+Substituting for \( f(y) \) and \( f'(y) \), we get:
+\[
+y_{n+1} = y_n - \frac{\frac{1}{y_n^{1/2}} - xy_n^{3/2}}{-\frac{1}{2}y_n^{-3/2} - \frac{3}{2}xy_n^{1/2}}
+\]
+Simplifying this, we obtain the update formula:
+\[
+y_{n+1} = y_n \left( \frac{3 + xy_n^2}{1 + 3xy_n^2} \right)
+\]
+
+\textbf{Root of \( f(y) = 0 \)}
+To find the root of \( f(y) \):
+\[
+\frac{1}{y^{1/2}} = xy^{3/2}
+\]
+\[
+1 = xy^2
+\]
+\[
+y = \frac{1}{\sqrt{x}}
+\]
+So, the root of \( f(y) = 0 \) is \( y = \frac{1}{\sqrt{x}} \).
+
+\textbf{Factor \( \frac{3 + xy_n^2}{1 + 3xy_n^2} \) and Its Significance}
+The factor \( \frac{3 + xy_n^2}{1 + 3xy_n^2} \) being less than 1 when \( \frac{1}{\sqrt{x}} \leq y_n \) ensures the iterates are converging towards \( \frac{1}{\sqrt{x}} \) since \( \frac{3 + c}{1 + 3c} < 1 \) for \( c > 0 \) (where \( c = xy_n^2 \)). This reduction per iteration leads to the desired stability and convergence of the method.
+
+\textbf{Global Convergence and Cubic Rate of Convergence}
+The condition \( (\sqrt{xy_n} - 1)^3 \geq 0 \) translates into non-negative values whenever \( \sqrt{xy_n} \geq 1 \) or \( \frac{1}{\sqrt{x}} \leq y_n \), ensuring each successive iterate remains above \( \frac{1}{\sqrt{x}} \). This inequality’s preservation from \( y_n \) to \( y_{n+1} \) supports the algorithm's global convergence on \( (0, \infty) \) due to the consistent reduction and bounding of the iterates. The cubic rate of convergence is suggested by the factor's form and the rapid reduction in the error term, making this a very efficient root-finding method for this specific function form.
 
 \subsubsection*{Q2: (25 points) Show that the \( m \times m \) matrix}
 \[
@@ -10661,24 +10960,109 @@ y_{n+1} = y_n \left( \frac{3 + xy_n^2}{1 + 3xy_n^2} \right).
 \]
 \( i = 2, \ldots, m \), \text{with eigenvalue} \( a \). \text{Under what circumstances is} \( \mathbf{A} \) \text{positive definite.}
 
-\subsubsection*{Q3: (25 points) Prove the squared hinge function} \( \max \{ 1 - u, 0 \}^2 \) \text{is majorized by} \( (u - u_n)^2 \) \text{at} \( u_n \geq 1 \) \text{and by} \( (1 - u)^2 \) \text{for} \( u_n < 1 \). \text{Draw a crude graph to visualize the problem.}
+To show the properties of the matrix \(\mathbf{A} = a \mathbf{I}_m + b \mathbf{11}^*\) and under what circumstances it is positive definite, let's work through the eigenvalues, eigenvectors, and positive definiteness:
 
-\subsubsection*{Q4: (30 points) Prove the inequality}
+\textbf{Eigenvalues and Eigenvectors}
+
+1. \textbf{Matrix Description:}
+   - \(\mathbf{I}_m\) is the \(m \times m\) identity matrix.
+   - \(\mathbf{11}^*\) is an \(m \times m\) matrix where every element is 1, which can be seen as the outer product of a vector of all ones with itself.
+
+2. \textbf{Eigenvalues}:
+   - \textbf{First Eigenvalue}: Consider the vector of all ones, \(\mathbf{1}\). For this vector:
+     \[
+     \mathbf{A}\mathbf{1} = a \mathbf{I}_m \mathbf{1} + b \mathbf{11}^*\mathbf{1} = a\mathbf{1} + b(m\mathbf{1}) = (a + mb)\mathbf{1}
+     \]
+     Thus, \(\mathbf{1}\) is an eigenvector with eigenvalue \(a + mb\).
+   - \textbf{Other Eigenvalues}: For any vector \(\mathbf{u}\) orthogonal to \(\mathbf{1}\), we have \(\mathbf{11}^*\mathbf{u} = \mathbf{0}\) because the sum of the elements of \(\mathbf{u}\) in each row is zero. Hence,
+     \[
+     \mathbf{A}\mathbf{u} = a \mathbf{I}_m \mathbf{u} + b \mathbf{11}^*\mathbf{u} = a\mathbf{u}
+     \]
+     Therefore, any vector orthogonal to \(\mathbf{1}\) is an eigenvector with eigenvalue \(a\), and since the dimension of the space orthogonal to \(\mathbf{1}\) is \(m-1\), there are \(m-1\) such eigenvectors.
+
+\textbf{3. Orthogonal Eigenvectors:}
+   - \textbf{Construction of \( \mathbf{u}_i \)}: The given vectors
+     \[
+     \mathbf{u}_i = \frac{1}{i-1} \sum_{j=1}^{i-1} (\mathbf{e}_j - \mathbf{e}_i)
+     \]
+     where \( \mathbf{e}_j \) are the standard basis vectors, are constructed to be orthogonal to each other and to \(\mathbf{1}\). They span the \(m-1\) dimensional subspace orthogonal to \(\mathbf{1}\), hence they are the eigenvectors corresponding to the eigenvalue \(a\).
+
+\textbf{Positive Definiteness}
+\textbf{- Conditions for Positive Definiteness:}
+  - A matrix is positive definite if all its eigenvalues are positive.
+  - From the eigenvalues derived:
+    - \(a + mb > 0\)
+    - \(a > 0\)
+  - These conditions are necessary and sufficient for \(\mathbf{A}\) to be positive definite.
+
+By verifying the eigenvectors and eigenvalues, and stating the conditions for positive definiteness, we've analyzed the properties of matrix \(\mathbf{A}\).
+
+\subsubsection*{Q3: (25 points) Prove the squared hinge function \( \max \{ 1 - u, 0 \}^2 \) \text{is majorized by} \( (u - u_n)^2 \) \text{at} \( u_n \geq 1 \) \text{and by} \( (1 - u)^2 \) \text{for} \( u_n < 1 \). \text{Draw a crude graph to visualize the problem.}}
+
+\textbf{Proof of Majorization}
+
+The squared hinge loss function \( \max \{ 1 - u, 0 \}^2 \) is a piecewise function that transitions at \( u = 1 \). Let's analyze the majorization by considering two cases based on the value of \( u_n \):
+
+\textbf{Case 1: \( u_n \geq 1 \)}
+When \( u_n \geq 1 \), the hinge function evaluates to \( \max \{ 1 - u, 0 \}^2 = 0 \). To show that \( (u - u_n)^2 \) majorizes \( \max \{ 1 - u, 0 \}^2 \) at \( u_n \), we note:
+- For \( u \geq 1 \), \( \max \{ 1 - u, 0 \}^2 = 0 \) and \( (u - u_n)^2 \geq 0 \), thus majorizing the hinge loss.
+- For \( u < 1 \), \( \max \{ 1 - u, 0 \}^2 = (1 - u)^2 \) and since \( u_n \geq 1 \), \( u - u_n \leq 0 \). Therefore, \( (u - u_n)^2 \) is a square term and will always be non-negative and will still be greater than or equal to \( (1 - u)^2 \).
+
+\textbf{Case 2: \( u_n < 1 \)}
+Here, the function \( (1 - u)^2 \) is used to majorize. Again, we check:
+- \( \max \{ 1 - u, 0 \}^2 = (1 - u)^2 \) for \( u < 1 \), and it matches exactly with the majorizing function.
+- For \( u \geq 1 \), \( \max \{ 1 - u, 0 \}^2 = 0 \), which is always less than or equal to \( (1 - u)^2 \) since \( (1 - u)^2 \) grows as \( u \) increases beyond 1.
+
+\textbf{Graph Visualization}
+
+To visualize the problem, we will sketch the squared hinge loss function and its majorizing functions for both cases.
+
+Graph:
+\begin{verbatim}
+y-axis (Function Value)
+|
+|                    ...............
+|                ..../
+|              ../
+|             /
+|            / ................. (u - u_n)^2 when u_n >= 1
+|           /
+|   ------/------ (1 - u)^2 when u_n < 1
+|         /
+|       /
+|    ./
+|  /
+|/__________________ x-axis (u)
+\end{verbatim}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{graph.png}
+    \caption{Graph 1}
+\end{figure}
+
+- The solid line represents the squared hinge loss \( \max \{ 1 - u, 0 \}^2 \).
+- The dotted lines represent the majorizing functions in their respective ranges.
+
+\textbf{Conclusion}
+By analyzing the squared hinge function for \( u_n \geq 1 \) and \( u_n < 1 \), we see that the given majorizing functions \( (u - u_n)^2 \) and \( (1 - u)^2 \) appropriately majorize the hinge loss function in their respective scenarios, establishing the upper bounds for the hinge loss at given points \( u_n \).
+
+\subsubsection*{Q4: (30 points) Prove the inequality
 \[
-(x + y)^p \leq x^p + y^p \text{ for } p \in (0, 1) \text{ and } x \text{ and } y \text{ nonnegative. (Hint: First reduce to a one-dimensional problem by dividing.)}
-\]
+(x + y)^p \leq x^p + y^p \] for  $p \in (0, 1)$  and $x$ and $y$ nonnegative. (Hint: First reduce to a one-dimensional problem by dividing.)
+}
 
-\subsubsection*{Q5: (25 points) Suppose you have to minimize the convex quadratic}
+\subsubsection*{Q5: (25 points) Suppose you have to minimize the convex quadratic
 \[
 h(\boldsymbol{\beta}) = \frac{1}{2} \boldsymbol{\beta}^* \mathbf{C}^* \mathbf{C} \boldsymbol{\beta} + \mathbf{v}^* \boldsymbol{\beta}.
 \]
-\text{How can you leverage the QR decomposition of} \( \mathbf{C} \) \text{to solve the problem? Note that} \( \mathbf{C} \) \text{is not necessarily square, but it should have full column rank.}
+How can you leverage the QR decomposition of \( \mathbf{C} \) to solve the problem? Note that \( \mathbf{C} \) is not necessarily square, but it should have full column rank.}
 
-\subsubsection*{Q6: (30 points) Suppose \( X \) is a random variable symmetrically distributed around 0. If \( X \) has quantile function \( Q(u) \), then show that the folded random variable \( Y = |X| \) has quantile function}
+\subsubsection*{Q6: (30 points) Suppose \( X \) is a random variable symmetrically distributed around 0. If \( X \) has quantile function \( Q(u) \), then show that the folded random variable \( Y = |X| \) has quantile function
 \[
 -Q([1 - u]/2).
 \]
-\text{You may assume \( X \) is continuously distributed. In practice, this exercise extends the inverse sampling method to \( |X| \) and related random variables such as} \( X^2 \).
+You may assume \( X \) is continuously distributed. In practice, this exercise extends the inverse sampling method to \( |X| \) and related random variables such as \( X^2 \).}
 
 \newpage
 
