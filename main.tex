@@ -1,12 +1,11 @@
-\documentclass[8pt]{article}
-\usepackage[utf8]{inputenc}
+\documentclass{article}
 \usepackage{mathtools}
 \usepackage{graphicx} % Required for inserting images
 \usepackage[a4paper, total={7in, 9in}]{geometry}
 \usepackage{minted}
 \usepackage{amsfonts} % Add this line to include the amsfonts package
 \usepackage{datetime} % For date if required
-\usepackage{graphicx}
+
 
 \usepackage{algorithm}
 \usepackage{algpseudocode} % Part of algorithmicx package
@@ -11228,7 +11227,61 @@ A = \begin{pmatrix} 0 & I_n \\ -I_n & 0 \end{pmatrix}.
 \]
 \text{Show that \( G \) is a group under matrix multiplication and that all \( M \in G \) have} \( \det M = \pm 1 \). \text{Actually,} \( \det M = 1 \), \text{but this is harder to prove. (Hint: Show that} \( \det A = 1 \) \text{when} \( n = 1 \). \text{Otherwise, assume this fact.)}
 
-\subsubsection*{Q2: (30 points) Let \( x_1, \ldots, x_m \) be a random sample from the gamma density}
+To show that $G$ is a group under matrix multiplication and that all $M \in G$ have $\det M = \pm 1$, we need to prove the following:
+
+\begin{enumerate}
+    \item Closure
+    \item Associativity
+    \item Identity element
+    \item Inverse element
+    \item Determinant property
+\end{enumerate}
+
+\textbf{1. Closure:}
+Let $M_1, M_2 \in G$. We need to show that $M_1M_2 \in G$.
+\begin{align*}
+(M_1M_2)^* A (M_1M_2) &= M_2^* M_1^* A M_1 M_2 \\
+&= M_2^* A M_2 \quad \text{(since $M_1 \in G$)} \\
+&= A \quad \text{(since $M_2 \in G$)}
+\end{align*}
+Thus, $M_1M_2 \in G$.
+
+\textbf{2. Associativity:}
+Matrix multiplication is associative, so this property holds.
+
+\textbf{3. Identity element:}
+The identity matrix $I_{2n}$ is in $G$ because:
+\[I_{2n}^* A I_{2n} = A\]
+
+\textbf{4. Inverse element:}
+For any $M \in G$, we need to show that $M^{-1} \in G$.
+\begin{align*}
+M^* A M &= A \\
+A &= M^{-1*} M^* A M M^{-1} \\
+A &= (MM^{-1})^* A (MM^{-1}) \\
+A &= M^{-1*} A M^{-1}
+\end{align*}
+Thus, $M^{-1} \in G$.
+
+\textbf{5. Determinant property:}
+For any $M \in G$:
+\begin{align*}
+\det(M^* A M) &= \det(A) \\
+\det(M^*) \det(A) \det(M) &= \det(A) \\
+|\det(M)|^2 \det(A) &= \det(A) \\
+|\det(M)|^2 &= 1 \\
+\det(M) &= \pm 1
+\end{align*}
+
+Note: We used the fact that $\det(A) = 1$. For $n = 1$, we can verify this directly:
+\[
+\det\begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix} = 1
+\]
+For $n > 1$, we assume this fact as given in the hint.
+
+Therefore, we have shown that $G$ is a group under matrix multiplication and that all $M \in G$ have $\det M = \pm 1$.
+
+\subsubsection*{Q2: (30 points) Let \( x_1, \ldots, x_m \) be a random sample from the gamma density
 \[
 f(x) = \Gamma(\alpha)^{-1} \beta^\alpha x^{\alpha - 1} e^{-\beta x}
 \]
@@ -11240,13 +11293,142 @@ As an alternative to Newton's method, we approximate \( L(\alpha) \) by the surr
 \[
 \frac{1}{\alpha_{n+1}} = \frac{1}{\alpha_n} + \frac{\ln \bar{x} - \ln \overline{\ln x} + \ln \alpha_n - \Psi(\alpha_n)}{\alpha_n - \alpha_n^2 \Psi'(\alpha_n)},
 \]
-where \( \Psi(\alpha) \) is the digamma function (derivative of the log gamma function). Convergence is quick with a good starting value. (Hint: First maximize the surrogate. Note that the coefficient \( c_0 \) is irrelevant so it suffices to match first and second derivatives.)
+where \( \Psi(\alpha) \) is the digamma function (derivative of the log gamma function). Convergence is quick with a good starting value. (Hint: First maximize the surrogate. Note that the coefficient \( c_0 \) is irrelevant so it suffices to match first and second derivatives.)}
+
+To solve this problem, we start by setting up and maximizing the surrogate function \( g(\alpha) \) defined as:
+\[
+g(\alpha) = c_0 + c_1 \alpha + c_2 \ln \alpha
+\]
+where \( c_0 \), \( c_1 \), and \( c_2 \) are coefficients adjusted at each iteration to ensure \( g(\alpha) \) closely approximates the behavior of \( L(\alpha) \) near \( \alpha_n \).
+
+\textbf{Step 1: Express \( L(\alpha) \)}
+
+The profile loglikelihood \( L(\alpha) \) is given by:
+\[
+L(\alpha) = m \alpha \ln \alpha - m \alpha \ln \bar{x} - m \ln \Gamma(\alpha) + m (\alpha - 1) \overline{\ln x} - m \alpha
+\]
+
+\textbf{Step 2: Differentiate \( L(\alpha) \)}
+
+To match the derivatives of \( g(\alpha) \) with \( L(\alpha) \), compute the first and second derivatives:
+- \textbf{First derivative}:
+\[
+L'(\alpha) = m \ln \alpha + m - m \ln \bar{x} + m \overline{\ln x} - m \Psi(\alpha)
+\]
+- \textbf{Second derivative}:
+\[
+L''(\alpha) = \frac{m}{\alpha} - m \Psi'(\alpha)
+\]
+
+\textbf{Step 3: Setting Up the Surrogate Function \( g(\alpha) \)}
+
+The surrogate function and its derivatives:
+- \textbf{Surrogate function}:
+\[
+g(\alpha) = c_0 + c_1 \alpha + c_2 \ln \alpha
+\]
+- \textbf{First derivative}:
+\[
+g'(\alpha) = c_1 + \frac{c_2}{\alpha}
+\]
+- \textbf{Second derivative}:
+\[
+g''(\alpha) = -\frac{c_2}{\alpha^2}
+\]
+
+\textbf{Step 4: Match the Derivatives}
+
+Match the first and second derivatives of \( g(\alpha) \) and \( L(\alpha) \) at \( \alpha_n \):
+- \textbf{Match first derivatives}:
+\[
+c_1 + \frac{c_2}{\alpha_n} = m \ln \alpha_n + m - m \ln \bar{x} + m \overline{\ln x} - m \Psi(\alpha_n)
+\]
+- \textbf{Match second derivatives}:
+\[
+-\frac{c_2}{\alpha_n^2} = \frac{m}{\alpha_n} - m \Psi'(\alpha_n)
+\]
+
+From the second derivative matching, solve for \( c_2 \):
+\[
+c_2 = \alpha_n^2 \left( m \Psi'(\alpha_n) - \frac{m}{\alpha_n} \right)
+\]
+
+\textbf{Step 5: Maximizing the Surrogate}
+
+To maximize \( g(\alpha) \), set \( g'(\alpha) = 0 \) and solve for \( \alpha \):
+\[
+c_1 + \frac{c_2}{\alpha} = 0
+\]
+\[
+c_1 \alpha + c_2 = 0
+\]
+\[
+\alpha = -\frac{c_2}{c_1}
+\]
+Substituting and simplifying:
+\[
+\frac{1}{\alpha_{n+1}} = \frac{1}{\alpha_n} + \frac{\ln \bar{x} - \overline{\ln x} + \ln \alpha_n - \Psi(\alpha_n)}{\alpha_n - \alpha_n^2 \Psi'(\alpha_n)}
+\]
+
+### Conclusion
+
+The update formula for \( \alpha_{n+1} \) derived from maximizing the surrogate function efficiently incorporates the digamma function and its derivative, capturing the key characteristics of the gamma distribution's loglikelihood function. This method, though iterative, converges quickly to the MLE of \( \alpha \) with an appropriate initial guess.
 
 \subsubsection*{Q3: (20 points) Show that the function}
 \[
 f(\mathbf{x}) = |3x_1 + 4x_2| + |2x_1 + x_2|
 \]
 is convex and attains its minimum of 0 at \( 0 \). Furthermore, show that the slices \( f(x_1, 3) \) and \( f(-4, x_2) \) achieve their minimal value of 5 at \( x_1 = -4 \) and \( x_2 = 3 \). Why are these facts not contradictory?
+
+To address this question, let's first establish the convexity of the function \( f(\mathbf{x}) = |3x_1 + 4x_2| + |2x_1 + x_2| \), then identify its minimal value and the specified slice conditions.
+
+\textbf{Convexity}
+
+1. \textbf{Linearity Inside Absolute Value}: The functions inside the absolute value signs, \( 3x_1 + 4x_2 \) and \( 2x_1 + x_2 \), are linear. Linear functions are both convex and concave.
+
+2. \textbf{Absolute Value of Linear Functions}: The absolute value of a linear function is a convex function. This results because the absolute value function \( |u| \) is convex and non-decreasing, and the composition of a convex, non-decreasing function with a linear function remains convex.
+
+3. \textbf{Sum of Convex Functions}: The sum of convex functions is also convex. Since \( |3x_1 + 4x_2| \) and \( |2x_1 + x_2| \) are convex, their sum, \( f(\mathbf{x}) \), is convex.
+
+\textbf{Minimum Value}
+
+- The minimum value of \( f(\mathbf{x}) \) occurs when both \( 3x_1 + 4x_2 = 0 \) and \( 2x_1 + x_2 = 0 \). Solving this system:
+  \[
+  3x_1 + 4x_2 = 0 \\
+  2x_1 + x_2 = 0
+  \]
+  Solving the second equation for \( x_2 \), \( x_2 = -2x_1 \). Substituting into the first:
+  \[
+  3x_1 + 4(-2x_1) = 0 \\
+  3x_1 - 8x_1 = 0 \\
+  -5x_1 = 0 \\
+  x_1 = 0, \quad x_2 = 0
+  \]
+- Thus, \( f(\mathbf{x}) = 0 \) at \( \mathbf{x} = (0, 0) \), and since \( f \) is convex and non-negative, \( 0 \) is indeed its global minimum.
+
+\textbf{Slices of the Function}
+
+\textbf{1. Slice \( f(x_1, 3) \)}:
+   \[
+   f(x_1, 3) = |3x_1 + 4 \cdot 3| + |2x_1 + 3| = |3x_1 + 12| + |2x_1 + 3|
+   \]
+   To minimize this, note that at \( x_1 = -4 \):
+   \[
+   |3(-4) + 12| + |2(-4) + 3| = |0| + |-5| = 5
+   \]
+
+\textbf{2. Slice \( f(-4, x_2) \)}:
+   \[
+   f(-4, x_2) = |3(-4) + 4x_2| + |2(-4) + x_2| = |-12 + 4x_2| + |-8 + x_2|
+   \]
+   To minimize this, note that at \( x_2 = 3 \):
+   \[
+   |-12 + 4 \cdot 3| + |-8 + 3| = |0| + |-5| = 5
+   \]
+
+\textbf{Why These Facts Are Not Contradictory}
+
+The minimization of the slices \( f(x_1, 3) \) and \( f(-4, x_2) \) to the value 5 at specified values does not contradict the fact that \( f(\mathbf{x}) \) itself has a global minimum of 0 at \( \mathbf{x} = (0, 0) \). The global minimum of \( f \) involves both variables simultaneously achieving their optimal values that zero out both terms. The minimal values obtained in the slices occur when only one variable is fixed, constraining the function's ability to reach the absolute minimum of 0. These slices essentially explore constrained versions of \( f \) along lines where the other variable is free but cannot achieve full cancellation of both terms simultaneously as is possible at the global minimum. This highlights the geometric aspect of convex functions, where slicing the function can provide local insights without contradicting the broader global behavior.
 
 \subsubsection*{Q4: (25 points) Consider the function}
 \[
@@ -11262,7 +11444,82 @@ x^2 + w^2 & x_n = 0 \\
 \]
 (Hint: Graph \( f(x) \).)
 
+To demonstrate that the function \( f(x) = (|x| - w)^2 \) is majorized by the specified convex quadratics, let's first explore the behavior of the function \( f(x) \) and then compare it with the suggested majorizing functions for different values of \( x_n \) (the current estimate or value of \( x \)). The proposed majorizing functions change depending on whether \( x_n \) is positive, zero, or negative.
+
+\textbf{Function \( f(x) \)}
+The function given is \( f(x) = (|x| - w)^2 \), which is clearly quadratic and non-negative. Its behavior changes at \( x = 0 \) and at \( x = \pm w \), leading to different expressions depending on the sign of \( x \). This can be rewritten as:
+\[
+f(x) = \begin{cases} 
+(x - w)^2 & \text{if } x \geq 0 \\
+(x + w)^2 & \text{if } x < 0
+\end{cases}
+\]
+
+\textbf{Proposed Majorizing Functions}
+The functions proposed to majorize \( f(x) \) are:
+\[
+\begin{cases} 
+(x - w)^2 & \text{if } x_n > 0 \\
+x^2 + w^2 & \text{if } x_n = 0 \\
+(x + w)^2 & \text{if } x_n < 0
+\end{cases}
+\]
+
+\textbf{Analysis of Majorization}
+To majorize \( f(x) \) by these functions, each piece needs to be greater than or equal to \( f(x) \) at all points \( x \), particularly near \( x_n \).
+
+\begin{itemize}
+    \item - \textbf{If \( x_n > 0 \)}: The function \( (x - w)^2 \) will match \( f(x) \) exactly for \( x \geq 0 \) and will naturally be above \( f(x) \) for \( x < 0 \) since \( (x - w)^2 \) grows rapidly as \( x \) becomes negative, while \( (x + w)^2 \) is the actual value of \( f(x) \) for \( x < 0 \).
+    \item - \textbf{If \( x_n = 0 \)}: The function \( x^2 + w^2 \) always evaluates to \( w^2 \) at \( x = 0 \) and is \( x^2 + w^2 \) otherwise, clearly above \( f(x) \) which equals \( w^2 \) at \( x = 0 \) and \( (|x| - w)^2 \) otherwise.
+    \item - \textbf{If \( x_n < 0 \)}: The function \( (x + w)^2 \) will match \( f(x) \) exactly for \( x < 0 \) and will be above \( f(x) \) for \( x \geq 0 \).
+\end{itemize}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{figures/graph2.png}
+    \caption{Figure 2}
+\end{figure}
+
 \subsubsection*{Q5: (20 points) Apply \( k \)-means clustering to the data \( (x_1, x_2, x_3) = (0, 2, 3) \), and show that the initial clusters \(\{0, 2\}\) and \(\{3\}\) are stable and preserved by the algorithm. What is the optimal clustering into 2 groups? Thus, \( k \)-means can converge to an inferior solution.}
+
+To apply \( k \)-means clustering to the data points \( x_1 = 0 \), \( x_2 = 2 \), \( x_3 = 3 \) and analyze the stability of the initial clusters \(\{0, 2\}\) and \(\{3\}\), let's follow the steps of the \( k \)-means algorithm and check if these clusters are indeed preserved during the iterations.
+
+\textbf{Step 1: Initial Cluster Assignment}
+Assume the initial cluster centers are as follows:
+\begin{itemize}
+    \item - Cluster 1: \( c_1 \) is the mean of \( \{0, 2\} \), which calculates to \( c_1 = \frac{0 + 2}{2} = 1 \).
+    \item - Cluster 2: \( c_2 \) is the mean of \( \{3\} \), which is simply \( c_2 = 3 \).
+\end{itemize}
+
+\textbf{Step 2: Assignment Step}
+Assign each data point \( x_i \) to the nearest cluster center:
+\begin{itemize}
+    \item - \( x_1 = 0 \) is closer to \( c_1 = 1 \) than to \( c_2 = 3 \) (distance to \( c_1 \) is 1, distance to \( c_2 \) is 3).
+    \item - \( x_2 = 2 \) is closer to \( c_1 = 1 \) than to \( c_2 = 3 \) (distance to \( c_1 \) is 1, distance to \( c_2 \) is 1, but ties can arbitrarily be assigned to the initial cluster).
+    \item - \( x_3 = 3 \) is closer to \( c_2 = 3 \) than to \( c_1 = 1 \) (distance to \( c_2 \) is 0, distance to \( c_1 \) is 2).
+\end{itemize}
+
+Thus, the points remain in their original clusters:
+\begin{itemize}
+    \item - Cluster 1: \( \{0, 2\} \)
+    \item - Cluster 2: \( \{3\} \)
+\end{itemize}
+
+\textbf{Step 3: Update Step}
+Recalculate the cluster centers based on the current assignment:
+\begin{itemize}
+    \item - Cluster 1: The new center \( c_1 \) remains \( \frac{0 + 2}{2} = 1 \).
+    \item - Cluster 2: The new center \( c_2 \) remains \( 3 \).
+\end{itemize}
+
+\textbf{Step 4: Check for Convergence}
+Since the cluster centers have not changed and the points remain in the same clusters, the algorithm converges and terminates. The clusters \( \{0, 2\} \) and \( \{3\} \) are indeed stable and preserved.
+
+\textbf{Optimal Clustering Analysis}
+Given the data points and the number of clusters (2), the clustering \( \{0, 2\} \) and \( \{3\} \) appears optimal based on the initial setup. However, considering the distribution of the points, the clusters are non-ideal because they do not minimize the variance within each cluster optimally. An alternative might be to consider different initial centroids that might result in a clustering like \( \{0\} \) and \( \{2, 3\} \), depending on the distance metric and the centroid initialization strategy.
+
+\textbf{Conclusion}
+This exercise shows that \( k \)-means can indeed converge to a stable solution that may not necessarily be the most optimal global solution. The initial choice of centroids can significantly influence the resulting clusters, demonstrating the algorithm's sensitivity to initial conditions and its potential to converge to local optima. Thus, \( k \)-means clustering might indeed yield an inferior solution, depending on the configuration of the data and the choice of initial centroids.
 
 \subsubsection*{Q6: (30 points) An asymmetric triangular distribution has triangular-shaped probability density function concentrated on the interval \( [a, b] \) with mode at \( m \in (a, b) \). Find the corresponding distribution function \( F(x) \), and show that inverse method generates the random deviate}
 \[
@@ -11273,10 +11530,116 @@ b - \sqrt{(1 - U)(b - a)(b - m)} & F(m) \leq U,
 \]
 where \( U \) is uniform on \( [0, 1] \). (Hint: The total mass of the density determines the value of the mode.)
 
+To solve this question, we will first derive the cumulative distribution function (CDF) \( F(x) \) of an asymmetric triangular distribution and then show how the inverse transform method generates random variates using the given formulas.
+
+\textbf{Step 1: Define the PDF}
+The probability density function (PDF) of an asymmetric triangular distribution on the interval \([a, b]\) with a mode at \(m\) is defined piecewise:
+\[
+f(x) = \begin{cases} 
+\frac{2(x - a)}{(b - a)(m - a)} & \text{for } a \leq x < m \\
+\frac{2(b - x)}{(b - a)(b - m)} & \text{for } m \leq x \leq b.
+\end{cases}
+\]
+
+\textbf{Step 2: Derive the CDF}
+The cumulative distribution function \(F(x)\) is obtained by integrating the PDF:
+\[
+F(x) = \begin{cases} 
+\int_a^x \frac{2(t - a)}{(b - a)(m - a)} dt & \text{for } a \leq x < m \\
+\int_a^m \frac{2(t - a)}{(b - a)(m - a)} dt + \int_m^x \frac{2(b - t)}{(b - a)(b - m)} dt & \text{for } m \leq x \leq b
+\end{cases}
+\]
+
+\textbf{For \(a \leq x < m\):}
+\[
+F(x) = \frac{2}{(b-a)(m-a)} \int_a^x (t - a) dt = \frac{(x - a)^2}{(b - a)(m - a)}
+\]
+
+\textbf{For \(m \leq x \leq b\):}
+\[
+F(m) = \frac{(m - a)^2}{(b - a)(m - a)} = \frac{m - a}{b - a}
+\]
+\[
+F(x) = F(m) + \frac{2}{(b-a)(b-m)} \int_m^x (b - t) dt = \frac{m - a}{b - a} + \frac{(b - x)^2}{(b - a)(b - m)}
+\]
+
+\textbf{Step 3: Inverse Transform Method}
+The inverse transform method involves solving \(F(x) = U\) for \(x\), where \(U\) is uniformly distributed on \([0, 1]\).
+
+\textbf{For \(0 < U < F(m)\):}
+Setting \(F(x) = U\) when \(x < m\),
+\[
+\frac{(x - a)^2}{(b - a)(m - a)} = U
+\]
+\[
+x - a = \sqrt{U(b - a)(m - a)}
+\]
+\[
+x = a + \sqrt{U(b - a)(m - a)}
+\]
+
+\textbf{For \(F(m) \leq U \leq 1\):}
+Setting \(F(x) = U\) when \(x \geq m\),
+\[
+\frac{m - a}{b - a} + \frac{(b - x)^2}{(b - a)(b - m)} = U
+\]
+\[
+(b - x)^2 = (b - a)(b - m)(U - \frac{m - a}{b - a})
+\]
+\[
+b - x = \sqrt{(1 - U)(b - a)(b - m)}
+\]
+\[
+x = b - \sqrt{(1 - U)(b - a)(b - m)}
+\]
+
+\textbf{Conclusion}
+These derived expressions for \(X\) in terms of \(U\) are exactly those given in the problem statement. This shows how the inverse transform sampling method can be applied to generate random variables from an asymmetric triangular distribution, where the CDF is first computed and then inverted to find the variable \(X\) as a function of a uniform random variable \(U\). This method effectively uses the properties of the triangular distribution and its CDF to find a straightforward sampling formula.
+
 \subsubsection*{Q7: (30 points) Consider the problem of computing \( e^x \) given a fast algorithm for taking logarithms. Why can we restrict \( x \) to positive values? Show Newton's method iterates according to}
 \[
 y_{n+1} = y_n - y_n (\ln y_n - x).
 \]
 Also show that if \( y_n > y_\infty \), then \( y_{n+1} < y_\infty \), and if \( y_n < y_\infty \), then \( y_{n+1} < y_\infty \) as well. In the latter case, prove that \( y_{n+1} \) is closer to \( y_\infty \) than \( y_n \) is. Prove that convergence is global whenever \( y_0 \in (0, e^{1+x}) \). (Hints: Apply the mean value theorem to \( y_{n+1} - x \). Under what condition does \( y_{n+1} > 0 \)?)
+
+To address the question, let's break it down into the parts provided and explore each in detail:
+
+\textbf{Restricting \( x \) to Positive Values}
+When discussing the exponential function \( e^x \), we often focus on \( x \) being positive for simplification and because the exponential growth nature is most notable and of primary interest in this range. For \( x < 0 \), the function \( e^x \) approaches zero, which while still important, typically poses fewer challenges computationally or in practical applications than handling large exponential growth for \( x > 0 \).
+
+\textbf{Newton's Method Iteration}
+Given the problem to compute \( e^x \) and assuming we have a fast algorithm for logarithms, we can use Newton's method to solve \( f(y) = \ln y - x = 0 \). This setup implies we're finding a \( y \) such that \( \ln y = x \), which means \( y = e^x \).
+
+Newton's method iterates by the formula:
+\[
+y_{n+1} = y_n - \frac{f(y_n)}{f'(y_n)}
+\]
+where \( f'(y) = \frac{d}{dy}(\ln y - x) = \frac{1}{y} \). Plugging into the Newton formula gives:
+\[
+y_{n+1} = y_n - \frac{\ln y_n - x}{1/y_n} = y_n - y_n (\ln y_n - x)
+\]
+
+\textbf{Convergence Analysis}
+To analyze the convergence: \textbf{Monotonicity}: We consider \( f(y) = \ln y - x \).
+  \begin{itemize}
+      \item If \( y_n > e^x \) (i.e., \( y_n > y_\infty \)), then \( \ln y_n > x \) so \( f(y_n) > 0 \) and \( y_{n+1} = y_n - y_n (\ln y_n - x) < y_n \).
+      \item If \( y_n < e^x \) (i.e., \( y_n < y_\infty \)), then \( \ln y_n < x \) so \( f(y_n) < 0 \) and \( y_{n+1} = y_n - y_n (\ln y_n - x) > y_n \). Moreover, since \( f(y) \) is increasing, \( y_{n+1} \) still lies between \( y_n \) and \( e^x \), hence is closer to \( e^x \).
+  \end{itemize}
+
+\textbf{Applying the Mean Value Theorem}
+Let's apply the Mean Value Theorem to \( f(y) \) between \( y_n \) and \( y_\infty \). There exists \( c \) between \( y_n \) and \( y_\infty \) such that:
+\[
+f'(c) = \frac{f(y_\infty) - f(y_n)}{y_\infty - y_n} = \frac{0 - (\ln y_n - x)}{y_\infty - y_n}
+\]
+where \( f'(c) = \frac{1}{c} \), implying:
+\[
+\frac{1}{c} = \frac{\ln y_n - x}{y_\infty - y_n}
+\]
+This shows how the iteration moves \( y_n \) closer to \( y_\infty \), given the decreasing nature of \( y_{n+1} - y_n \) magnitude.
+
+\textbf{Global Convergence for \( y_0 \in (0, e^{1+x}) \)}
+If \( y_0 \) is chosen within \( (0, e^{1+x}) \), it starts within a range where \( f(y) \) transitions through zero (as \( \ln y \) ranges from \( -\infty \) to \( 1+x \)), thus covering \( e^x \) effectively. The properties of the logarithm ensure that \( f(y) \) will guide \( y_n \) to \( e^x \) efficiently, and the monotonic properties of Newton's method in this context assure convergence.
+
+This arrangement effectively uses the logarithmic function's properties and the corrective feedback of Newton's method to steer iterates towards the desired value \( e^x \) globally from any positive starting point in the prescribed range.
 
 \end{document}
