@@ -5,6 +5,14 @@
 \usepackage[a4paper, total={7in, 9in}]{geometry}
 \usepackage{minted}
 \usepackage{amsfonts} % Add this line to include the amsfonts package
+\usepackage{datetime} % For date if required
+
+\usepackage{algorithm}
+\usepackage{algpseudocode} % Part of algorithmicx package
+
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmin}{arg\,min}  % The asterisk is used to place the subscript under "arg min" in display style
+
 
 \setlength\parindent{0pt}
 
@@ -30,6 +38,20 @@ A wholistic answer sheet to help us study for the BIOMATH 205 - Computational Al
 \end{itemize}
 
 \subsubsection*{I skipped programming questions for the most part since they wont be useful for the qual}
+
+
+\begin{flushright}
+\vspace{2cm} % Adjusts vertical space above the signature line
+\line(1,0){200} % Creates a horizontal line; change width as needed
+\\ Simon A. Lee % Name of the signer
+\\ \today % Date of signing; remove or modify if not required
+\end{flushright}
+
+\newpage
+\section*{Questions (Verbatim)}
+
+
+\newpage
 
 \section*{Chapter 1: Ancient Algorithms}
 %% Question 2 %%
@@ -396,8 +418,8 @@ using Plots
 
 function pi_approximations(n)
     m = 2 * 2^n
-    a_n = m * tan(π / m)
-    b_n = m * sin(π / m)
+    a_n = m * tan(pi / m)
+    b_n = m * sin(pi/ m)
     mixed = (1/3) * a_n + (2/3) * b_n
     
     return a_n, b_n, mixed
@@ -427,7 +449,7 @@ for a given value of \( x \). If one proceeds naively, then it takes \( n-1 \) m
 \[ = x b_{n-1}(x) + a_n. \]
 Since the polynomial \( b_{n-1}(x) \) of degree \( n - 1 \) can be similarly reduced, a complete recursive scheme for evaluating \( p(x) \) is given by 
 \[ b_0(x) = a_0, \quad b_k(x) = x b_{k-1}(x) + a_k, \quad k = 1, \ldots, n. \]
-This scheme requires only \( n \) multiplications and \( n \) additions in order to compute \( p(x) = b_n(x). \) Program the scheme and extend it to the simultaneous evaluation of the derivative \( p'(x) \) of \( p(x). \)}\\
+This scheme requires only \( n \) multiplications and \( n \) additions in order to compute \( p(x) = b_n(x). \) Program the scheme and extend it to the simultaneous evaluation of the derivative \( p'(x) \) of \( p(x). \)}
 
 The efficient method of evaluating the polynomial \(p(x)\) and its derivative \(p'(x)\) can be implemented using Horner's method. This method requires only \(n\) multiplications and \(n\) additions, significantly reducing computational overhead compared to the naive method.
 
@@ -3317,7 +3339,7 @@ w_{n+1} = w_n - \frac{f(w_n)}{f'(w_n)}
 
 One advantage of this version of Newton’s method is that it avoids exponential overflows for large values of \( w \). Given the derivatives \( f'(w) = w^{-1} + 1 > 0 \) and \( f''(w) = -w^{-2} < 0 \), the logic of Problem 6.17 slightly modified demonstrates that the Newton iterates converge from below when \( w_0 < W(x) \). Because \( f(w) \) is strictly increasing, the condition \( w_0 e^{w_0} < \ln x \) is equivalent to the condition \( w_0 < W(x) \).
 
-\subsubsection*{Q23: Consider the problem of computing \( e^x \) given a fast algorithm for taking logarithms. Why can we restrict \( x \) to positive values? Show Newton’s method iterates according to \( y_{n+1} = y_n - y_n (\ln y_n - x) \). Also show that if \( y_n > e^x \), then \( y_{n+1} < e^x \), and if \( y_n < e^x \), then \( y_{n+1} < e^x \) as well. In the latter case prove that \( y_{n+1} \) is closer to \( e^x \) than \( y_n \) is. Prove that convergence is guaranteed whenever \( y_0 \in (0, e^{1+x}) \). (Hints: Apply the mean value theorem to \( y_{n+1} - e^x \). Under what condition does \( y_{n+1} > 0 \)?)
+\subsubsection*{Q23: Consider the problem of computing \( e^x \) given a fast algorithm for taking logarithms. Why can we restrict \( x \) to positive values? Show Newton’s method iterates according to \( y_{n+1} = y_n - y_n (\ln y_n - x) \). Also show that if \( y_n > e^x \), then \( y_{n+1} < e^x \), and if \( y_n < e^x \), then \( y_{n+1} < e^x \) as well. In the latter case prove that \( y_{n+1} \) is closer to \( e^x \) than \( y_n \) is. Prove that convergence is guaranteed whenever \( y_0 \in (0, e^{1+x}) \). (Hints: Apply the mean value theorem to \( y_{n+1} - e^x \). Under what condition does \( y_{n+1} > 0 \)?)}
 
 6.23 Since \( e^{-x} = \frac{1}{e^x} \), it suffices to take \( x > 0 \). The displayed iterates constitute Newton’s method for solving \( \ln y = x \) or equivalently \( y = e^x \). The mean value theorem implies
 
@@ -3959,7 +3981,7 @@ Canceling common terms on both sides, this is equivalent to
 
 which after a little algebra is equivalent to \( x_i x_j < \frac{1}{2} x_i^2 + \frac{1}{2} x_j^2 \), or \( 0 < \frac{1}{2} (x_i - x_j)^2 \). Thus, all coordinates except \( x_n \) must be equal.
 
-\subsubsection*{Q16: As a generalization of the Dinkelbach maneuver, consider \( h(x) = \min_{i=1}^{r} \frac{f_i(x)}{g_i(x)} \) with all denominators \( g_i(x) \) positive. To reduce \( h(x) \) by iteration, let \( S \) be the index set \( \arg\min_i \frac{f_i(x_n)}{g_i(x_n)} \), and define for some \( k \in S \)
+\subsubsection*{Q16: As a generalization of the Dinkelbach maneuver, consider \( h(x) = \min_{i=1}^{r} \frac{f_i(x)}{g_i(x)} \) with all denominators \( g_i(x) \) positive. To reduce \( h(x) \) by iteration, let \( S \) be the index set \( \arg\min_i \frac{f_i(x_n)}{g_i(x_n)} \), and define for some \( k \in S \)}
 
 \[
 x_{n+1} = \arg\min_x [f_k(x) - h(x_n) g_k(x)].
@@ -5116,7 +5138,7 @@ Q8.22: Suppose the matrix \( M \) has full svd \( U \Sigma V^* \). Let \( J \) b
 
 \subsubsection*{Q23: Every invertible matrix \( M \) has a polar decomposition \( M = AO \) into a product of a positive definite matrix \( A \) and an orthogonal matrix \( O \). Find the polar decomposition in terms of the svd of \( M \). Show that \( O \) is the closest orthogonal matrix to \( M \) in the Frobenius norm. (Hint: Apply Proposition A.7.5.)}
 
-Q8.23: Take the full svd \( M = U \Sigma V^* \) and put \( A = U \Sigma U^* \) and \( O = UV^* \). Then \( A \) is positive definite and \( O \) is orthogonal. Assuming \( M \) is \( n \times n \) and \( W \) is any \( n \times n \) orthogonal matrix, then}
+Q8.23: Take the full svd \( M = U \Sigma V^* \) and put \( A = U \Sigma U^* \) and \( O = UV^* \). Then \( A \) is positive definite and \( O \) is orthogonal. Assuming \( M \) is \( n \times n \) and \( W \) is any \( n \times n \) orthogonal matrix, then
 \[
 \| M - W \|_F^2 = \| M \|_F^2 - 2 \text{tr}(MW^*) + \| W \|_F^2 = \| M \|_F^2 - 2 \text{tr}(MW^*) + n.
 \]
@@ -6310,6 +6332,458 @@ The majorization method involves:
 
 The MM algorithm then iteratively applies these updates, improving the parameter estimates in each step until convergence. This approach effectively handles the logistic function in the Rasch model by linearizing the non-linear parts, making optimization tractable.
 
+\subsubsection*{Q20: For \( x \) in \( \mathbb{R}^2 \), show that the function \( f(x) = \frac{x_1^2}{x_2} \) is convex on the domain \( x_2 > 0 \).}
+
+9.20 The function $f(x)$ has second differential
+\[d^2f(x) = \frac{2}{x_2^3} \begin{pmatrix} x_2^2 & -x_1x_2 \\ -x_1x_2 & x_1^2 \end{pmatrix} = \frac{2}{x_2^3} \begin{pmatrix} x_2 & -x_1 \end{pmatrix} \begin{pmatrix} x_2 \\ -x_1 \end{pmatrix},\]
+which is a positive semidefinite matrix.
+
+\subsubsection*{Q21: Prove the minorization}
+\[ 
+\ln[1 - \tanh(x)^2] \geq \ln[1 - \tanh(x_n)^2] - 2 \tanh(x_n)(x - x_n) - (x - x_n)^2 
+\]
+\noindent by the quadratic upper bound principle.
+
+Let's prove this minorization using the quadratic upper bound principle:
+
+1) Define $f(x) = -\ln[1 - \tanh(x)^2]$
+
+2) Calculate the first and second derivatives:
+
+   $f'(x) = 2\tanh(x)\text{sech}^2(x)$
+
+   $f''(x) = 2\text{sech}^2(x) - 4\tanh^2(x)\text{sech}^2(x) = 2\text{sech}^2(x)(1 - 2\tanh^2(x))$
+
+3) Note that $f''(x) \leq 2$ for all $x$, because $\text{sech}^2(x) \leq 1$ and $(1 - 2\tanh^2(x)) \leq 1$
+
+4) By the quadratic upper bound principle, we have:
+
+   $f(x) \leq f(x_n) + f'(x_n)(x - x_n) + (x - x_n)^2$
+
+5) Substituting the expressions:
+
+   $-\ln[1 - \tanh(x)^2] \leq -\ln[1 - \tanh(x_n)^2] + 2\tanh(x_n)(x - x_n) + (x - x_n)^2$
+
+6) Multiplying both sides by -1 and rearranging:
+
+   $\ln[1 - \tanh(x)^2] \geq \ln[1 - \tanh(x_n)^2] - 2\tanh(x_n)(x - x_n) - (x - x_n)^2$
+
+This completes the proof of the minorization.
+
+\subsubsection*{Q22: Suppose \( A = (a_{ij}) \) is a symmetric matrix and \( B = (b_{ij}) \) is the diagonal matrix with \( i \)th diagonal \( b_{ii} = \sum_j |a_{ij}| \). Prove that \( x^* A x \leq x^* B x \) for all \( x \).}
+
+Let's prove that $x^* A x \leq x^* B x$ for all $x$:
+
+1) We start with the left-hand side:
+
+   $x^* A x = \sum_{i,j} x_i^* a_{ij} x_j$
+
+2) Since $A$ is symmetric, $a_{ij} = a_{ji}$. We can rewrite:
+
+   $x^* A x = \sum_{i=j} x_i^* a_{ii} x_i + \sum_{i<j} (x_i^* a_{ij} x_j + x_j^* a_{ji} x_i)$
+
+3) For the second sum, we use the inequality $2|ab| \leq |a|^2 + |b|^2$:
+
+   $x_i^* a_{ij} x_j + x_j^* a_{ji} x_i \leq |a_{ij}| (|x_i|^2 + |x_j|^2)$
+
+4) Applying this inequality:
+
+   $x^* A x \leq \sum_{i} |x_i|^2 a_{ii} + \sum_{i<j} |a_{ij}| (|x_i|^2 + |x_j|^2)$
+
+5) Rearranging the terms:
+
+   $x^* A x \leq \sum_{i} |x_i|^2 (a_{ii} + \sum_{j\neq i} |a_{ij}|)$
+
+6) By definition of $B$, $b_{ii} = \sum_j |a_{ij}| = |a_{ii}| + \sum_{j\neq i} |a_{ij}|$
+
+   Since $A$ is symmetric, $a_{ii}$ is real, so $|a_{ii}| = a_{ii}$
+
+7) Therefore:
+
+   $x^* A x \leq \sum_{i} |x_i|^2 b_{ii} = x^* B x$
+
+This completes the proof that $x^* A x \leq x^* B x$ for all $x$.
+
+\subsubsection*{Q23: Show that the linear function \( f(x) = v^* x \) is majorized by the quadratic}
+\[
+g(x \mid x_n) = \frac{1}{2} (v^* x - v^* x_n + 1)^2 - \frac{1}{2} + v^* x_n.
+\]
+
+Let's prove that $g(x \mid x_n)$ majorizes $f(x) = v^* x$:
+
+1) To show majorization, we need to prove two conditions:
+   a) $g(x \mid x_n) \geq f(x)$ for all $x$
+   b) $g(x_n \mid x_n) = f(x_n)$
+
+2) Let's start with condition (b):
+
+   $g(x_n \mid x_n) = \frac{1}{2} (v^* x_n - v^* x_n + 1)^2 - \frac{1}{2} + v^* x_n$
+                    $= \frac{1}{2} (1)^2 - \frac{1}{2} + v^* x_n$
+                    $= v^* x_n = f(x_n)$
+
+3) Now for condition (a), let's expand $g(x \mid x_n)$:
+
+   $g(x \mid x_n) = \frac{1}{2} (v^* x - v^* x_n + 1)^2 - \frac{1}{2} + v^* x_n$
+                  $= \frac{1}{2} [(v^* x)^2 + (v^* x_n)^2 + 1 - 2(v^* x)(v^* x_n) + 2v^* x - 2v^* x_n] - \frac{1}{2} + v^* x_n$
+                  $= \frac{1}{2} (v^* x)^2 + v^* x - \frac{1}{2} (v^* x_n)^2 + \frac{1}{2} - (v^* x)(v^* x_n)$
+
+4) Now, $g(x \mid x_n) - f(x)$:
+
+   $g(x \mid x_n) - f(x) = \frac{1}{2} (v^* x)^2 - \frac{1}{2} (v^* x_n)^2 + \frac{1}{2} - (v^* x)(v^* x_n)$
+                          $= \frac{1}{2} [(v^* x)^2 - 2(v^* x)(v^* x_n) + (v^* x_n)^2] + \frac{1}{2} - \frac{1}{2} (v^* x_n)^2$
+                          $= \frac{1}{2} (v^* x - v^* x_n)^2 + \frac{1}{2} (1 - (v^* x_n)^2)$
+
+5) Since $(v^* x - v^* x_n)^2 \geq 0$ and $(1 - (v^* x_n)^2) \geq 0$ for any real $v^* x_n$, we have:
+
+   $g(x \mid x_n) - f(x) \geq 0$
+
+   Therefore, $g(x \mid x_n) \geq f(x)$ for all $x$
+
+Thus, we have proven both conditions, showing that $g(x \mid x_n)$ majorizes $f(x) = v^* x$.
+
+\subsubsection*{Q24: For all variables positive, demonstrate the majorization}
+\[
+\frac{1}{\sum_{i=1}^m a_i x_i} \leq \left( \sum_{j=1}^m a_j x_{nj} \right)^2 \sum_{i=1}^m \frac{a_i x_{ni}^2}{x_i}.
+\]
+
+9.24 By Cauchy-Schwarz
+\[
+\left( \sum_{j=1}^m a_j x_{nj} \right)^2 \leq \left( \sum_{i=1}^m a_i x_i \right) \sum_{i=1}^m a_i x_{ni}^2.
+\]
+Equality is obvious when $x = x_n$. Now divide both sides of the inequality by
+\[
+\left( \sum_{j=1}^m a_j x_{nj} \right)^2 \left( \sum_{i=1}^m a_i x_i \right).
+\]
+
+\subsubsection*{Q25: Show that any norm \( \|x\|_* \) satisfies the majorization}
+\[
+\|x\|_* \leq \frac{1}{2} \left( \|x_n\|_* + \frac{\|x\|_*^2}{\|x_n\|_*} \right)
+\]
+\noindent for \( x_n \neq 0 \).
+
+Let's prove this majorization for any norm $\|x\|_*$ when $x_n \neq 0$:
+
+1) Start with the inequality we want to prove:
+
+   $\|x\|_* \leq \frac{1}{2} \left( \|x_n\|_* + \frac{\|x\|_*^2}{\|x_n\|_*} \right)$
+
+2) Multiply both sides by $2\|x_n\|_*$:
+
+   $2\|x\|_*\|x_n\|_* \leq \|x_n\|_*^2 + \|x\|_*^2$
+
+3) Subtract $2\|x\|_*\|x_n\|_*$ from both sides:
+
+   $0 \leq \|x_n\|_*^2 + \|x\|_*^2 - 2\|x\|_*\|x_n\|_*$
+
+4) Factor the right-hand side:
+
+   $0 \leq (\|x_n\|_* - \|x\|_*)^2$
+
+5) This inequality is always true for any real numbers $\|x\|_*$ and $\|x_n\|_*$
+
+6) Therefore, working backwards, we can conclude that the original inequality holds:
+
+   $\|x\|_* \leq \frac{1}{2} \left( \|x_n\|_* + \frac{\|x\|_*^2}{\|x_n\|_*} \right)$
+
+Thus, we have proven the majorization for any norm $\|x\|_*$ when $x_n \neq 0$.
+
+\textbf{Note:} This majorization is particularly useful because it's valid for any norm, not just specific ones like the Euclidean norm.
+
+\subsubsection*{Q26: Suppose \( f(x) \) is a convex function with domain \( \mathbb{R}^p \). Derive the majorization}
+\[
+f \left( \sum_{i=1}^m x_i \right) \leq \frac{1}{m} \sum_{i=1}^m f \left[ m (x_i - x_{ni} + \bar{x}_n) \right]
+\]
+\noindent involving vectors \( x_1, \ldots, x_m \), where \( \bar{x}_n = \frac{1}{m} \sum_{i=1}^m x_{ni} \) and \( x_{ni} \) represents the value of \( x_i \) at iteration \( n \) in some optimization scheme. This majorization splits the vectors. The choices \( f(x) = \|x\|_* \) and \( f(x) = \|x\|_*^2 \) involving an arbitrary norm are important in practice.
+
+Let's derive this majorization:
+
+1) Start with Jensen's inequality for convex functions:
+
+   $f(\sum_{i=1}^m \alpha_i y_i) \leq \sum_{i=1}^m \alpha_i f(y_i)$
+
+   where $\alpha_i \geq 0$ and $\sum_{i=1}^m \alpha_i = 1$
+
+2) Let $\alpha_i = \frac{1}{m}$ for all $i$. Then:
+
+   $f(\frac{1}{m}\sum_{i=1}^m y_i) \leq \frac{1}{m}\sum_{i=1}^m f(y_i)$
+
+3) Now, let $y_i = m(x_i - x_{ni} + \bar{x}_n)$. Substituting:
+
+   $f(\sum_{i=1}^m (x_i - x_{ni} + \bar{x}_n)) \leq \frac{1}{m}\sum_{i=1}^m f(m(x_i - x_{ni} + \bar{x}_n))$
+
+4) Simplify the left side:
+
+   $\sum_{i=1}^m (x_i - x_{ni} + \bar{x}_n) = \sum_{i=1}^m x_i - \sum_{i=1}^m x_{ni} + m\bar{x}_n$
+
+   $= \sum_{i=1}^m x_i - \sum_{i=1}^m x_{ni} + \sum_{i=1}^m x_{ni} = \sum_{i=1}^m x_i$
+
+5) Therefore, we have:
+
+   $f(\sum_{i=1}^m x_i) \leq \frac{1}{m}\sum_{i=1}^m f(m(x_i - x_{ni} + \bar{x}_n))$
+
+This proves the desired majorization.
+
+For specific cases:
+
+1) If $f(x) = \|x\|_*$, we get:
+
+   $\|\sum_{i=1}^m x_i\|_* \leq \frac{1}{m}\sum_{i=1}^m \|m(x_i - x_{ni} + \bar{x}_n)\|_*$
+
+2) If $f(x) = \|x\|_*^2$, we get:
+
+   $\|\sum_{i=1}^m x_i\|_*^2 \leq \frac{1}{m}\sum_{i=1}^m \|m(x_i - x_{ni} + \bar{x}_n)\|_*^2$
+
+These cases are particularly useful in optimization problems involving norms.
+
+\subsubsection*{Q27: Suppose \( h(x) \) is nondecreasing, \( r(x) \) is nonincreasing, and \( f'(x) = r(x)h'(x) \). Prove that}
+\[
+g(x \mid x_n) = f(x_n) + r(x_n)h(x) - r(x_n)h(x_n)
+\]
+\noindent majorizes \( f(x) \) around \( x_n \). Construct an example where this majorization applies.
+
+9.27 If $x > x_n$, then the fundamental theorem of calculus implies
+\[
+f(x) - f(x_n) = \int_{x_n}^x r(y) h'(y) dy \leq r(x_n) [h(x) - h(x_n)].
+\]
+If $x < x_n$, then
+\[
+f(x_n) - f(x) = \int_x^{x_n} r(y) h'(y) dy \geq r(x_n) [h(x) - h(x_n)].
+\]
+Now multiply by $-1$. The tangency condition is obvious. As an example let $r(x) = 1 - x$ and $h'(x) = e^x$. Then $f(x) = r(x) h'(x) = (1 - x) e^x$, and the function
+\[
+f(x_n) + r(x_n) [h(x) - h(x_n)] = (1 - x_n) e^{x_n} - x_n (e^x - e^{x_n}) = e^x_n - x_n e^x
+\]
+majorizes $(1 - x) e^x$.
+
+\subsubsection*{Q28: Consider a graph with edge set \( E \) and edge weights \( w_{ij} \). The Laplacian of the graph is the quadratic form}
+\[
+\mathcal{L}(x) = \frac{1}{2} \sum_{(i,j) \in E} w_{ij} (x_i - x_j)^2.
+\]
+
+\noindent Show that \( \mathcal{L}(x) \) is majorized by the quadratic function
+\[
+\mathcal{L}(x) \leq \sum_{(i,j) \in E} w_{ij} \left[ \left( x_i - \frac{1}{2} x_{ni} - \frac{1}{2} x_{nj} \right)^2 + \left( x_j - \frac{1}{2} x_{ni} - \frac{1}{2} x_{nj} \right)^2 \right]
+\]
+\noindent 
+\[
+= \sum_{(i,j) \in E} w_{ij} \left[ x_i^2 + x_j^2 - (x_i + x_j) (x_{nj} + x_{ni}) \right] + c_n
+\]
+\noindent with variables separated, where \( c_n \) is an irrelevant constant.
+
+Let's prove this majorization:
+
+1) Start with the Laplacian:
+
+   $\mathcal{L}(x) = \frac{1}{2} \sum_{(i,j) \in E} w_{ij} (x_i - x_j)^2$
+
+2) Use the inequality $(a-b)^2 \leq 2(a^2 + b^2)$ for any real $a$ and $b$:
+
+   $\mathcal{L}(x) \leq \sum_{(i,j) \in E} w_{ij} (x_i^2 + x_j^2)$
+
+3) Now, consider the right-hand side of the majorization:
+
+   $\sum_{(i,j) \in E} w_{ij} \left[ \left( x_i - \frac{1}{2} x_{ni} - \frac{1}{2} x_{nj} \right)^2 + \left( x_j - \frac{1}{2} x_{ni} - \frac{1}{2} x_{nj} \right)^2 \right]$
+
+4) Expand this:
+
+   $\sum_{(i,j) \in E} w_{ij} \left[ x_i^2 + x_j^2 + \frac{1}{4}(x_{ni}^2 + x_{nj}^2) - x_i(x_{ni} + x_{nj}) - x_j(x_{ni} + x_{nj}) + x_{ni}x_{nj} \right]$
+
+5) Rearrange:
+
+   $\sum_{(i,j) \in E} w_{ij} \left[ x_i^2 + x_j^2 - (x_i + x_j)(x_{ni} + x_{nj}) \right] + c_n$
+
+   where $c_n = \sum_{(i,j) \in E} w_{ij} \left[ \frac{1}{4}(x_{ni}^2 + x_{nj}^2) + x_{ni}x_{nj} \right]$
+
+6) The difference between this and $\mathcal{L}(x)$ is:
+
+   $\sum_{(i,j) \in E} w_{ij} \left[ \frac{1}{2}(x_i^2 + x_j^2) - x_ix_j - (x_i + x_j)(x_{ni} + x_{nj}) + x_ix_{ni} + x_ix_{nj} + x_jx_{ni} + x_jx_{nj} \right] + c_n$
+
+   $= \sum_{(i,j) \in E} w_{ij} \left[ \frac{1}{2}(x_i - x_j)^2 - \frac{1}{2}(x_i - x_{ni})^2 - \frac{1}{2}(x_i - x_{nj})^2 - \frac{1}{2}(x_j - x_{ni})^2 - \frac{1}{2}(x_j - x_{nj})^2 \right] + c_n$
+
+7) This difference is always non-negative, proving the majorization.
+
+Therefore, we have shown that the given quadratic function majorizes $\mathcal{L}(x)$.
+
+\subsubsection*{Q29: Let \( f(x) \) be nondecreasing and \( g(x) \) be concave. Demonstrate the majorization}
+\[
+f[g(x)] \leq f[g(x_n) + dg(x_n)(x - x_n)].
+\]
+
+To prove this majorization, we start by using the property of the concavity of \( g(x) \). A function \( g \) is concave if, for any \( x, x_n \) in the domain of \( g \) and for any \( t \in [0,1] \),
+\[
+g(tx + (1-t)x_n) \geq tg(x) + (1-t)g(x_n).
+\]
+Choosing \( t=1 \) gives us \( g(x) \geq g(x_n) + dg(x_n)(x - x_n) \), where \( dg(x_n) \) is the derivative of \( g \) at \( x_n \).
+
+Given that \( f(x) \) is nondecreasing, the property \( f(a) \leq f(b) \) holds whenever \( a \leq b \). Applying this to our result from the concavity of \( g \), we have:
+\[
+g(x) \geq g(x_n) + dg(x_n)(x - x_n) \implies f[g(x)] \leq f[g(x_n) + dg(x_n)(x - x_n)].
+\]
+
+Thus, the inequality \( f[g(x)] \leq f[g(x_n) + dg(x_n)(x - x_n)] \) holds by the composition of the nondecreasing function \( f \) and the linear approximation given by the concavity of \( g \), evaluated at \( x_n \).
+
+\subsubsection*{Q30: Suppose \( f(x) \) is concave and differentiable. Verify the majorization}
+\[
+f[g(x)] \leq f[g(x_n)] + f'[g(x_n)][g(x) - g(x_n)].
+\]
+
+Given that \( f(x) \) is concave and differentiable, we can utilize the property of concavity which states that for any \( x \) and \( x_n \),
+\[
+f(x) \leq f(x_n) + f'(x_n)(x - x_n).
+\]
+Applying this property to \( g(x) \) and \( g(x_n) \), where \( g \) is a function and \( f \) is evaluated at these points, gives:
+\[
+f[g(x)] \leq f[g(x_n)] + f'[g(x_n)](g(x) - g(x_n)).
+\]
+This inequality is the result of applying the definition of concavity to \( f \), where \( f'(g(x_n)) \) represents the derivative of \( f \) at \( g(x_n) \). This confirms the majorization stated.
+
+\subsubsection*{Q31: Suppose \( f(x) \) is real and \( a \)-Lipschitz and \( g(x) \) is \( b \)-Lipschitz. Verify the majorization}
+\[
+f[g(x)] \leq f[g(x_n)] + ab \|x - x_n\|.
+\]
+
+For a function \( f(x) \) that is \( a \)-Lipschitz, the following holds for any \( x_1, x_2 \) in its domain:
+\[
+|f(x_1) - f(x_2)| \leq a |x_1 - x_2|.
+\]
+Similarly, for a function \( g(x) \) that is \( b \)-Lipschitz:
+\[
+|g(x_1) - g(x_2)| \leq b |x_1 - x_2|.
+\]
+
+Using the property of the composition of Lipschitz functions, if \( f \) and \( g \) are composed, the Lipschitz constant for the composition \( f \circ g \) is the product of their individual constants. Thus, for any \( x \) and \( x_n \):
+\[
+|f[g(x)] - f[g(x_n)]| \leq a |g(x) - g(x_n)|.
+\]
+Since \( g \) is \( b \)-Lipschitz, we substitute:
+\[
+|f[g(x)] - f[g(x_n)]| \leq a b |x - x_n|.
+\]
+
+Rewriting this in terms of \( f[g(x)] \), we establish:
+\[
+f[g(x)] \leq f[g(x_n)] + ab \|x - x_n\|,
+\]
+which verifies the majorization as stated, reflecting the bound on the change in \( f(g(x)) \) with respect to \( x \) in terms of the product of the Lipschitz constants \( a \) and \( b \).
+
+\subsubsection*{Q32: Assume that the real-valued function satisfies the \( L \)-smooth majorization}
+\[
+f(x) \leq f(x_n) + df(x_n)(x - x_n) + \frac{L}{2} \|x - x_n\|^2.
+\]
+If \( |x| \) denotes the component-wise absolute value function, then demonstrate the majorization
+\[
+f(|x|) \leq f(|x_n|) + df(|x_n|)(|x| - |x_n|) + \frac{L}{2} \|x - x_n\|^2.
+\]
+This majorization is separable and has a simple proximal operator. Thus, \( f(|x|) \) can be routinely minimized, which is equivalent to minimization of \( f(x) \) over the nonnegative orthant.
+
+Given the \( L \)-smoothness condition for the function \( f(x) \), which states:
+\[
+f(x) \leq f(x_n) + df(x_n)(x - x_n) + \frac{L}{2} \|x - x_n\|^2,
+\]
+we need to demonstrate a similar inequality for \( f(|x|) \).
+
+\textbf{Majorization for \( f(|x|) \)}
+
+\textbf{1. Smoothness Adaptation:}
+   Since \( f(x) \) is \( L \)-smooth, it satisfies the smoothness inequality for all \( x \) and \( x_n \). Consider applying the inequality with \( |x| \) and \( |x_n| \) (absolute values of components):
+   \[
+   f(|x|) \leq f(|x_n|) + df(|x_n|)(|x| - |x_n|) + \frac{L}{2} \| |x| - |x_n| \|^2.
+   \]
+
+\textbf{2. Component-wise Absolute Value:}
+   By definition, \( |x| \) yields the absolute values of each component of \( x \). Thus, \( \| |x| - |x_n| \| \) is a norm of the vector composed of the absolute differences of corresponding components of \( x \) and \( x_n \).
+
+\textbf{3. Norm Inequality:}
+   Since \( \|x - x_n\|^2 \) bounds \( \| |x| - |x_n| \|^2 \) due to the triangle inequality and properties of absolute values, the majorization becomes:
+   \[
+   f(|x|) \leq f(|x_n|) + df(|x_n|)(|x| - |x_n|) + \frac{L}{2} \|x - x_n\|^2.
+   \]
+
+\textbf{Application and Minimization}
+
+- \textbf{Proximal Operator and Minimization:}
+   Given the majorization for \( f(|x|) \), the function \( f(|x|) \) retains the smoothness properties of \( f(x) \). This makes it amenable to methods like gradient descent with component-wise operations adapted for absolute values.
+
+- \textbf{Minimization on Nonnegative Orthant:}
+   Minimizing \( f(|x|) \) is practically equivalent to minimizing \( f(x) \) over the nonnegative orthant since \( |x| \) represents \( x \) constrained to nonnegative values.
+
+The above adaptation to \( L \)-smoothness for \( f(|x|) \) ensures that the function can be minimized efficiently using standard optimization routines, respecting the specific structure of \( f \) being applied to absolute component values of \( x \). This majorization is particularly useful when dealing with optimization problems constrained to the nonnegative orthant, as it provides a straightforward method to enforce nonnegativity without altering the fundamental characteristics of the optimization landscape.
+
+\subsubsection*{Q33: Prove the inequality \( (x + y)^p \leq x^p + y^p \) for \( p \in (0, 1) \) and \( x \) and \( y \) nonnegative.}
+(Hint: First reduce to a one-dimensional problem by dividing.)
+
+9.33 If either $x = 0$ or $y = 0$, the claim is obvious. Otherwise, divide by $y$, and set $u = x/y$. Consider the function
+\[
+f(u) = (1 + u)^p - 1 - u^p
+\]
+and its derivative. It is clear that $f(0) = 0$ and that $f'(u) \leq 0$ for all $u \geq 0$. Hence, $f(u) \leq 0$ for $u \geq 0$.
+
+\subsubsection*{Q34: Prove the squared hinge function \( f(u) = \max\{1 - u, 0\}^2 \) is majorized by the surrogate function \( g(u \mid u_n) = (u - u_n)^2 \) for \( u_n \geq 1 \) and by \( g(u \mid u_n) = (1 - u)^2 \) for \( u_n < 1 \). Draw a crude graph to visualize the problem.}
+
+9.34 Recall that $f(u) = \max\{1 - u, 0\}^2$, $g(u \mid u_n) = (u - u_n)^2$ for $u_n \geq 1$, and $g(u \mid u_n) = (1 - u)^2$ for $u_n < 1$. On both domains it is trivial to check that $f(u_n) = g(u_n \mid u_n)$ and that $f'(u_n) = g'(u_n \mid u_n)$. Thus, tangency obtains. Whenever $f(u) = 0$, we have $g(u \mid u_n) \geq f(u)$ since $g(u \mid u_n) \geq 0$ everywhere. If $f(u) > 0$ then either $g(u \mid u_n) = f(u)$ because $u_n < 1$, or $u_n \geq 1$ and $u < 1$ so that
+\[
+f(u) = (1 - u)^2 \leq (u_n - u)^2 = g(u \mid u_n).
+\]
+
+\subsubsection*{Q35: Show that the function \( f(x) = x^2 e^{-x^2} \) satisfies the quadratic upper bound majorization}
+\[
+f(x) \leq f(x_n) + f'(x_n)(x - x_n) + (x - x_n)^2.
+\]
+See the article \[88\] for a potential application to edge enhancement in imaging.
+
+9.35 For the function $f(x) = x^2 e^{-x^2}$, note that
+\[
+f'(x) = -2x(x^2 - 1)e^{-x^2}
+\]
+\[
+f''(x) = 2(2x^4 - 5x^2 + 1)e^{-x^2}.
+\]
+
+Now on $[0, \infty)$ the function $f''(x)$ has the same maximum absolute value as the function $g(u) = 2(2u^2 - 5u + 1)e^{-u}$. The latter function has derivative
+\[
+g'(u) = (8u - 10 - 4u^2 + 10u - 2)e^{-u} = (-4u^2 + 18u - 12)e^{-u}.
+\]
+
+Hence, its stationary points are
+\[
+u = \frac{9 \pm \sqrt{9^2 - 4 \cdot 2 \cdot 6}}{4} = \frac{9 \pm \sqrt{33}}{4}.
+\]
+
+The candidate optimal points of $f''(x)$ on $[0, \infty)$ are 0 and $\frac{9 \pm \sqrt{33}}{2}$. It is easy to check numerically that $x = 0$ maximizes $|f''(x)|$ with value 2.
+
+\subsubsection*{Q36: The Cauchy probability density with location \(\mu\) and scale \(\sigma\) can be written as}
+\[
+f(x) = \frac{1}{\pi \sigma \left[ 1 + \left( \frac{x - \mu}{\sigma} \right)^2 \right]}.
+\]
+The usual approach to maximum likelihood estimation of \(\mu\) and \(\sigma\) involves finding the roots of polynomials of degree \(2m - 1\) and \(2m\), respectively, for \(m\) sample points \( x_1, \ldots, x_m \). However, this process tends to be complicated by the existence of multiple local maxima. Derive the MM updates
+\[
+\mu_{n+1} = \frac{\sum_{i=1}^m w_{ni} x_i}{\sum_{i=1}^m w_{ni}}, \quad \text{and} \quad \sigma_{n+1} = \sqrt{\frac{2 \sum_{i=1}^m w_{ni} (x_i - \mu_{n+1})^2}{m}}.
+\]
+for estimating \(\mu\) and \(\sigma\) using positive weights \( w_{ni} \). (Hint: Invoke the supporting hyperplane minorization for the function \(- \log(1 + y)\).)
+
+9.36 Based on the hint, substitute $\left(\frac{x - \mu}{\sigma}\right)^2$ for $y$. The loglikelihood is then minorized by
+\[
+L(\mu, \sigma) \geq -m \log \sigma - \sum_{i=1}^m w_{ni} \left( \frac{x_i - \mu}{\sigma} \right)^2 + c_n
+\]
+\[
+w_{ni} = \frac{1}{1 + \left( \frac{x_i - \mu_n}{\sigma_n} \right)^2}
+\]
+at iteration $n$, where $c_n$ is an irrelevant constant. The MM algorithm for estimating $\mu$ and $\sigma$ now reduces to weighted least squares with the given updates. These updates stably increase the likelihood at each iteration. The median of the $x_i$ serves as a starting value for $\mu$. As recommended by Wikipedia, half the sample inter-quartile range is a reasonable starting value for $\sigma$.
+
+\subsubsection*{Q39: Show that the function $f(x) = (|x| - w)^2$ for $w > 0$ is majorized by the convex quadratics
+\[g(x \mid x_n) = \begin{cases} 
+(x - w)^2 & x_n > 0 \\
+x^2 + w^2 & x_n = 0 \\
+(x + w)^2 & x_n < 0.
+\end{cases}\]
+When $w < 0$, show that $f(x)$ is majorized by
+\[
+\frac{|x_n| - w}{|x_n|}(x^2 - x_n^2) + f(x_n) = \frac{|x_n| - w}{|x_n|}(x^2 - x_n^2) + (|x_n| - w)^2.
+\]
+Note that no quadratic majorization exists when $x_n = 0$ and $w < 0$. Why is the case $w = 0$ trivial? (Hint: Graph $f(x)$.)}
+
+9.39 When $w > 0$, the majorizations are self-evident from Figure B.1. Note that $f(x)$ is even because $|x|$ is even. Furthermore, $f(x) = (|x| - w)^2$ achieves its minimum value of 0 at $\pm w$ and is convex on the intervals $(-\infty, 0]$ and $[0, \infty)$. The other cases are left to the reader.
+
 \newpage
 \section*{Chapter 10: Data Mining}
 
@@ -7095,9 +7569,9 @@ where the matrix \( B \) has all columns equal to \( b \), and the matrices \( Y
 \[
 A = (Y - B)X^*(XX^*)^{-1},
 \]
-assuming \( X \) has full rank. Why do these solutions represent minimum points?
+assuming \( X \) has full rank. Why do these solutions represent minimum points?}
 
-Q10.20: The objective is convex in \( (A, b) \). Hence, a stationary point represents a minimum. If \( Z = Y - AX \) has columns \( z_i \), then}
+Q10.20: The objective is convex in \( (A, b) \). Hence, a stationary point represents a minimum. If \( Z = Y - AX \) has columns \( z_i \), then
 \[
 \frac{1}{2} \|Y - AX - B\|_F^2 = \frac{1}{2} \sum_{i=1}^k \|z_i - b\|^2.
 \]
@@ -7105,7 +7579,7 @@ The block update \( b = \frac{1}{k} \sum_{i=1}^k z_i \) now follows. The directi
 \[
 -\operatorname{tr}[(Y - AX - B)^*WX] = -\operatorname{tr}[X(Y - AX - B)^*W].
 \]
-Because this vanishes for all \( W \) at a stationary point, \( (Y - AX - B)X^* = 0 \). One can now solve for the block update of \( A \) in the stated form.}
+Because this vanishes for all \( W \) at a stationary point, \( (Y - AX - B)X^* = 0 \). One can now solve for the block update of \( A \) in the stated form.
 
 \subsubsection*{Q23: The Minkowski sum \( A + B \) of two sets \( A \) and \( B \) is defined to be the set of all sums \( a + b \) for \( a \in A \) and \( b \in B \). One can easily prove that \( A + B \) is convex whenever \( A \) and \( B \) are both convex. Unfortunately, \( A + B \) is not necessarily closed when \( A \) and \( B \) are both closed; it is closed if one of the two sets is compact and the other is closed. It is also closed when \( A \) and \( B \) are both polyhedral. A natural question is how to project a point \( x \) onto \( A + B \) given both convexity and closure. Suppose that the projection operators \( P_A(y) \) and \( P_B(z) \) are both known. Show that the alternating algorithm
 \[
@@ -7345,7 +7819,6 @@ For \(0 \leq r < n/2\), define the rectangular and triangular smoothing sequence
 \[
    d_j = \frac{1}{r} 1_{\{-r \leq j \leq r\}} \left(1 - \frac{|j|}{r}\right).
 \]
-
 and extend them to have period \(n\). Show that
 \[
 \hat{c}_k = \frac{1}{n(2r+1)} \frac{\sin \left(\frac{(2r+1)k\pi}{n}\right)}{\sin \left(\frac{k\pi}{n}\right)}
@@ -7980,7 +8453,7 @@ a_{n-1} & a_{n-2} & a_{n-3} & \ldots & a_0
 We can see that if you do a right cyclic shift on the first row you get the second
 row, and this pattern continues.
 
-\textbfTranspose of a Circulant Matrix}
+\textbf{Transpose of a Circulant Matrix}
 Now, let’s find the transpose of matrix A:
 \begin{equation}
 A^T = \begin{pmatrix}
@@ -9008,10 +9481,10 @@ Devise a simulated annealing algorithm to approximate the maximum number of 1’
 
 To devise a simulated annealing algorithm for approximating the maximum number of 1's in the hardcore model on a graph, let's define the problem and the key components of the algorithm. The hardcore model is a type of graph-based statistical model where vertices can either be occupied (1) or unoccupied (0), with the constraint that no two adjacent vertices can both be occupied.
 
-### Problem Setup
+\textbf{Problem Setup}
 Given a graph \( G = (V, E) \), the objective is to find the configuration \( \{x_v\}_{v \in V} \) (where \( x_v \in \{0, 1\} \) for all \( v \)) that maximizes the number of 1's, subject to the constraint that no adjacent vertices can both be set to 1. This is equivalent to finding the maximum independent set of the graph.
 
-### Simulated Annealing Algorithm
+\textbf{Simulated Annealing Algorithm}
 
 Simulated annealing is a probabilistic technique for approximating the global optimum of a given function. It is particularly useful for large problems where other methods are not feasible. Here are the steps for the simulated annealing algorithm tailored for the hardcore model:
 
@@ -9400,7 +9873,7 @@ To demonstrate that the correspondence from the group of invertible \(2 \times 2
 
 Given:
 \[ f_1(s) = \frac{\alpha_1 s + \beta_1}{\gamma_1 s + \delta_1} \]
-\[ f_2(s) = \frac{\alpha_2 s + \beta_2}{\gamma_2 s + δ_2} \]
+\[ f_2(s) = \frac{\alpha_2 s + \beta_2}{\gamma_2 s + \delta_2} \]
 
 The matrix representation of these transformations are:
 \[ M_1 = \begin{pmatrix} \alpha_1 & \beta_1 \\ \gamma_1 & \delta_1 \end{pmatrix} \]
@@ -9629,7 +10102,7 @@ for all \( x \).}
 
 To prove these two inequalities, we will explore each component and demonstrate the relationship between \( \sqrt{x^2 + \epsilon} \) and \( |x| \), as well as their implications on \( f(x) = \frac{1}{2} (x + \sqrt{x^2 + \epsilon}) \) and \( x_+ = \frac{1}{2} (x + |x|) \).
 
-\textbf{### Part 1:} \( \sqrt{x^2 + \epsilon} \) vs. \( |x| \)
+\textbf{Part 1:} \( \sqrt{x^2 + \epsilon} \) vs. \( |x| \)
 
 \textbf{Inequality: \( 0 \leq \sqrt{x^2 + \epsilon} - |x| \leq \sqrt{\epsilon} \)}
 
@@ -9870,8 +10343,5 @@ Hence, it is demonstrated that there exists a scalar \( s \in [0,1] \) such that
 \]
 
 This inequality effectively bounds the change in \( f \) between any two points in \( U \) by the maximum "stretch" the function's derivative has in any direction multiplied by the distance between the two points. This result is a powerful tool in analysis, particularly in proving continuity, differentiability, and Lipschitz conditions for vector-valued functions.
-
-
-
 
 \end{document}
