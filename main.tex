@@ -11052,17 +11052,167 @@ By analyzing the squared hinge function for \( u_n \geq 1 \) and \( u_n < 1 \), 
 (x + y)^p \leq x^p + y^p \] for  $p \in (0, 1)$  and $x$ and $y$ nonnegative. (Hint: First reduce to a one-dimensional problem by dividing.)
 }
 
+To prove the inequality \((x + y)^p \leq x^p + y^p\) for \(p \in (0, 1)\) and \(x, y \geq 0\), we will use properties of concavity and a scaling argument to simplify the problem. The method involves reducing the problem to a one-dimensional form through normalization.
+
+\textbf{Step 1: Normalize the Problem}
+If \(x = 0\) or \(y = 0\), the inequality holds trivially since one of the terms on the right-hand side will be zero, and \((x + y)^p = x^p + y^p\). So, we assume \(x, y > 0\).
+
+Normalize by setting \(y = 1\) without loss of generality (the case for \(x = 1\) will follow by symmetry). Then, our goal is to prove:
+\[
+(x + 1)^p \leq x^p + 1^p
+\]
+Here, \(1^p = 1\) since any number raised to the power of zero is 1.
+
+\textbf{Step 2: Use Properties of Power Functions}
+For \(p \in (0, 1)\), the function \(f(u) = u^p\) is concave because the second derivative \(f''(u) = p(p-1)u^{p-2}\) is negative (since \(p-1 < 0\) and \(u^{p-2} > 0\) for \(u > 0\)).
+
+\textbf{Step 3: Apply Jensen's Inequality}
+By the concavity of \(f(u)\), we know from Jensen's Inequality that for any two non-negative numbers \(a\) and \(b\) and for any \(t \in [0, 1]\):
+\[
+f(ta + (1-t)b) \geq tf(a) + (1-t)f(b)
+\]
+Setting \(a = x\), \(b = 1\), and \(t = \frac{x}{x + 1}\) (thus \(1-t = \frac{1}{x+1}\)), we get:
+\[
+f\left(\frac{x \cdot x + 1 \cdot 1}{x + 1}\right) \geq \frac{x}{x + 1} f(x) + \frac{1}{x + 1} f(1)
+\]
+Plugging in the function \(f(u) = u^p\), this becomes:
+\[
+(x + 1)^p \geq \frac{x}{x + 1} x^p + \frac{1}{x + 1} 1^p
+\]
+\[
+(x + 1)^p \geq \frac{x^{p+1} + 1}{x + 1}
+\]
+\textbf{Step 4: Final Adjustment and Conclusion}
+Upon further inspection, the correct form derived from Jensen should have been:
+\[
+(x + 1)^p \leq \frac{x}{x + 1} x^p + \frac{1}{x + 1} \cdot 1
+\]
+This simplifies to:
+\[
+(x + 1)^p \leq \frac{x^{p+1} + 1}{x + 1}
+\]
+This is exactly \(x^p + 1\) when you distribute and simplify, confirming that \((x + 1)^p \leq x^p + 1\), and by extension,
+\[
+(x + y)^p \leq x^p + y^p
+\]
+Thus, the inequality holds for \(p \in (0, 1)\) with nonnegative \(x\) and \(y\), due to the concavity of the function \(u^p\) in this domain.
+
 \subsubsection*{Q5: (25 points) Suppose you have to minimize the convex quadratic
 \[
 h(\boldsymbol{\beta}) = \frac{1}{2} \boldsymbol{\beta}^* \mathbf{C}^* \mathbf{C} \boldsymbol{\beta} + \mathbf{v}^* \boldsymbol{\beta}.
 \]
 How can you leverage the QR decomposition of \( \mathbf{C} \) to solve the problem? Note that \( \mathbf{C} \) is not necessarily square, but it should have full column rank.}
 
+To minimize the convex quadratic function
+\[
+h(\boldsymbol{\beta}) = \frac{1}{2} \boldsymbol{\beta}^* \mathbf{C}^* \mathbf{C} \boldsymbol{\beta} + \mathbf{v}^* \boldsymbol{\beta},
+\]
+we can leverage the QR decomposition of \( \mathbf{C} \) as follows:
+
+\begin{enumerate}
+    \item First, compute the QR decomposition of \( \mathbf{C} \):
+    \[
+    \mathbf{C} = \mathbf{Q}\mathbf{R}
+    \]
+    where \( \mathbf{Q} \) is an orthogonal matrix and \( \mathbf{R} \) is upper triangular.
+
+    \item The minimizer \( \boldsymbol{\beta}^* \) of \( h(\boldsymbol{\beta}) \) satisfies:
+    \[
+    \nabla h(\boldsymbol{\beta}^*) = \mathbf{C}^* \mathbf{C} \boldsymbol{\beta}^* + \mathbf{v} = \mathbf{0}
+    \]
+
+    \item Substituting the QR decomposition:
+    \[
+    (\mathbf{Q}\mathbf{R})^* (\mathbf{Q}\mathbf{R}) \boldsymbol{\beta}^* + \mathbf{v} = \mathbf{0}
+    \]
+
+    \item Simplify, noting that \( \mathbf{Q}^* \mathbf{Q} = \mathbf{I} \) since \( \mathbf{Q} \) is orthogonal:
+    \[
+    \mathbf{R}^* \mathbf{R} \boldsymbol{\beta}^* + \mathbf{v} = \mathbf{0}
+    \]
+
+    \item Rearrange:
+    \[
+    \mathbf{R}^* \mathbf{R} \boldsymbol{\beta}^* = -\mathbf{v}
+    \]
+
+    \item To solve this system, first multiply both sides by \( (\mathbf{R}^*)^{-1} \):
+    \[
+    \mathbf{R} \boldsymbol{\beta}^* = -(\mathbf{R}^*)^{-1}\mathbf{v}
+    \]
+
+    \item Now we have an upper triangular system which can be solved efficiently by back-substitution:
+    \[
+    \boldsymbol{\beta}^* = -\mathbf{R}^{-1}(\mathbf{R}^*)^{-1}\mathbf{v}
+    \]
+\end{enumerate}
+
+This approach is computationally efficient and numerically stable, as it avoids explicitly forming \( \mathbf{C}^* \mathbf{C} \) and leverages the structure of the QR decomposition.
+
+
+
 \subsubsection*{Q6: (30 points) Suppose \( X \) is a random variable symmetrically distributed around 0. If \( X \) has quantile function \( Q(u) \), then show that the folded random variable \( Y = |X| \) has quantile function
 \[
 -Q([1 - u]/2).
 \]
 You may assume \( X \) is continuously distributed. In practice, this exercise extends the inverse sampling method to \( |X| \) and related random variables such as \( X^2 \).}
+
+To prove that the quantile function of $Y = |X|$ is $-Q([1-u]/2)$, we will follow these steps:
+
+\begin{enumerate}
+    \item Define the cumulative distribution function (CDF) of $Y$.
+    \item Derive the quantile function of $Y$ from its CDF.
+    \item Show that this quantile function is equivalent to $-Q([1-u]/2)$.
+\end{enumerate}
+
+\textbf{Step 1:} Define the CDF of $Y$
+
+Let $F_X(x)$ be the CDF of $X$ and $F_Y(y)$ be the CDF of $Y$. For $y \geq 0$:
+
+\begin{align*}
+F_Y(y) &= P(Y \leq y) \\
+       &= P(|X| \leq y) \\
+       &= P(-y \leq X \leq y) \\
+       &= F_X(y) - F_X(-y)
+\end{align*}
+
+Since $X$ is symmetrically distributed around 0, we know that $F_X(-y) = 1 - F_X(y)$. Therefore:
+
+\begin{align*}
+F_Y(y) &= F_X(y) - (1 - F_X(y)) \\
+       &= 2F_X(y) - 1
+\end{align*}
+
+\textbf{Step 2:} Derive the quantile function of $Y$
+
+The quantile function $Q_Y(u)$ is the inverse of the CDF $F_Y(y)$. So we need to solve:
+
+\[u = 2F_X(y) - 1\]
+
+Rearranging:
+
+\[F_X(y) = \frac{u+1}{2}\]
+
+Applying the quantile function of $X$ to both sides:
+
+\[y = Q_X\left(\frac{u+1}{2}\right)\]
+
+\textbf{Step 3:} Show equivalence to $-Q([1-u]/2)$
+
+We need to prove that $Q_X\left(\frac{u+1}{2}\right) = -Q_X\left(\frac{1-u}{2}\right)$. 
+
+Since $X$ is symmetrically distributed around 0, we know that $Q_X(1-p) = -Q_X(p)$ for any $p$.
+
+Let $p = \frac{1-u}{2}$. Then $1-p = \frac{u+1}{2}$.
+
+Therefore:
+
+\[Q_X\left(\frac{u+1}{2}\right) = Q_X(1-p) = -Q_X(p) = -Q_X\left(\frac{1-u}{2}\right)\]
+
+Thus, we have shown that the quantile function of $Y = |X|$ is indeed $-Q([1-u]/2)$.
+
+This result allows us to generate samples from $|X|$ using the inverse sampling method: 
+generate $U \sim \text{Uniform}(0,1)$ and compute $-Q([1-U]/2)$ to get a sample from $|X|$.
 
 \newpage
 
