@@ -10351,7 +10351,69 @@ This inequality effectively bounds the change in \( f \) between any two points 
 \begin{pmatrix} \mathbf{X} & \mathbf{y} \end{pmatrix} = \begin{pmatrix} \mathbf{Q} & \mathbf{q} \end{pmatrix} \begin{pmatrix} \mathbf{R} & \mathbf{r} \\ \mathbf{0} & d \end{pmatrix}.
 \]
 
+Let's derive each component using the extended QR decomposition:
+
+1) Estimate $\hat{\boldsymbol{\beta}}$:
+
+   From $\mathbf{X} = \mathbf{Q}\mathbf{R}$ and $\mathbf{y} = \mathbf{Q}\mathbf{r} + d\mathbf{q}$, we have:
+   
+   $\hat{\boldsymbol{\beta}} = \mathbf{R}^{-1}\mathbf{Q}^T\mathbf{y} = \mathbf{R}^{-1}\mathbf{r}$
+
+2) Predicted values $\hat{\mathbf{y}}$:
+
+   $\hat{\mathbf{y}} = \mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{Q}\mathbf{R}\mathbf{R}^{-1}\mathbf{r} = \mathbf{Q}\mathbf{r}$
+
+3) Residual vector $\mathbf{r}$:
+
+   $\mathbf{r} = \mathbf{y} - \hat{\mathbf{y}} = (\mathbf{Q}\mathbf{r} + d\mathbf{q}) - \mathbf{Q}\mathbf{r} = d\mathbf{q}$
+
+4) Residual sum of squares $\|\mathbf{r}\|^2$:
+
+   $\|\mathbf{r}\|^2 = \|d\mathbf{q}\|^2 = d^2\|\mathbf{q}\|^2 = d^2$
+
+   (Since $\mathbf{q}$ is a unit vector in the QR decomposition)
+
+Therefore, in terms of the extended QR decomposition:
+
+- $\hat{\boldsymbol{\beta}} = \mathbf{R}^{-1}\mathbf{r}$
+- $\hat{\mathbf{y}} = \mathbf{Q}\mathbf{r}$
+- $\mathbf{r} = d\mathbf{q}$
+- $\|\mathbf{r}\|^2 = d^2$
+
 \subsubsection*{Q2: (20 points) Convert the problem of minimizing \( |x_1| - |x_2| \) subject to \( x_1 + x_2 = 5 \), \( 2x_1 + 3x_2 - x_3 \leq 0 \), and \( x_3 \geq 4 \) into a linear program in standard form.}
+
+To convert this problem into a linear program in standard form:
+
+1) Introduce new variables to handle absolute values:
+   Let $x_1 = u_1 - v_1$ and $x_2 = u_2 - v_2$, where $u_i, v_i \geq 0$
+
+2) Rewrite the objective function:
+   Minimize $z = (u_1 + v_1) - (u_2 + v_2)$
+
+3) Rewrite the constraints:
+   $(u_1 - v_1) + (u_2 - v_2) = 5$
+   $2(u_1 - v_1) + 3(u_2 - v_2) - x_3 \leq 0$
+   $x_3 \geq 4$
+
+4) Convert inequalities to equalities by introducing slack variables:
+   $2(u_1 - v_1) + 3(u_2 - v_2) - x_3 + s_1 = 0$
+   $x_3 - 4 - s_2 = 0$
+
+5) Express in standard form:
+
+   Minimize $z = u_1 + v_1 - u_2 - v_2$
+   
+   Subject to:
+   
+   $u_1 - v_1 + u_2 - v_2 = 5$
+   
+   $2u_1 - 2v_1 + 3u_2 - 3v_2 - x_3 + s_1 = 0$
+   
+   $x_3 - s_2 = 4$
+   
+   $u_1, v_1, u_2, v_2, x_3, s_1, s_2 \geq 0$
+
+This is now a linear program in standard form with 7 variables and 3 equality constraints.
 
 \subsubsection*{Q3: (30 points) Show that the function}
 \[
@@ -10359,7 +10421,86 @@ f(\mathbf{x}) = x_1^2 + x_2^2 + x_3^2 + x_1 x_2 + x_1 x_3 + x_2 x_3 + (x_1^2 + x
 \]
 \text{is convex and possesses a global minimum at} \(\mathbf{x} = \mathbf{0}\).
 
+To show that $f(\mathbf{x})$ is convex and has a global minimum at $\mathbf{x} = \mathbf{0}$:
+
+1) First, let's compute the Hessian matrix $H$:
+
+   $\frac{\partial f}{\partial x_i} = 2x_i + x_j + x_k + 4(x_1^2 + x_2^2 + x_3^2)x_i$, where $i,j,k$ are distinct.
+
+   $\frac{\partial^2 f}{\partial x_i^2} = 2 + 4(x_1^2 + x_2^2 + x_3^2) + 8x_i^2$
+   
+   $\frac{\partial^2 f}{\partial x_i \partial x_j} = 1 + 8x_ix_j$, for $i \neq j$
+
+   The Hessian matrix is:
+   
+   $H = \begin{pmatrix}
+   2 + 4(x_1^2 + x_2^2 + x_3^2) + 8x_1^2 & 1 + 8x_1x_2 & 1 + 8x_1x_3 \\
+   1 + 8x_1x_2 & 2 + 4(x_1^2 + x_2^2 + x_3^2) + 8x_2^2 & 1 + 8x_2x_3 \\
+   1 + 8x_1x_3 & 1 + 8x_2x_3 & 2 + 4(x_1^2 + x_2^2 + x_3^2) + 8x_3^2
+   \end{pmatrix}$
+
+2) To show convexity, we need to prove that $H$ is positive semidefinite for all $\mathbf{x}$. 
+   Let $\mathbf{y} = (y_1, y_2, y_3)$ be any non-zero vector. Then:
+
+   $\mathbf{y}^T H \mathbf{y} = (2 + 4\|\mathbf{x}\|^2)(y_1^2 + y_2^2 + y_3^2) + 8(x_1y_1 + x_2y_2 + x_3y_3)^2 + 2(y_1y_2 + y_1y_3 + y_2y_3)$
+   
+   $\geq 2\|\mathbf{y}\|^2 + 2(y_1y_2 + y_1y_3 + y_2y_3) = (y_1 + y_2 + y_3)^2 + (y_1^2 + y_2^2 + y_3^2) \geq 0$
+
+   This proves that $H$ is positive semidefinite, and thus $f(\mathbf{x})$ is convex.
+
+3) To show that $\mathbf{x} = \mathbf{0}$ is a global minimum:
+   
+   Compute the gradient $\nabla f(\mathbf{x})$:
+   
+   $\nabla f(\mathbf{x}) = \begin{pmatrix}
+   2x_1 + x_2 + x_3 + 4(x_1^2 + x_2^2 + x_3^2)x_1 \\
+   2x_2 + x_1 + x_3 + 4(x_1^2 + x_2^2 + x_3^2)x_2 \\
+   2x_3 + x_1 + x_2 + 4(x_1^2 + x_2^2 + x_3^2)x_3
+   \end{pmatrix}$
+
+   At $\mathbf{x} = \mathbf{0}$, $\nabla f(\mathbf{0}) = \mathbf{0}$, satisfying the first-order necessary condition.
+
+   Since $f(\mathbf{x})$ is convex and $\nabla f(\mathbf{0}) = \mathbf{0}$, $\mathbf{x} = \mathbf{0}$ is a global minimum.
+
+Therefore, $f(\mathbf{x})$ is convex and has a global minimum at $\mathbf{x} = \mathbf{0}$.
+
 \subsubsection*{Q4: (30 points) Suppose \( f(\mathbf{x}) \) is convex on \( \mathbb{R}^p \) and achieves its minimum at \( \mathbf{y} \). If \( f(\mathbf{x}) \) is also symmetric in the sense that \( f(\mathbf{P}\mathbf{x}) = f(\mathbf{x}) \) for all permutation matrices \( \mathbf{P} \), then demonstrate that \( f(\mathbf{x}) \) possesses a symmetric minimum point \( \mathbf{z} \) with \( \mathbf{P}\mathbf{z} = \mathbf{z} \) for all such \( \mathbf{P} \). (Hint: Symmetrize the point \( \mathbf{y} \).)}
+
+To prove this, let's follow these steps:
+
+1) Let $\mathbf{y}$ be the minimum point of $f(\mathbf{x})$.
+
+2) Define $\mathbf{z}$ as the average of all permutations of $\mathbf{y}$:
+
+   $\mathbf{z} = \frac{1}{p!} \sum_{\mathbf{P}} \mathbf{P}\mathbf{y}$
+
+   where the sum is over all $p!$ permutation matrices.
+
+3) First, let's show that $\mathbf{z}$ is symmetric:
+
+   For any permutation matrix $\mathbf{Q}$:
+   
+   $\mathbf{Q}\mathbf{z} = \frac{1}{p!} \sum_{\mathbf{P}} \mathbf{Q}\mathbf{P}\mathbf{y} = \frac{1}{p!} \sum_{\mathbf{P}} \mathbf{P}\mathbf{y} = \mathbf{z}$
+
+   This proves that $\mathbf{P}\mathbf{z} = \mathbf{z}$ for all permutation matrices $\mathbf{P}$.
+
+4) Now, let's show that $\mathbf{z}$ is also a minimum point:
+
+   By the convexity of $f$:
+   
+   $f(\mathbf{z}) = f(\frac{1}{p!} \sum_{\mathbf{P}} \mathbf{P}\mathbf{y}) \leq \frac{1}{p!} \sum_{\mathbf{P}} f(\mathbf{P}\mathbf{y})$
+
+   By the symmetry of $f$:
+   
+   $f(\mathbf{P}\mathbf{y}) = f(\mathbf{y})$ for all $\mathbf{P}$
+
+   Therefore:
+   
+   $f(\mathbf{z}) \leq \frac{1}{p!} \sum_{\mathbf{P}} f(\mathbf{y}) = f(\mathbf{y})$
+
+5) Since $\mathbf{y}$ is a minimum point, we must have $f(\mathbf{z}) = f(\mathbf{y})$.
+
+Therefore, we have shown that $\mathbf{z}$ is a symmetric minimum point of $f(\mathbf{x})$, satisfying $\mathbf{P}\mathbf{z} = \mathbf{z}$ for all permutation matrices $\mathbf{P}$.
 
 \subsubsection*{Q5: (30 points) Suppose \( f(\mathbf{x}) \) is a convex function with domain \( \mathbb{R}^p \). Derive the majorization}
 \[
@@ -10367,10 +10508,96 @@ f\left( \sum_{i=1}^m \mathbf{x}_i \right) \leq \frac{1}{m} \sum_{i=1}^m f\left[m
 \]
 \text{involving vectors} \( \mathbf{x}_1, \ldots, \mathbf{x}_m \), \text{where} \( \bar{\mathbf{x}}_n = \frac{1}{m} \sum_{i=1}^m \mathbf{x}_{ni} \) \text{and} \( \mathbf{x}_{ni} \) \text{represents the value of} \( \mathbf{x}_i \) \text{at iteration} \( n \) \text{in some optimization scheme. This majorization splits the vectors. The choices} \( f(\mathbf{x}) = \|\mathbf{x}\|_{\ast} \) \text{and} \( f(\mathbf{x}) = \|\mathbf{x}\|_{\ast}^2 \) \text{involving an arbitrary norm are important in practice.}
 
+To derive this majorization, we'll use Jensen's inequality and the convexity of $f(\mathbf{x})$:
+
+1) Start with Jensen's inequality for convex functions:
+
+   $f\left(\sum_{i=1}^m \alpha_i \mathbf{y}_i\right) \leq \sum_{i=1}^m \alpha_i f(\mathbf{y}_i)$
+
+   where $\alpha_i \geq 0$ and $\sum_{i=1}^m \alpha_i = 1$
+
+2) Let $\alpha_i = \frac{1}{m}$ for all $i$. Then:
+
+   $f\left(\frac{1}{m}\sum_{i=1}^m \mathbf{y}_i\right) \leq \frac{1}{m}\sum_{i=1}^m f(\mathbf{y}_i)$
+
+3) Now, let $\mathbf{y}_i = m(\mathbf{x}_i - \mathbf{x}_{ni} + \bar{\mathbf{x}}_n)$. Substituting:
+
+   $f\left(\sum_{i=1}^m (\mathbf{x}_i - \mathbf{x}_{ni} + \bar{\mathbf{x}}_n)\right) \leq \frac{1}{m}\sum_{i=1}^m f(m(\mathbf{x}_i - \mathbf{x}_{ni} + \bar{\mathbf{x}}_n))$
+
+4) Simplify the left side:
+
+   $\sum_{i=1}^m (\mathbf{x}_i - \mathbf{x}_{ni} + \bar{\mathbf{x}}_n) = \sum_{i=1}^m \mathbf{x}_i - \sum_{i=1}^m \mathbf{x}_{ni} + m\bar{\mathbf{x}}_n$
+
+   $= \sum_{i=1}^m \mathbf{x}_i - \sum_{i=1}^m \mathbf{x}_{ni} + \sum_{i=1}^m \mathbf{x}_{ni} = \sum_{i=1}^m \mathbf{x}_i$
+
+5) Therefore, we have:
+
+   $f\left(\sum_{i=1}^m \mathbf{x}_i\right) \leq \frac{1}{m}\sum_{i=1}^m f(m(\mathbf{x}_i - \mathbf{x}_{ni} + \bar{\mathbf{x}}_n))$
+
+This proves the desired majorization.
+
+For specific cases:
+
+1) If $f(\mathbf{x}) = \|\mathbf{x}\|_{\ast}$, we get:
+
+   $\left\|\sum_{i=1}^m \mathbf{x}_i\right\|_{\ast} \leq \frac{1}{m}\sum_{i=1}^m \|m(\mathbf{x}_i - \mathbf{x}_{ni} + \bar{\mathbf{x}}_n)\|_{\ast}$
+
+2) If $f(\mathbf{x}) = \|\mathbf{x}\|_{\ast}^2$, we get:
+
+   $\left\|\sum_{i=1}^m \mathbf{x}_i\right\|_{\ast}^2 \leq \frac{1}{m}\sum_{i=1}^m \|m(\mathbf{x}_i - \mathbf{x}_{ni} + \bar{\mathbf{x}}_n)\|_{\ast}^2$
+
+These cases are particularly useful in optimization problems involving norms.
+
 \subsubsection*{Q6: (30 points) Devise an acceptance-rejection method for generating beta deviates based on the inequality} 
 \[
 x^{\alpha-1} (1 - x)^{\beta-1} \leq x^{\alpha-1} + (1 - x)^{\beta-1}.
 \]
+
+To devise an acceptance-rejection method for generating beta deviates, we'll use the given inequality:
+
+1) The beta distribution has the probability density function:
+
+   $f(x) = \frac{1}{B(\alpha,\beta)} x^{\alpha-1} (1-x)^{\beta-1}$, for $0 \leq x \leq 1$
+
+   where $B(\alpha,\beta)$ is the beta function.
+
+2) Using the given inequality, we can create a majorizing function:
+
+   $g(x) = \frac{1}{B(\alpha,\beta)} [x^{\alpha-1} + (1-x)^{\beta-1}]$
+
+3) The acceptance-rejection algorithm:
+
+   \begin{algorithm}
+   \caption{Beta Deviate Generation}
+   \begin{algorithmic}
+   \While{true}
+     \State Generate $U_1, U_2 \sim \text{Uniform}(0,1)$
+     \If{$U_1 \leq \frac{1}{2}$}
+       \State $X \gets U_2^{\frac{1}{\alpha}}$
+     \Else
+       \State $X \gets 1 - U_2^{\frac{1}{\beta}}$
+     \EndIf
+     \If{$U_1 \leq \frac{x^{\alpha-1}(1-x)^{\beta-1}}{x^{\alpha-1} + (1-x)^{\beta-1}}$}
+       \State \textbf{return} $X$
+     \EndIf
+   \EndWhile
+   \end{algorithmic}
+   \end{algorithm}
+
+4) Justification:
+   - The algorithm generates $X$ from the density proportional to $x^{\alpha-1} + (1-x)^{\beta-1}$
+   - It then accepts $X$ with probability $\frac{f(x)}{g(x)} = \frac{x^{\alpha-1}(1-x)^{\beta-1}}{x^{\alpha-1} + (1-x)^{\beta-1}}$
+
+5) Efficiency:
+   The acceptance probability is:
+   
+   $P(\text{accept}) = \int_0^1 \frac{f(x)}{g(x)} g(x) dx = \frac{1}{2}$
+
+   This means the algorithm will, on average, need 2 iterations to generate one beta deviate.
+
+This acceptance-rejection method efficiently generates beta deviates using the given inequality.
+
+\newpage
 
 \section*{2020 Comp Exam}
 
@@ -10409,6 +10636,8 @@ f'(x) = \frac{a^2 - c}{(a + x)^2}
 A = (\mathbf{Y} - \mathbf{B})\mathbf{X}^*(\mathbf{X}\mathbf{X}^*)^{-1},
 \]
 \text{assuming} \( \mathbf{X} \) \text{has full rank. Why do these solutions represent minimum points?}
+
+\newpage
 
 \section*{2021 Comp Exam}
 
@@ -10450,6 +10679,8 @@ h(\boldsymbol{\beta}) = \frac{1}{2} \boldsymbol{\beta}^* \mathbf{C}^* \mathbf{C}
 -Q([1 - u]/2).
 \]
 \text{You may assume \( X \) is continuously distributed. In practice, this exercise extends the inverse sampling method to \( |X| \) and related random variables such as} \( X^2 \).
+
+\newpage
 
 \section*{2022 Comp Exam}
 
