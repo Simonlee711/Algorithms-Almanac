@@ -1,5 +1,8 @@
 # BIOMATH 205 - Algorithms
 
+![Answers Almanac](./algorithms.png)
+
+
 A painful attempt at solving all the Ken Lange Problems in "Algorithms from the Book"
 
 - [x] **Chapter 1: Ancient Algorithms**
